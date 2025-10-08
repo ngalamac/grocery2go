@@ -34,7 +34,7 @@ const OrdersPage: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {orders.map(o => (
-            <a href={`/order/${o.id}`} key={o.id} className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between hover:shadow transition">
+            <a href={`/dashboard/order/${o.id}`} key={o.id} className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between hover:shadow transition">
               <div>
                 <div className="font-semibold">Order #{o.id}</div>
                 <div className="text-sm text-gray-500">{new Date(o.createdAt).toLocaleString()}</div>
