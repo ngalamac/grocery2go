@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail } from 'lucide-react';
+import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -14,6 +15,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
   const navigate = useNavigate();
   const { getCartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, openAuthModal, logout } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
@@ -114,9 +116,18 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                   </span>
                 )}
               </button>
-              <button className="text-white hover:text-yellow-400 transition">
-                <User size={24} />
-              </button>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <span className="hidden sm:block text-white text-sm">{user.name || user.email}</span>
+                  <button onClick={logout} className="text-white hover:text-yellow-400 transition" title="Logout">
+                    <LogOut size={22} />
+                  </button>
+                </div>
+              ) : (
+                <button onClick={openAuthModal} className="text-white hover:text-yellow-400 transition">
+                  <User size={24} />
+                </button>
+              )}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="lg:hidden text-white"

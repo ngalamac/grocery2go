@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
@@ -14,6 +14,8 @@ import CouponPage from './components/CouponPage';
 import TrackOrderPage from './components/TrackOrderPage';
 import { CartProvider } from './context/CartContext';
 import { AdditionalItem } from './types';
+import { AuthProvider } from './context/AuthContext';
+import AuthModal from './components/AuthModal';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -107,17 +109,20 @@ function App() {
           onCheckout={() => navigate('/booking')}
         />
 
+        <AuthModal />
         <Footer />
       </div>
     );
   }
 
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <AppWithNavigation />
-      </BrowserRouter>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <AppWithNavigation />
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

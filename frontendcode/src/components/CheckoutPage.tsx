@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ArrowLeft } from 'lucide-react';
 import { AdditionalItem } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 interface CheckoutPageProps {
   onBack: () => void;
@@ -19,6 +20,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
   specialInstructions
 }) => {
   const { cart, getCartTotal, clearCart } = useCart();
+  const { user, openAuthModal } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -61,6 +63,10 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      openAuthModal();
+      return;
+    }
     console.log('Order submitted:', {
       ...formData,
       cart,
