@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
-import { products, features } from '../data/mockData';
+import { features } from '../data/mockData';
+import { useProducts } from '../context/ProductsContext';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -10,6 +11,7 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { products } = useProducts();
   const featuredProducts = (() => {
     try {
       const ids = (localStorage.getItem('g2g_featured_ids') || '').split(',').map(s=>s.trim()).filter(Boolean);

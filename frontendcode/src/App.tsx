@@ -27,6 +27,7 @@ import ProfilePage from './components/ProfilePage';
 import { ThemeProvider } from './context/ThemeContext';
 import { CouponProvider } from './context/CouponContext';
 import { ReviewsProvider } from './context/ReviewsContext';
+import { ProductsProvider } from './context/ProductsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import AdminDashboard from './components/AdminDashboard';
 
@@ -140,16 +141,18 @@ function App() {
         <ToastProvider>
           <AuthProvider>
             <ReviewsProvider>
-              <WishlistProvider>
-                <QuickViewProvider>
-                  <CartProvider>
-                    <BrowserRouter>
-                      <AppWithNavigation />
-                      <ToastViewport />
-                    </BrowserRouter>
-                  </CartProvider>
-                </QuickViewProvider>
-              </WishlistProvider>
+              <ProductsProvider>
+                <WishlistProvider>
+                  <QuickViewProvider>
+                    <CartProvider>
+                      <BrowserRouter>
+                        <AppWithNavigation />
+                        <ToastViewport />
+                      </BrowserRouter>
+                    </CartProvider>
+                  </QuickViewProvider>
+                </WishlistProvider>
+              </ProductsProvider>
             </ReviewsProvider>
           </AuthProvider>
         </ToastProvider>

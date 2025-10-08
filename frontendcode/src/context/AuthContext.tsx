@@ -28,7 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const USERS_KEY = 'g2g_auth_users';
 const USER_KEY = 'g2g_auth_user';
 
-function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string }> {
+function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }> {
   try {
     const raw = localStorage.getItem(USERS_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -37,7 +37,7 @@ function loadUsers(): Record<string, { email: string; password: string; name?: s
   }
 }
 
-function saveUsers(users: Record<string, { email: string; password: string; name?: string; id: string }>) {
+function saveUsers(users: Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }>) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 

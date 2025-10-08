@@ -1,6 +1,7 @@
 import React from 'react';
 import { Plus, Star } from 'lucide-react';
-import { categories, products, testimonials } from '../data/mockData';
+import { categories, testimonials } from '../data/mockData';
+import { useProducts } from '../context/ProductsContext';
 
 
 interface SidebarProps {
@@ -8,6 +9,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
+  const { products } = useProducts();
   const topSellers = products.slice(0, 4);
 
   return (

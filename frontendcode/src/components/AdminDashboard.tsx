@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useReviews } from '../context/ReviewsContext';
 import { useCoupon } from '../context/CouponContext';
+import { useProducts } from '../context/ProductsContext';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [tab, setTab] = useState<'reviews' | 'coupons' | 'settings' | 'featured' | 'orders'>('reviews');
+  const [tab, setTab] = useState<'reviews' | 'coupons' | 'settings' | 'featured' | 'orders' | 'products'>('reviews');
   if (!user || user.role !== 'admin') {
     return <div className="max-w-4xl mx-auto px-4 py-10 text-center text-gray-600">Admin access required.</div>;
   }
@@ -13,7 +14,7 @@ const AdminDashboard: React.FC = () => {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <div className="flex gap-2 mb-6 flex-wrap">
-        {(['reviews','coupons','settings','featured','orders'] as const).map(k => (
+        {(['reviews','coupons','settings','featured','orders','products'] as const).map(k => (
           <button key={k} onClick={() => setTab(k)} className={`px-3 py-2 rounded ${tab===k?'bg-[#7cb342] text-white':'bg-gray-100'}`}>{k}</button>
         ))}
       </div>
@@ -22,6 +23,7 @@ const AdminDashboard: React.FC = () => {
       {tab === 'settings' && <AdminSettings />}
       {tab === 'featured' && <AdminFeatured />}
       {tab === 'orders' && <AdminOrders />}
+      {tab === 'products' && <AdminProducts />}
     </div>
   );
 };
@@ -131,6 +133,50 @@ const AdminFeatured: React.FC = () => {
       <p className="text-sm text-gray-500">Enter product IDs (comma-separated) to feature on Home.</p>
       <input value={ids} onChange={e=>setIds(e.target.value)} className="w-full border rounded px-3 py-2" placeholder="e.g. 1,2,3,4" />
       <button onClick={save} className="px-3 py-2 bg-[#7cb342] text-white rounded">Save</button>
+    </div>
+  );
+};
+
+const AdminProducts: React.FC = () => {
+  const { products, addProduct, updateProduct, removeProduct } = useProducts();
+  const [draft, setDraft] = useState({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop' as 'shop'|'market', description: '' });
+  const create = () => {
+    if (!draft.name || !draft.image) return;
+    addProduct({ ...draft, price: Number(draft.price) });
+    setDraft({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop', description: '' });
+  };
+  return (
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-white rounded-lg shadow-sm p-4 space-y-3">
+        <h2 className="font-semibold">Add Product</h2>
+        <input value={draft.name} onChange={e=>setDraft({ ...draft, name: e.target.value })} placeholder="Name" className="w-full border rounded px-3 py-2" />
+        <input type="number" value={draft.price} onChange={e=>setDraft({ ...draft, price: Number(e.target.value) })} placeholder="Price (CFA)" className="w-full border rounded px-3 py-2" />
+        <input value={draft.image} onChange={e=>setDraft({ ...draft, image: e.target.value })} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
+        <input value={draft.category} onChange={e=>setDraft({ ...draft, category: e.target.value })} placeholder="Category" className="w-full border rounded px-3 py-2" />
+        <select value={draft.type} onChange={e=>setDraft({ ...draft, type: e.target.value as any })} className="w-full border rounded px-3 py-2">
+          <option value="shop">Shop</option>
+          <option value="market">Market</option>
+        </select>
+        <textarea value={draft.description} onChange={e=>setDraft({ ...draft, description: e.target.value })} placeholder="Description" className="w-full border rounded px-3 py-2" rows={3} />
+        <button onClick={create} className="px-3 py-2 bg-[#7cb342] text-white rounded">Create</button>
+      </div>
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <h2 className="font-semibold mb-2">Products</h2>
+        <div className="max-h-[480px] overflow-auto divide-y">
+          {products.map(p => (
+            <div key={p.id} className="py-3 flex items-center gap-3">
+              <img src={p.image} alt={p.name} className="w-12 h-12 object-cover rounded" />
+              <div className="flex-1">
+                <div className="font-semibold text-sm">{p.name}</div>
+                <div className="text-xs text-gray-500">{p.price} CFA • {p.category} • {p.type}</div>
+              </div>
+              <button onClick={()=>updateProduct(p.id, { name: p.name + ' (Edited)' })} className="text-blue-600 text-sm">Quick Edit</button>
+              <button onClick={()=>removeProduct(p.id)} className="text-red-600 text-sm">Delete</button>
+            </div>
+          ))}
+          {products.length === 0 && <div className="text-sm text-gray-500">No products.</div>}
+        </div>
+      </div>
     </div>
   );
 };

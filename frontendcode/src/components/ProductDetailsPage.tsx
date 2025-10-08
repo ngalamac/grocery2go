@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { products } from '../data/mockData';
+import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +8,7 @@ import { useReviews } from '../context/ReviewsContext';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams();
+  const { products } = useProducts();
   const product = products.find(p => p.id === id);
   const { addToCart } = useCart();
   const { show } = useToast();

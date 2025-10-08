@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Filter } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
-import { products } from '../data/mockData';
+import { useProducts } from '../context/ProductsContext';
 
 
 import { categories } from '../data/mockData';
@@ -23,6 +23,7 @@ const ShopPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const { products } = useProducts();
   const subcategories = selectedCategory !== 'all' ? getAllSubcategories(selectedCategory) : [];
 
   useEffect(() => {
