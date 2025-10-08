@@ -4,6 +4,7 @@ import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
 import { features } from '../data/mockData';
 import { useProducts } from '../context/ProductsContext';
+import BrandGallery from './BrandGallery';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -26,7 +27,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
       title: 'FRESH FOOD FOR',
       subtitle: 'FRESH MOOD',
       tagline: '100% Organic / 20% Off Select Products',
-      image: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=800'
+      image: 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=1200'
     }
   ];
 
@@ -310,6 +311,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </div>
           </div>
         </div>
+
+        <BrandGallery />
       </div>
     </div>
   );

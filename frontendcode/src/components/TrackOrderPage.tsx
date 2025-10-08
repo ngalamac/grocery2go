@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { getOrderById } from '../utils/orders';
 
-const steps = ['Order Placed', 'In Progress', 'Out for Delivery', 'Delivered'];
+// Steps are inlined in render; no static array needed
 
 const TrackOrderPage: React.FC = () => {
   const [orderId, setOrderId] = useState('');
@@ -14,15 +15,14 @@ const TrackOrderPage: React.FC = () => {
       setStep(null);
       return;
     }
-    // Simulate: if ends with 5 => delivered; 3 => out for delivery; default => in progress
-    const last = orderId.slice(-1);
-    if (last === '5') setStep(3);
-    else if (last === '3') setStep(2);
-    else if (orderId.length >= 4) setStep(1);
-    else {
+    const order = getOrderById(orderId);
+    if (!order) {
       setError('Order not found. Please check your ID.');
       setStep(null);
+      return;
     }
+    const map: Record<string, number> = { 'pending': 0, 'confirmed': 1, 'shopping': 2, 'out-for-delivery': 3, 'delivered': 4 };
+    setStep(map[order.status] ?? 0);
   };
 
   return (
@@ -41,8 +41,8 @@ const TrackOrderPage: React.FC = () => {
       {step !== null && (
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4">Order Status</h2>
-          <ol className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {steps.map((s, i) => (
+          <ol className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {['Order Placed','Confirmed','Shopping','Out for Delivery','Delivered'].map((s, i) => (
               <li key={s} className={`text-center rounded border p-3 ${i <= step ? 'bg-green-50 border-green-200 text-green-800' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
                 <div className="text-sm">Step {i + 1}</div>
                 <div className="font-semibold">{s}</div>

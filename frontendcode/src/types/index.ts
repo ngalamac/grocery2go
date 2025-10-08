@@ -45,11 +45,14 @@ export interface Order {
   shoppingFee: number;
   deliveryFee: number;
   total: number;
-  status: 'pending' | 'in-progress' | 'delivered';
+  status: OrderStatus;
   customerInfo: CustomerInfo;
   specialInstructions?: string;
   budget: number;
   createdAt: string;
+  eta?: string;
+  riderName?: string;
+  events?: OrderEvent[];
 }
 
 export interface CustomerInfo {
@@ -58,6 +61,16 @@ export interface CustomerInfo {
   phone: string;
   address: string;
   city: string;
+}
+
+export type OrderStatus = 'pending' | 'confirmed' | 'shopping' | 'out-for-delivery' | 'delivered' | 'cancelled';
+
+export interface OrderEvent {
+  id: string;
+  timestamp: string;
+  type: 'status' | 'note';
+  title: string;
+  description?: string;
 }
 
 export interface Feature {
