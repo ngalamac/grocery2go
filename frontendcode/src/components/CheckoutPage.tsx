@@ -3,6 +3,8 @@ import { useCart } from '../context/CartContext';
 import { ArrowLeft } from 'lucide-react';
 import { AdditionalItem } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { useCoupon } from '../context/CouponContext';
 
 interface CheckoutPageProps {
   onBack: () => void;
@@ -21,6 +23,8 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
 }) => {
   const { cart, getCartTotal, clearCart } = useCart();
   const { user, openAuthModal } = useAuth();
+  const { show } = useToast();
+  const { applied } = useCoupon();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -52,7 +56,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
   };
 
   const serviceFee = calculateServiceFee();
-  const total = estimatedTotal + serviceFee;
+  const preDiscountTotal = estimatedTotal + serviceFee;
+  const discount = applied ? (applied.type === 'percent' ? (preDiscountTotal * applied.value) / 100 : applied.value) : 0;
+  const total = Math.max(0, preDiscountTotal - discount);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -67,15 +73,26 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
       openAuthModal();
       return;
     }
-    console.log('Order submitted:', {
+    const orderSummary = {
       ...formData,
       cart,
       additionalItems,
       specialInstructions,
       budget,
       total
-    });
+    };
+    // Persist minimal order record for Orders page
+    try {
+      const key = `g2g_orders_${user.id}`;
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const id = Math.random().toString(36).slice(2, 8).toUpperCase();
+      const itemsCount = cart.reduce((n, it) => n + it.quantity, 0) + additionalItems.length;
+      const record = { id, createdAt: new Date().toISOString(), total, itemsCount, status: 'pending' };
+      localStorage.setItem(key, JSON.stringify([record, ...existing]));
+    } catch {}
+    console.log('Order submitted:', orderSummary);
     clearCart();
+    show('Order placed successfully!', { type: 'success', title: 'Success' });
     onSuccess();
   };
 
@@ -176,6 +193,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <p className="text-sm text-blue-700">
                 Estimated total: <span className="font-bold">{total.toFixed(0)} CFA</span>
               </p>
+              {applied && (
+                <p className="text-xs text-blue-700">Coupon {applied.code} applied (-{applied.type === 'percent' ? `${applied.value}%` : `${applied.value} CFA`})</p>
+              )}
               <p className="text-xs text-blue-600 mt-2">
                 Any unused budget will be refunded after shopping is completed
               </p>
@@ -252,6 +272,12 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 <span className="text-gray-600">Shopping & Delivery Fee:</span>
                 <span className="font-semibold">{serviceFee} CFA</span>
               </div>
+              {applied && (
+                <div className="flex justify-between text-sm text-green-700">
+                  <span>Discount ({applied.code}):</span>
+                  <span className="font-semibold">- {discount.toFixed(0)} CFA</span>
+                </div>
+              )}
               <div className="border-t pt-2 flex justify-between text-lg font-bold">
                 <span>Total:</span>
                 <span className="text-[#7cb342]">{total.toFixed(0)} CFA</span>

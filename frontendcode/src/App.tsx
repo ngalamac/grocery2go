@@ -16,6 +16,17 @@ import { CartProvider } from './context/CartContext';
 import { AdditionalItem } from './types';
 import { AuthProvider } from './context/AuthContext';
 import AuthModal from './components/AuthModal';
+import { ToastProvider } from './context/ToastContext';
+import ToastViewport from './components/ToastViewport';
+import { WishlistProvider } from './context/WishlistContext';
+import WishlistPage from './components/WishlistPage';
+import OrdersPage from './components/OrdersPage';
+import { QuickViewProvider } from './context/QuickViewContext';
+import QuickViewModal from './components/QuickViewModal';
+import ProfilePage from './components/ProfilePage';
+import { ThemeProvider } from './context/ThemeContext';
+import { CouponProvider } from './context/CouponContext';
+import ProductDetailsPage from './components/ProductDetailsPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -51,6 +62,7 @@ function App() {
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/market" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/booking" element={
               <BookingPage
                 onBack={() => setIsCartOpen(true)}
@@ -70,6 +82,9 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/coupon" element={<CouponPage />} />
             <Route path="/track-order" element={<TrackOrderPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">
@@ -110,19 +125,31 @@ function App() {
         />
 
         <AuthModal />
+        <QuickViewModal />
         <Footer />
       </div>
     );
   }
 
   return (
-    <AuthProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <AppWithNavigation />
-        </BrowserRouter>
-      </CartProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <CouponProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <WishlistProvider>
+              <QuickViewProvider>
+                <CartProvider>
+                  <BrowserRouter>
+                    <AppWithNavigation />
+                    <ToastViewport />
+                  </BrowserRouter>
+                </CartProvider>
+              </QuickViewProvider>
+            </WishlistProvider>
+          </AuthProvider>
+        </ToastProvider>
+      </CouponProvider>
+    </ThemeProvider>
   );
 }
 
