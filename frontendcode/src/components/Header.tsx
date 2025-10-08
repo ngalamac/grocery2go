@@ -3,6 +3,7 @@ import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail, LogOut } from 
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -116,6 +117,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                   </span>
                 )}
               </button>
+              <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-2">
                   <button onClick={() => navigate('/profile')} className="hidden sm:block text-white text-sm hover:text-yellow-300">{user.name || user.email}</button>

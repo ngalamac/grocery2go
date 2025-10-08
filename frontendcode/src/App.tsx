@@ -24,6 +24,9 @@ import OrdersPage from './components/OrdersPage';
 import { QuickViewProvider } from './context/QuickViewContext';
 import QuickViewModal from './components/QuickViewModal';
 import ProfilePage from './components/ProfilePage';
+import { ThemeProvider } from './context/ThemeContext';
+import { CouponProvider } from './context/CouponContext';
+import ProductDetailsPage from './components/ProductDetailsPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -59,6 +62,7 @@ function App() {
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/market" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/booking" element={
               <BookingPage
                 onBack={() => setIsCartOpen(true)}
@@ -128,20 +132,24 @@ function App() {
   }
 
   return (
-    <ToastProvider>
-      <AuthProvider>
-        <WishlistProvider>
-          <QuickViewProvider>
-            <CartProvider>
-              <BrowserRouter>
-                <AppWithNavigation />
-                <ToastViewport />
-              </BrowserRouter>
-            </CartProvider>
-          </QuickViewProvider>
-        </WishlistProvider>
-      </AuthProvider>
-    </ToastProvider>
+    <ThemeProvider>
+      <CouponProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <WishlistProvider>
+              <QuickViewProvider>
+                <CartProvider>
+                  <BrowserRouter>
+                    <AppWithNavigation />
+                    <ToastViewport />
+                  </BrowserRouter>
+                </CartProvider>
+              </QuickViewProvider>
+            </WishlistProvider>
+          </AuthProvider>
+        </ToastProvider>
+      </CouponProvider>
+    </ThemeProvider>
   );
 }
 

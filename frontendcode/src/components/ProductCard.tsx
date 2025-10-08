@@ -49,9 +49,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </button>
       </div>
       <div className="p-4">
-        <h3 className="font-semibold text-[#7cb342] mb-2 hover:text-[#689f38] cursor-pointer">
+        <a href={`/product/${product.id}`} className="font-semibold text-[#7cb342] mb-2 hover:text-[#689f38] cursor-pointer block">
           {product.name}
-        </h3>
+        </a>
         <div className="flex items-center gap-1 mb-2">
           {[...Array(5)].map((_, i) => (
             <Star
