@@ -155,7 +155,7 @@ const ShopPage: React.FC = () => {
 
                 {/* Price Filter */}
                 <div className="flex items-center gap-2">
-                  <label className="text-sm">Budget:</label>
+                  <label className="text-sm">Price Filter:</label>
                   <input
                     type="number"
                     value={priceRange[0]}

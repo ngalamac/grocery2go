@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -10,6 +11,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick, onHomeClick }) => {
+  const navigate = useNavigate();
   const { getCartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -152,6 +154,38 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                 className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
               >
                 Market Products
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => navigate('/about')}
+                className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
+              >
+                About
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => navigate('/contact')}
+                className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
+              >
+                Contact
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => navigate('/coupon')}
+                className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
+              >
+                Coupon
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => navigate('/track-order')}
+                className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
+              >
+                Track Order
               </button>
             </li>
           </ul>

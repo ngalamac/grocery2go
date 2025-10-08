@@ -35,14 +35,16 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
         </ul>
       </div>
 
-      {/* Organic Movement Banner */}
+      {/* Contact Information */}
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm p-8 text-center">
+        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">Contact Us</h3>
         <div className="mb-4">
-          <div className="text-lg font-bold">— A Proud —</div>
-          <div className="text-4xl font-bold text-red-600 my-2">FRESHNESS</div>
-          <div className="text-lg font-bold">— of the —</div>
-          <div className="text-4xl font-bold text-red-600 my-2">ORGANIC</div>
-          <div className="text-lg font-bold">movement</div>
+          <div className="text-lg font-bold text-[#7cb342] mb-2">Phone:</div>
+          <div className="text-2xl font-bold mb-2">6 79 83 81 82</div>
+          <div className="text-lg font-bold text-[#7cb342] mb-2">Email:</div>
+          <div className="text-base font-semibold mb-2">info@grocery2go.shop</div>
+          <div className="text-lg font-bold text-[#7cb342] mb-2">Store Location:</div>
+          <div className="text-base font-semibold">Mimboman- Chateaux Yaounde</div>
         </div>
         <div className="mt-6">
           <img

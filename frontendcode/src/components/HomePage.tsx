@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
@@ -29,7 +29,11 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
     { name: 'Apple', icon: '🍎' },
     { name: 'Cup Cream', icon: '🥛' },
     { name: 'Breast Meat', icon: '🍗' },
-    { name: 'Cool Drinks', icon: '🥤' }
+    { name: 'Cool Drinks', icon: '🥤' },
+    { name: 'About', icon: 'ℹ️', link: '/about' },
+    { name: 'Contact', icon: '📞', link: '/contact' },
+    { name: 'Coupon', icon: '🏷️', link: '/coupon' },
+    { name: 'Track Order', icon: '📦', link: '/track-order' },
   ];
 
   const nextSlide = () => {
@@ -39,6 +43,26 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
+
+  // Countdown logic
+  const [timeLeft, setTimeLeft] = useState(0);
+  // Set countdown to next midnight (or any promo end time)
+  useEffect(() => {
+    const promoEnd = new Date();
+    promoEnd.setHours(23, 59, 59, 999);
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = promoEnd.getTime() - now.getTime();
+      setTimeLeft(diff > 0 ? diff : 0);
+    };
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -55,6 +79,16 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             <div className="flex items-center min-h-[400px]">
               <div className="w-full md:w-1/2 p-8 md:p-12 text-white z-10">
                 <p className="text-yellow-300 italic text-xl mb-2">Introducing</p>
+                {/* Countdown Timer */}
+                <div className="mb-4">
+                  <div className="bg-white/80 rounded-lg px-6 py-3 inline-block shadow">
+                    <span className="text-lg font-bold text-[#7cb342]">FLASH DISCOUNT ENDS IN:</span>
+                    <span className="ml-4 text-2xl font-mono text-red-600">
+                      {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+                    </span>
+                  </div>
+                  <div className="text-xs text-white mt-1">Shop now and get exclusive discounts before time runs out!</div>
+                </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
                   {heroSlides[currentSlide].title}
                   <br />
@@ -103,13 +137,24 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
               {quickCategories.map((cat, index) => (
-                <button
-                  key={index}
-                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
-                >
-                  <div className="text-4xl">{cat.icon}</div>
-                  <span className="text-xs text-center">{cat.name}</span>
-                </button>
+                cat.link ? (
+                  <a
+                    key={index}
+                    href={cat.link}
+                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
+                  >
+                    <div className="text-4xl">{cat.icon}</div>
+                    <span className="text-xs text-center">{cat.name}</span>
+                  </a>
+                ) : (
+                  <button
+                    key={index}
+                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
+                  >
+                    <div className="text-4xl">{cat.icon}</div>
+                    <span className="text-xs text-center">{cat.name}</span>
+                  </button>
+                )
               ))}
             </div>
           </div>

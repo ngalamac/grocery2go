@@ -8,6 +8,10 @@ import Cart from './components/Cart';
 import BookingPage from './components/BookingPage';
 import CheckoutPage from './components/CheckoutPage';
 import Footer from './components/Footer';
+import ContactPage from './components/ContactPage';
+import AboutPage from './components/AboutPage';
+import CouponPage from './components/CouponPage';
+import TrackOrderPage from './components/TrackOrderPage';
 import { CartProvider } from './context/CartContext';
 import { AdditionalItem } from './types';
 
@@ -60,6 +64,10 @@ function App() {
                 specialInstructions={specialInstructions}
               />
             } />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/coupon" element={<CouponPage />} />
+            <Route path="/track-order" element={<TrackOrderPage />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">
