@@ -77,7 +77,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           {/* Hero Section */}
           <div className="relative bg-gradient-to-r from-[#7cb342] to-[#558b2f] rounded-lg overflow-hidden shadow-lg">
             <div className="flex items-center min-h-[400px]">
-              <div className="w-full md:w-1/2 p-8 md:p-12 text-white z-10">
+              <div className="w-full md:w-1/2 p-6 md:p-12 text-white z-10">
                 <p className="text-yellow-300 italic text-xl mb-2">Introducing</p>
                 {/* Countdown Timer */}
                 <div className="mb-4">
@@ -95,7 +95,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                   <span className="text-white">{heroSlides[currentSlide].subtitle}</span>
                 </h1>
                 <p className="text-lg mb-6">{heroSlides[currentSlide].tagline}</p>
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={onShopClick}
                     className="bg-yellow-400 text-black px-8 py-3 rounded-md font-semibold hover:bg-yellow-500 transition"

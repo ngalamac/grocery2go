@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 interface CartProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { user, openAuthModal } = useAuth();
 
   const subtotal = getCartTotal();
 
@@ -104,7 +106,13 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
               </p>
             </div>
             <button
-              onClick={onCheckout}
+              onClick={() => {
+                if (!user) {
+                  openAuthModal();
+                  return;
+                }
+                onCheckout();
+              }}
               className="w-full bg-[#7cb342] text-white py-3 rounded-lg font-semibold hover:bg-[#689f38] transition"
             >
               Proceed to Booking
