@@ -30,7 +30,10 @@ import { ReviewsProvider } from './context/ReviewsContext';
 import { ProductsProvider } from './context/ProductsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import AdminDashboard from './components/AdminDashboard';
+import AdminLoginPage from './components/AdminLoginPage';
+import DashboardLayout from './components/DashboardLayout';
 import OrderDetailsPage from './components/OrderDetailsPage';
+import { RequireAdmin, RequireAuth } from './components/RouteGuards';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -90,7 +93,18 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/order/:id" element={<OrderDetailsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route element={<RequireAdmin />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+            </Route>
+            <Route element={<RequireAuth />}>
+              <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route path="orders" element={<OrdersPage />} />
+              <Route path="wishlist" element={<WishlistPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="order/:id" element={<OrderDetailsPage />} />
+              </Route>
+            </Route>
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">

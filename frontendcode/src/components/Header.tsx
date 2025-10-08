@@ -123,7 +123,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                   {user.role === 'admin' && (
                     <button onClick={() => navigate('/admin')} className="hidden sm:block text-white text-sm hover:text-yellow-300">Admin</button>
                   )}
-                  <button onClick={() => navigate('/profile')} className="hidden sm:block text-white text-sm hover:text-yellow-300">{user.name || user.email}</button>
+                  <button onClick={() => navigate('/dashboard/profile')} className="hidden sm:block text-white text-sm hover:text-yellow-300">{user.name || user.email}</button>
                   <button onClick={logout} className="text-white hover:text-yellow-400 transition" title="Logout">
                     <LogOut size={22} />
                   </button>
