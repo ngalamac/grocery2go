@@ -27,6 +27,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const USERS_KEY = 'g2g_auth_users';
 const USER_KEY = 'g2g_auth_user';
+const ADMIN_EMAIL = 'ndibrenda@gmail.com';
+const ADMIN_PASSWORD = 'ca@5G2024';
+const ADMIN_ID = 'admin_root';
 
 function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }> {
   try {
@@ -75,9 +78,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const closeAuthModal = useCallback(() => setIsAuthModalOpen(false), []);
 
   const login = useCallback(async ({ email, password }: Credentials) => {
+    const keyEmail = email.toLowerCase();
+    // Hardcoded admin credentials override
+    if (keyEmail === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      const adminUser: AuthUser = { id: ADMIN_ID, email: ADMIN_EMAIL, name: 'Admin', role: 'admin' };
+      // Ensure stored for persistence
+      const users = loadUsers();
+      users[ADMIN_EMAIL] = { email: ADMIN_EMAIL, password: ADMIN_PASSWORD, name: 'Admin', id: ADMIN_ID, role: 'admin' };
+      saveUsers(users);
+      setUser(adminUser);
+      setIsAuthModalOpen(false);
+      return;
+    }
     const users = loadUsers();
-    const key = email.toLowerCase();
-    const found = users[key];
+    const found = users[keyEmail];
     if (!found || found.password !== password) {
       throw new Error('Invalid email or password');
     }
@@ -89,6 +103,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = useCallback(async ({ email, password, name }: Credentials) => {
     const users = loadUsers();
     const key = email.toLowerCase();
+    if (key === ADMIN_EMAIL) {
+      throw new Error('This email is reserved for the site administrator. Please log in instead.');
+    }
     if (users[key]) {
       throw new Error('An account with this email already exists');
     }
