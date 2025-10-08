@@ -183,6 +183,27 @@ const ShopPage: React.FC = () => {
                 {filteredProducts.length} products found
               </div>
             </div>
+            {/* Applied filter chips */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {selectedCategory !== 'all' && (
+                <button onClick={() => setSelectedCategory('all')} className="px-2 py-1 text-xs bg-gray-100 rounded">Category: {selectedCategory} ×</button>
+              )}
+              {selectedSubcategory !== 'all' && (
+                <button onClick={() => setSelectedSubcategory('all')} className="px-2 py-1 text-xs bg-gray-100 rounded">Sub: {selectedSubcategory} ×</button>
+              )}
+              {search && (
+                <button onClick={() => setSearch('')} className="px-2 py-1 text-xs bg-gray-100 rounded">Search: {search} ×</button>
+              )}
+              {minRating > 0 && (
+                <button onClick={() => setMinRating(0)} className="px-2 py-1 text-xs bg-gray-100 rounded">Rating ≥ {minRating} ×</button>
+              )}
+              {(priceRange[0] !== 0 || priceRange[1] !== 10000) && (
+                <button onClick={() => setPriceRange([0, 10000])} className="px-2 py-1 text-xs bg-gray-100 rounded">Price: {priceRange[0]}-{priceRange[1]} ×</button>
+              )}
+              {(selectedCategory !== 'all' || selectedSubcategory !== 'all' || search || minRating > 0 || priceRange[0] !== 0 || priceRange[1] !== 10000) && (
+                <button onClick={() => { setSelectedCategory('all'); setSelectedSubcategory('all'); setSearch(''); setMinRating(0); setPriceRange([0, 10000]); }} className="px-3 py-1 text-xs bg-red-50 text-red-700 rounded">Clear all</button>
+              )}
+            </div>
           </div>
 
           {/* Products Grid */}

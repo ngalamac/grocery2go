@@ -26,6 +26,7 @@ import QuickViewModal from './components/QuickViewModal';
 import ProfilePage from './components/ProfilePage';
 import { ThemeProvider } from './context/ThemeContext';
 import { CouponProvider } from './context/CouponContext';
+import { ReviewsProvider } from './context/ReviewsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
 
 function App() {
@@ -136,16 +137,18 @@ function App() {
       <CouponProvider>
         <ToastProvider>
           <AuthProvider>
-            <WishlistProvider>
-              <QuickViewProvider>
-                <CartProvider>
-                  <BrowserRouter>
-                    <AppWithNavigation />
-                    <ToastViewport />
-                  </BrowserRouter>
-                </CartProvider>
-              </QuickViewProvider>
-            </WishlistProvider>
+            <ReviewsProvider>
+              <WishlistProvider>
+                <QuickViewProvider>
+                  <CartProvider>
+                    <BrowserRouter>
+                      <AppWithNavigation />
+                      <ToastViewport />
+                    </BrowserRouter>
+                  </CartProvider>
+                </QuickViewProvider>
+              </WishlistProvider>
+            </ReviewsProvider>
           </AuthProvider>
         </ToastProvider>
       </CouponProvider>
