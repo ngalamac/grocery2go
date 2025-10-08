@@ -16,6 +16,11 @@ import { CartProvider } from './context/CartContext';
 import { AdditionalItem } from './types';
 import { AuthProvider } from './context/AuthContext';
 import AuthModal from './components/AuthModal';
+import { ToastProvider } from './context/ToastContext';
+import ToastViewport from './components/ToastViewport';
+import { WishlistProvider } from './context/WishlistContext';
+import WishlistPage from './components/WishlistPage';
+import OrdersPage from './components/OrdersPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -70,6 +75,8 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/coupon" element={<CouponPage />} />
             <Route path="/track-order" element={<TrackOrderPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">
@@ -116,13 +123,18 @@ function App() {
   }
 
   return (
-    <AuthProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <AppWithNavigation />
-        </BrowserRouter>
-      </CartProvider>
-    </AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <AppWithNavigation />
+              <ToastViewport />
+            </BrowserRouter>
+          </CartProvider>
+        </WishlistProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

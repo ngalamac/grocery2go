@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Filter } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
@@ -21,8 +21,14 @@ const ShopPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [minRating, setMinRating] = useState<number>(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const subcategories = selectedCategory !== 'all' ? getAllSubcategories(selectedCategory) : [];
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(t);
+  }, []);
 
   const filteredProducts = products
     .filter(p => {
@@ -181,9 +187,20 @@ const ShopPage: React.FC = () => {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {loading
+              ? Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
+                    <div className="w-full h-48 bg-gray-200 rounded-t-lg" />
+                    <div className="p-4 space-y-3">
+                      <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                      <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                      <div className="h-6 w-1/4 bg-gray-200 rounded" />
+                    </div>
+                  </div>
+                ))
+              : filteredProducts.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
           </div>
 
           {/* Empty State */}

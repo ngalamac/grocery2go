@@ -1,7 +1,9 @@
 import React from 'react';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, Heart } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
+import { useToast } from '../context/ToastContext';
 
 interface ProductCardProps {
   product: Product;
@@ -9,9 +11,12 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { show } = useToast();
 
   const handleAddToCart = () => {
     addToCart(product);
+    show('Added to cart', { type: 'success' });
   };
 
   return (
@@ -22,6 +27,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.name}
           className="w-full h-48 object-cover group-hover:scale-110 transition duration-300"
         />
+        <button
+          onClick={() => toggleWishlist(product)}
+          className={`absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white transition ${isInWishlist(product.id) ? 'text-red-500' : 'text-gray-600'}`}
+          title="Add to wishlist"
+        >
+          <Heart size={18} />
+        </button>
         <button
           onClick={handleAddToCart}
           className="absolute bottom-4 right-4 bg-[#7cb342] text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition hover:bg-[#689f38]"

@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <div>On Order Over $9</div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="text-white hover:text-yellow-400 transition">
+              <button onClick={() => navigate('/wishlist')} className="text-white hover:text-yellow-400 transition" title="Wishlist">
                 <Heart size={24} />
               </button>
               <button onClick={onCartClick} className="text-white hover:text-yellow-400 transition relative">
@@ -140,6 +140,15 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
       </div>
 
       {/* Navigation */}
+      {/* Mobile search */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-t">
+          <div className="max-w-7xl mx-auto px-4 py-2 flex gap-2">
+            <input type="text" placeholder="Search products" className="flex-1 px-3 py-2 border rounded" />
+            <button className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 transition"><Search size={18} /></button>
+          </div>
+        </div>
+      )}
       <nav className={`bg-white border-t ${mobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
         <div className="max-w-7xl mx-auto px-4">
           <ul className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-0 lg:gap-8 py-2">
@@ -197,6 +206,14 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                 className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
               >
                 Track Order
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => navigate('/orders')}
+                className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
+              >
+                Orders
               </button>
             </li>
           </ul>

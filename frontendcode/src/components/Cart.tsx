@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 interface CartProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
   const { user, openAuthModal } = useAuth();
+  const { show } = useToast();
 
   const subtotal = getCartTotal();
 
@@ -82,7 +84,10 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
                     </div>
                   </div>
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => {
+                      removeFromCart(item.id);
+                      show('Item removed from cart', { type: 'info' });
+                    }}
                     className="text-red-500 hover:text-red-700 transition"
                   >
                     <X size={20} />
