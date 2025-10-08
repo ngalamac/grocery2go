@@ -6,7 +6,7 @@ import { useProducts } from '../context/ProductsContext';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [tab, setTab] = useState<'reviews' | 'coupons' | 'settings' | 'featured' | 'orders' | 'products'>('reviews');
+  const [tab, setTab] = useState<'reviews' | 'coupons' | 'settings' | 'featured' | 'orders' | 'products' | 'users'>('reviews');
   if (!user || user.role !== 'admin') {
     return <div className="max-w-4xl mx-auto px-4 py-10 text-center text-gray-600">Admin access required.</div>;
   }
@@ -14,7 +14,7 @@ const AdminDashboard: React.FC = () => {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <div className="flex gap-2 mb-6 flex-wrap">
-        {(['reviews','coupons','settings','featured','orders','products'] as const).map(k => (
+        {(['reviews','coupons','settings','featured','orders','products','users'] as const).map(k => (
           <button key={k} onClick={() => setTab(k)} className={`px-3 py-2 rounded ${tab===k?'bg-[#7cb342] text-white':'bg-gray-100'}`}>{k}</button>
         ))}
       </div>
@@ -24,6 +24,7 @@ const AdminDashboard: React.FC = () => {
       {tab === 'featured' && <AdminFeatured />}
       {tab === 'orders' && <AdminOrders />}
       {tab === 'products' && <AdminProducts />}
+      {tab === 'users' && <AdminUsers />}
     </div>
   );
 };
@@ -140,10 +141,14 @@ const AdminFeatured: React.FC = () => {
 const AdminProducts: React.FC = () => {
   const { products, addProduct, updateProduct, removeProduct } = useProducts();
   const [draft, setDraft] = useState({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop' as 'shop'|'market', description: '' });
+  const [preview, setPreview] = useState('');
+  const [editId, setEditId] = useState<string | null>(null);
+  const [edit, setEdit] = useState({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop' as 'shop'|'market', description: '' });
   const create = () => {
     if (!draft.name || !draft.image) return;
     addProduct({ ...draft, price: Number(draft.price) });
     setDraft({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop', description: '' });
+    setPreview('');
   };
   return (
     <div className="grid md:grid-cols-2 gap-4">
@@ -151,7 +156,10 @@ const AdminProducts: React.FC = () => {
         <h2 className="font-semibold">Add Product</h2>
         <input value={draft.name} onChange={e=>setDraft({ ...draft, name: e.target.value })} placeholder="Name" className="w-full border rounded px-3 py-2" />
         <input type="number" value={draft.price} onChange={e=>setDraft({ ...draft, price: Number(e.target.value) })} placeholder="Price (CFA)" className="w-full border rounded px-3 py-2" />
-        <input value={draft.image} onChange={e=>setDraft({ ...draft, image: e.target.value })} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
+        <input value={draft.image} onChange={e=>{ setDraft({ ...draft, image: e.target.value }); setPreview(e.target.value); }} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
+        {preview && (
+          <img src={preview} alt="preview" className="w-full h-32 object-cover rounded" onError={()=>setPreview('')} />
+        )}
         <input value={draft.category} onChange={e=>setDraft({ ...draft, category: e.target.value })} placeholder="Category" className="w-full border rounded px-3 py-2" />
         <select value={draft.type} onChange={e=>setDraft({ ...draft, type: e.target.value as any })} className="w-full border rounded px-3 py-2">
           <option value="shop">Shop</option>
@@ -170,13 +178,34 @@ const AdminProducts: React.FC = () => {
                 <div className="font-semibold text-sm">{p.name}</div>
                 <div className="text-xs text-gray-500">{p.price} CFA • {p.category} • {p.type}</div>
               </div>
-              <button onClick={()=>updateProduct(p.id, { name: p.name + ' (Edited)' })} className="text-blue-600 text-sm">Quick Edit</button>
+              <button onClick={()=>{ setEditId(p.id); setEdit({ name: p.name, price: p.price, image: p.image, rating: p.rating, category: p.category, type: p.type, description: p.description || '' }); }} className="text-blue-600 text-sm">Edit</button>
               <button onClick={()=>removeProduct(p.id)} className="text-red-600 text-sm">Delete</button>
             </div>
           ))}
           {products.length === 0 && <div className="text-sm text-gray-500">No products.</div>}
         </div>
       </div>
+      {editId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={()=>setEditId(null)} />
+          <div className="relative bg-white w-full max-w-lg mx-4 rounded-lg shadow-xl p-4 space-y-3">
+            <h3 className="font-semibold">Edit Product</h3>
+            <input value={edit.name} onChange={e=>setEdit({ ...edit, name: e.target.value })} placeholder="Name" className="w-full border rounded px-3 py-2" />
+            <input type="number" value={edit.price} onChange={e=>setEdit({ ...edit, price: Number(e.target.value) })} placeholder="Price" className="w-full border rounded px-3 py-2" />
+            <input value={edit.image} onChange={e=>setEdit({ ...edit, image: e.target.value })} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
+            <input value={edit.category} onChange={e=>setEdit({ ...edit, category: e.target.value })} placeholder="Category" className="w-full border rounded px-3 py-2" />
+            <select value={edit.type} onChange={e=>setEdit({ ...edit, type: e.target.value as any })} className="w-full border rounded px-3 py-2">
+              <option value="shop">Shop</option>
+              <option value="market">Market</option>
+            </select>
+            <textarea value={edit.description} onChange={e=>setEdit({ ...edit, description: e.target.value })} placeholder="Description" className="w-full border rounded px-3 py-2" rows={3} />
+            <div className="flex justify-end gap-2">
+              <button onClick={()=>setEditId(null)} className="px-3 py-2 bg-gray-100 rounded">Cancel</button>
+              <button onClick={()=>{ updateProduct(editId, edit as any); setEditId(null); }} className="px-3 py-2 bg-[#7cb342] text-white rounded">Save</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -188,7 +217,7 @@ const AdminOrders: React.FC = () => {
     <div className="bg-white rounded-lg shadow-sm p-4">
       <h2 className="font-semibold mb-3">All Orders</h2>
       <div className="space-y-3">
-        {orders.map(o => (
+        {orders.slice(0, 200).map(o => (
           <div key={o.id} className="flex items-center justify-between text-sm border-b pb-2">
             <div className="font-mono">{o.id}</div>
             <div>{new Date(o.createdAt).toLocaleString()}</div>
@@ -198,6 +227,43 @@ const AdminOrders: React.FC = () => {
           </div>
         ))}
         {orders.length === 0 && <div className="text-sm text-gray-500">No orders yet.</div>}
+      </div>
+    </div>
+  );
+};
+
+const AdminUsers: React.FC = () => {
+  const [users, setUsers] = useState<Record<string, any>>({});
+  const reload = () => { try { const raw = localStorage.getItem('g2g_auth_users'); setUsers(raw ? JSON.parse(raw) : {}); } catch { setUsers({}); } };
+  useEffect(() => { reload(); }, []);
+  const setRole = (email: string, role: 'user'|'admin') => {
+    const next = { ...users };
+    const key = email.toLowerCase();
+    if (!next[key]) return;
+    next[key] = { ...next[key], role };
+    try { localStorage.setItem('g2g_auth_users', JSON.stringify(next)); } catch {}
+    setUsers(next);
+  };
+  return (
+    <div className="bg-white rounded-lg shadow-sm p-4">
+      <h2 className="font-semibold mb-3">Users</h2>
+      <div className="space-y-2">
+        {Object.values(users).map((u: any) => (
+          <div key={u.email} className="flex items-center justify-between text-sm border-b pb-2">
+            <div>
+              <div className="font-semibold">{u.name || '(no name)'} <span className="text-gray-500">&lt;{u.email}&gt;</span></div>
+              <div className="text-xs text-gray-500">id: {u.id}</div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs">Role:</span>
+              <select value={u.role || 'user'} onChange={e=>setRole(u.email, e.target.value as any)} className="border rounded px-2 py-1 text-xs">
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
+            </div>
+          </div>
+        ))}
+        {Object.keys(users).length === 0 && <div className="text-sm text-gray-500">No users yet.</div>}
       </div>
     </div>
   );
