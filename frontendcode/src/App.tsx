@@ -28,6 +28,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { CouponProvider } from './context/CouponContext';
 import { ReviewsProvider } from './context/ReviewsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -86,6 +87,7 @@ function App() {
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">

@@ -10,7 +10,14 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const featuredProducts = products.slice(0, 8);
+  const featuredProducts = (() => {
+    try {
+      const ids = (localStorage.getItem('g2g_featured_ids') || '').split(',').map(s=>s.trim()).filter(Boolean);
+      if (ids.length === 0) return products.slice(0,8);
+      const picked = products.filter(p => ids.includes(p.id));
+      return picked.length > 0 ? picked : products.slice(0,8);
+    } catch { return products.slice(0,8); }
+  })();
 
   const heroSlides = [
     {

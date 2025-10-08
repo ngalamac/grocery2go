@@ -89,6 +89,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const itemsCount = cart.reduce((n, it) => n + it.quantity, 0) + additionalItems.length;
       const record = { id, createdAt: new Date().toISOString(), total, itemsCount, status: 'pending' };
       localStorage.setItem(key, JSON.stringify([record, ...existing]));
+      const globalKey = 'g2g_orders_all';
+      const all = JSON.parse(localStorage.getItem(globalKey) || '[]');
+      localStorage.setItem(globalKey, JSON.stringify([{ ...record, userEmail: user.email }, ...all]));
     } catch {}
     console.log('Order submitted:', orderSummary);
     clearCart();

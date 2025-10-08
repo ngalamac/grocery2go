@@ -19,7 +19,7 @@ const ContactPage: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h1 className="text-2xl font-bold mb-2">Contact Us</h1>
-          <p className="text-gray-600 mb-6">We'd love to hear from you! Fill the form and we'll respond shortly.</p>
+          <p className="text-gray-600 mb-6">{(typeof window !== 'undefined' && localStorage.getItem('g2g_setting_contact')) || "We'd love to hear from you! Fill the form and we'll respond shortly."}</p>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <input className="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Your Name" value={name} onChange={e => setName(e.target.value)} required />
             <input className="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Your Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
