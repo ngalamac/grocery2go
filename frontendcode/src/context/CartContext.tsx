@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { CartItem, Product } from '../types';
 
 interface CartContextType {
@@ -27,6 +27,25 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('g2g_cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // Persist cart on changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('g2g_cart', JSON.stringify(cart));
+    } catch {
+      // ignore
+    }
+  }, [cart]);
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
