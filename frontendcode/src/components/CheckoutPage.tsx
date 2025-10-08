@@ -1,27 +1,56 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ArrowLeft } from 'lucide-react';
+import { AdditionalItem } from '../types';
 
 interface CheckoutPageProps {
   onBack: () => void;
   onSuccess: () => void;
+  budget: number;
+  additionalItems: AdditionalItem[];
+  specialInstructions: string;
 }
 
-const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBack, onSuccess }) => {
+const CheckoutPage: React.FC<CheckoutPageProps> = ({
+  onBack,
+  onSuccess,
+  budget,
+  additionalItems,
+  specialInstructions
+}) => {
   const { cart, getCartTotal, clearCart } = useCart();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     address: '',
-    city: 'Yaoundé',
-    extraInfo: ''
+    city: 'Yaoundé'
   });
 
-  const SHOPPING_FEE = 2.5;
-  const DELIVERY_FEE = 5.0;
+  const MIN_SERVICE_FEE = 500;
   const subtotal = getCartTotal();
-  const total = subtotal + SHOPPING_FEE + DELIVERY_FEE;
+  const additionalItemsTotal = additionalItems.reduce((sum, item) => sum + item.estimatedPrice, 0);
+  const estimatedTotal = subtotal + additionalItemsTotal;
+
+  const calculateServiceFee = () => {
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalValue = estimatedTotal;
+
+    let serviceFee = MIN_SERVICE_FEE;
+
+    if (totalValue > 10000) {
+      serviceFee += Math.floor((totalValue - 10000) / 5000) * 100;
+    }
+
+    if (itemCount > 10) {
+      serviceFee += (itemCount - 10) * 50;
+    }
+
+    return Math.max(serviceFee, MIN_SERVICE_FEE);
+  };
+
+  const serviceFee = calculateServiceFee();
+  const total = estimatedTotal + serviceFee;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -32,7 +61,14 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBack, onSuccess }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Order submitted:', { ...formData, cart, total });
+    console.log('Order submitted:', {
+      ...formData,
+      cart,
+      additionalItems,
+      specialInstructions,
+      budget,
+      total
+    });
     clearCart();
     onSuccess();
   };
@@ -119,20 +155,23 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBack, onSuccess }) => {
               <p className="text-xs text-gray-500 mt-1">Delivery is only available in Yaoundé</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2">
-                Additional Information or Extra Products
-              </label>
-              <textarea
-                name="extraInfo"
-                value={formData.extraInfo}
-                onChange={handleChange}
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                placeholder="Any additional products or special instructions for your order..."
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Let us know if you need any products not listed or have special delivery instructions
+            {specialInstructions && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold mb-2">Shopping Instructions</h3>
+                <p className="text-sm text-gray-700">{specialInstructions}</p>
+              </div>
+            )}
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h3 className="font-semibold mb-2 text-blue-800">Budget Information</h3>
+              <p className="text-sm text-blue-700">
+                Your budget: <span className="font-bold">{budget} CFA</span>
+              </p>
+              <p className="text-sm text-blue-700">
+                Estimated total: <span className="font-bold">{total.toFixed(0)} CFA</span>
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                Any unused budget will be refunded after shopping is completed
               </p>
             </div>
 
@@ -161,6 +200,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBack, onSuccess }) => {
             <h3 className="text-xl font-bold mb-4">Order Summary</h3>
 
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
+              <h4 className="font-semibold text-sm text-gray-700">Catalog Items:</h4>
               {cart.map(item => (
                 <div key={item.id} className="flex gap-3">
                   <img
@@ -172,30 +212,47 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ onBack, onSuccess }) => {
                     <h4 className="font-semibold text-sm">{item.name}</h4>
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                     <p className="text-[#7cb342] font-bold text-sm">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {(item.price * item.quantity).toFixed(0)} CFA
                     </p>
                   </div>
                 </div>
               ))}
+
+              {additionalItems.length > 0 && (
+                <>
+                  <h4 className="font-semibold text-sm text-gray-700 mt-4">Additional Items:</h4>
+                  {additionalItems.map((item, index) => (
+                    <div key={index} className="flex justify-between text-sm">
+                      <span>{item.name}</span>
+                      <span className="font-semibold">{item.estimatedPrice} CFA</span>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
 
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                <span className="text-gray-600">Catalog Items:</span>
+                <span className="font-semibold">{subtotal.toFixed(0)} CFA</span>
               </div>
+              {additionalItemsTotal > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Additional Items:</span>
+                  <span className="font-semibold">{additionalItemsTotal.toFixed(0)} CFA</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Shopping Fee:</span>
-                <span className="font-semibold">${SHOPPING_FEE.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Delivery Fee (Yaoundé):</span>
-                <span className="font-semibold">${DELIVERY_FEE.toFixed(2)}</span>
+                <span className="text-gray-600">Shopping & Delivery Fee:</span>
+                <span className="font-semibold">{serviceFee} CFA</span>
               </div>
               <div className="border-t pt-2 flex justify-between text-lg font-bold">
                 <span>Total:</span>
-                <span className="text-[#7cb342]">${total.toFixed(2)}</span>
+                <span className="text-[#7cb342]">{total.toFixed(0)} CFA</span>
               </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Budget: {budget} CFA | Remaining: {(budget - total).toFixed(0)} CFA
+              </p>
             </div>
 
             <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">

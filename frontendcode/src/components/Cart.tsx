@@ -11,10 +11,7 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
 
-  const SHOPPING_FEE = 2.5;
-  const DELIVERY_FEE = 5.0;
   const subtotal = getCartTotal();
-  const total = subtotal + SHOPPING_FEE + DELIVERY_FEE;
 
   if (!isOpen) return null;
 
@@ -62,7 +59,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm mb-1">{item.name}</h3>
                     <p className="text-[#7cb342] font-bold mb-2">
-                      ${item.price.toFixed(2)}
+                      {item.price} CFA
                     </p>
                     <div className="flex items-center gap-2">
                       <button
@@ -99,27 +96,18 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
           <div className="border-t p-4 bg-gray-50">
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                <span className="text-gray-600">Estimated Items Total:</span>
+                <span className="font-semibold">{subtotal.toFixed(0)} CFA</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Shopping Fee:</span>
-                <span className="font-semibold">${SHOPPING_FEE.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Delivery Fee:</span>
-                <span className="font-semibold">${DELIVERY_FEE.toFixed(2)}</span>
-              </div>
-              <div className="border-t pt-2 flex justify-between text-lg font-bold">
-                <span>Total:</span>
-                <span className="text-[#7cb342]">${total.toFixed(2)}</span>
-              </div>
+              <p className="text-xs text-gray-500">
+                Service fee will be calculated based on final order (minimum 500 CFA)
+              </p>
             </div>
             <button
               onClick={onCheckout}
               className="w-full bg-[#7cb342] text-white py-3 rounded-lg font-semibold hover:bg-[#689f38] transition"
             >
-              Proceed to Checkout
+              Proceed to Booking
             </button>
           </div>
         )}

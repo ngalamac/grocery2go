@@ -2,12 +2,18 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  priceRange?: string;
   image: string;
   rating: number;
   category: string;
   type: 'shop' | 'market';
   description?: string;
   stock?: number;
+}
+
+export interface AdditionalItem {
+  name: string;
+  estimatedPrice: number;
 }
 
 export interface CartItem extends Product {
@@ -34,13 +40,15 @@ export interface Testimonial {
 export interface Order {
   id: string;
   items: CartItem[];
+  additionalItems: AdditionalItem[];
   subtotal: number;
   shoppingFee: number;
   deliveryFee: number;
   total: number;
   status: 'pending' | 'in-progress' | 'delivered';
   customerInfo: CustomerInfo;
-  extraInfo?: string;
+  specialInstructions?: string;
+  budget: number;
   createdAt: string;
 }
 

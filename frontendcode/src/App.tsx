@@ -3,23 +3,42 @@ import Header from './components/Header';
 import HomePage from './components/HomePage';
 import ShopPage from './components/ShopPage';
 import Cart from './components/Cart';
+import BookingPage from './components/BookingPage';
 import CheckoutPage from './components/CheckoutPage';
 import Footer from './components/Footer';
 import { CartProvider } from './context/CartContext';
+import { AdditionalItem } from './types';
 
-type Page = 'home' | 'shop' | 'market' | 'checkout' | 'success';
+type Page = 'home' | 'shop' | 'market' | 'booking' | 'checkout' | 'success';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [budget, setBudget] = useState<number>(0);
+  const [additionalItems, setAdditionalItems] = useState<AdditionalItem[]>([]);
+  const [specialInstructions, setSpecialInstructions] = useState<string>('');
 
   const handleCheckout = () => {
     setIsCartOpen(false);
+    setCurrentPage('booking');
+  };
+
+  const handleProceedToPayment = (
+    newBudget: number,
+    newAdditionalItems: AdditionalItem[],
+    newSpecialInstructions: string
+  ) => {
+    setBudget(newBudget);
+    setAdditionalItems(newAdditionalItems);
+    setSpecialInstructions(newSpecialInstructions);
     setCurrentPage('checkout');
   };
 
   const handleOrderSuccess = () => {
     setCurrentPage('success');
+    setBudget(0);
+    setAdditionalItems([]);
+    setSpecialInstructions('');
     setTimeout(() => {
       setCurrentPage('home');
     }, 3000);
@@ -41,10 +60,19 @@ function App() {
           )}
           {currentPage === 'shop' && <ShopPage />}
           {currentPage === 'market' && <ShopPage />}
+          {currentPage === 'booking' && (
+            <BookingPage
+              onBack={() => setIsCartOpen(true)}
+              onProceedToPayment={handleProceedToPayment}
+            />
+          )}
           {currentPage === 'checkout' && (
             <CheckoutPage
-              onBack={() => setIsCartOpen(true)}
+              onBack={() => setCurrentPage('booking')}
               onSuccess={handleOrderSuccess}
+              budget={budget}
+              additionalItems={additionalItems}
+              specialInstructions={specialInstructions}
             />
           )}
           {currentPage === 'success' && (
