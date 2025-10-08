@@ -4,6 +4,7 @@ import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
 import { features } from '../data/mockData';
 import { useProducts } from '../context/ProductsContext';
+import BrandGallery from './BrandGallery';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -26,7 +27,19 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
       title: 'FRESH FOOD FOR',
       subtitle: 'FRESH MOOD',
       tagline: '100% Organic / 20% Off Select Products',
-      image: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=800'
+      image: 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    },
+    {
+      title: 'MARKET TO DOOR',
+      subtitle: 'IN HOURS',
+      tagline: 'Daily fresh picks delivered fast',
+      image: 'https://images.pexels.com/photos/3737633/pexels-photo-3737633.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    },
+    {
+      title: 'EAT BETTER',
+      subtitle: 'LIVE BETTER',
+      tagline: 'Healthy choices for every basket',
+      image: 'https://images.pexels.com/photos/4051786/pexels-photo-4051786.jpeg?auto=compress&cs=tinysrgb&w=1200'
     }
   ];
 
@@ -72,6 +85,12 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const hours = Math.floor(timeLeft / (1000 * 60 * 60));
   const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+  // Autoplay
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentSlide((s) => (s + 1) % heroSlides.length), 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -138,6 +157,11 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                 >
                   <ChevronRight size={24} />
                 </button>
+                <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2">
+                  {heroSlides.map((_, i) => (
+                    <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2.5 h-2.5 rounded-full ${i===currentSlide?'bg-white':'bg-white/50'} hover:bg-white transition`} />
+                  ))}
+                </div>
               </>
             )}
           </div>
@@ -310,6 +334,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </div>
           </div>
         </div>
+
+        <BrandGallery />
       </div>
     </div>
   );

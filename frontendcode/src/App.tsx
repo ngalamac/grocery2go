@@ -30,6 +30,7 @@ import { ReviewsProvider } from './context/ReviewsContext';
 import { ProductsProvider } from './context/ProductsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import AdminDashboard from './components/AdminDashboard';
+import OrderDetailsPage from './components/OrderDetailsPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -87,6 +88,7 @@ function App() {
             <Route path="/track-order" element={<TrackOrderPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/order/:id" element={<OrderDetailsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/success" element={

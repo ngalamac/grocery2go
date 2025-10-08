@@ -5,6 +5,7 @@ import { AdditionalItem } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useCoupon } from '../context/CouponContext';
+import { createOrder } from '../utils/orders';
 
 interface CheckoutPageProps {
   onBack: () => void;
@@ -73,27 +74,21 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
       openAuthModal();
       return;
     }
-    const orderSummary = {
-      ...formData,
-      cart,
-      additionalItems,
-      specialInstructions,
-      budget,
-      total
-    };
-    // Persist minimal order record for Orders page
     try {
-      const key = `g2g_orders_${user.id}`;
-      const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      const id = Math.random().toString(36).slice(2, 8).toUpperCase();
-      const itemsCount = cart.reduce((n, it) => n + it.quantity, 0) + additionalItems.length;
-      const record = { id, createdAt: new Date().toISOString(), total, itemsCount, status: 'pending' };
-      localStorage.setItem(key, JSON.stringify([record, ...existing]));
-      const globalKey = 'g2g_orders_all';
-      const all = JSON.parse(localStorage.getItem(globalKey) || '[]');
-      localStorage.setItem(globalKey, JSON.stringify([{ ...record, userEmail: user.email }, ...all]));
+      createOrder({
+        userId: user.id,
+        userEmail: user.email,
+        items: cart,
+        additionalItems,
+        subtotal,
+        shoppingFee: serviceFee,
+        deliveryFee: 0,
+        total,
+        budget,
+        specialInstructions,
+        customerInfo: formData
+      });
     } catch {}
-    console.log('Order submitted:', orderSummary);
     clearCart();
     show('Order placed successfully!', { type: 'success', title: 'Success' });
     onSuccess();

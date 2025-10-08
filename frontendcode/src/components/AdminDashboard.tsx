@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useReviews } from '../context/ReviewsContext';
 import { useCoupon } from '../context/CouponContext';
 import { useProducts } from '../context/ProductsContext';
+import { getOrderById, setOrderStatus, updateOrder, addOrderEvent } from '../utils/orders';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -218,12 +219,22 @@ const AdminOrders: React.FC = () => {
       <h2 className="font-semibold mb-3">All Orders</h2>
       <div className="space-y-3">
         {orders.slice(0, 200).map(o => (
-          <div key={o.id} className="flex items-center justify-between text-sm border-b pb-2">
-            <div className="font-mono">{o.id}</div>
-            <div>{new Date(o.createdAt).toLocaleString()}</div>
-            <div>{o.itemsCount} items</div>
-            <div className="font-semibold text-[#7cb342]">{o.total.toFixed(0)} CFA</div>
-            <div className="text-xs">{o.userEmail}</div>
+          <div key={o.id} className="text-sm border-b pb-2">
+            <div className="flex items-center justify-between">
+              <div className="font-mono">{o.id}</div>
+              <div>{new Date(o.createdAt).toLocaleString()}</div>
+              <div>{o.itemsCount} items</div>
+              <div className="font-semibold text-[#7cb342]">{o.total.toFixed(0)} CFA</div>
+              <div className="text-xs">{o.userEmail}</div>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs">Status:</span>
+              <select value={o.status} onChange={e=>{ setOrderStatus(o.id, e.target.value as any); const next = orders.map(x => x.id===o.id?{...x, status: e.target.value}:x); setOrders(next); }} className="border rounded px-2 py-1 text-xs">
+                {['pending','confirmed','shopping','out-for-delivery','delivered','cancelled'].map(s=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <button onClick={()=>{ const ord = getOrderById(o.id); if (ord) { const eta = prompt('Set ETA (e.g., Today 4pm)') || ''; updateOrder(o.id, { eta }); alert('ETA updated'); } }} className="px-2 py-1 bg-gray-100 rounded">Set ETA</button>
+              <button onClick={()=>{ const note = prompt('Add note'); if (note) addOrderEvent(o.id, { id: '', timestamp: '', type: 'note', title: 'Note', description: note }); alert('Note added'); }} className="px-2 py-1 bg-gray-100 rounded">Add Note</button>
+            </div>
           </div>
         ))}
         {orders.length === 0 && <div className="text-sm text-gray-500">No orders yet.</div>}
