@@ -21,6 +21,9 @@ import ToastViewport from './components/ToastViewport';
 import { WishlistProvider } from './context/WishlistContext';
 import WishlistPage from './components/WishlistPage';
 import OrdersPage from './components/OrdersPage';
+import { QuickViewProvider } from './context/QuickViewContext';
+import QuickViewModal from './components/QuickViewModal';
+import ProfilePage from './components/ProfilePage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -77,6 +80,7 @@ function App() {
             <Route path="/track-order" element={<TrackOrderPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">
@@ -117,6 +121,7 @@ function App() {
         />
 
         <AuthModal />
+        <QuickViewModal />
         <Footer />
       </div>
     );
@@ -126,12 +131,14 @@ function App() {
     <ToastProvider>
       <AuthProvider>
         <WishlistProvider>
-          <CartProvider>
-            <BrowserRouter>
-              <AppWithNavigation />
-              <ToastViewport />
-            </BrowserRouter>
-          </CartProvider>
+          <QuickViewProvider>
+            <CartProvider>
+              <BrowserRouter>
+                <AppWithNavigation />
+                <ToastViewport />
+              </BrowserRouter>
+            </CartProvider>
+          </QuickViewProvider>
         </WishlistProvider>
       </AuthProvider>
     </ToastProvider>

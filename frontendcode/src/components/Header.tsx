@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               </button>
               {user ? (
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:block text-white text-sm">{user.name || user.email}</span>
+                  <button onClick={() => navigate('/profile')} className="hidden sm:block text-white text-sm hover:text-yellow-300">{user.name || user.email}</button>
                   <button onClick={logout} className="text-white hover:text-yellow-400 transition" title="Logout">
                     <LogOut size={22} />
                   </button>
