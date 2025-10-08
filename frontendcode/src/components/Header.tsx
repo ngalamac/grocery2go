@@ -138,32 +138,12 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                 Home
               </button>
             </li>
-            <li className="relative group">
-              <button className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition">
-                Collection
-              </button>
-            </li>
             <li>
               <button
                 onClick={onShopClick}
                 className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition"
               >
                 Shop
-              </button>
-            </li>
-            <li>
-              <button className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition">
-                Kitchen Appliance
-              </button>
-            </li>
-            <li>
-              <button className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition">
-                Groceries
-              </button>
-            </li>
-            <li>
-              <button className="block w-full text-left lg:w-auto py-3 lg:py-2 hover:text-[#7cb342] transition">
-                Vegetables
               </button>
             </li>
             <li>

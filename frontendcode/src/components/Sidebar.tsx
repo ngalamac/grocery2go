@@ -2,7 +2,12 @@ import React from 'react';
 import { Plus, Star } from 'lucide-react';
 import { categories, products, testimonials } from '../data/mockData';
 
-const Sidebar: React.FC = () => {
+
+interface SidebarProps {
+  onCategorySelect?: (category: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
   const topSellers = products.slice(0, 4);
 
   return (
@@ -15,7 +20,10 @@ const Sidebar: React.FC = () => {
         <ul className="space-y-3">
           {categories.map(category => (
             <li key={category.id} className="flex items-center justify-between">
-              <button className="flex items-center gap-2 text-gray-700 hover:text-[#7cb342] transition">
+              <button
+                className="flex items-center gap-2 text-gray-700 hover:text-[#7cb342] transition"
+                onClick={() => onCategorySelect && onCategorySelect(category.name)}
+              >
                 <span className="w-2 h-2 bg-[#7cb342] rounded-full"></span>
                 <span>{category.name}</span>
               </button>

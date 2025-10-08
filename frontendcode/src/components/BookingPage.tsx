@@ -21,6 +21,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   const [newItemPrice, setNewItemPrice] = useState('');
 
   const MIN_SERVICE_FEE = 500;
+  const DELIVERY_FEE = 1000;
   const subtotal = getCartTotal();
   const additionalItemsTotal = additionalItems.reduce((sum, item) => sum + item.estimatedPrice, 0);
   const estimatedTotal = subtotal + additionalItemsTotal;
@@ -43,6 +44,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   };
 
   const serviceFee = calculateServiceFee();
+  const totalFee = serviceFee + DELIVERY_FEE;
 
   const handleAddItem = () => {
     if (newItemName.trim() && newItemPrice) {
@@ -66,8 +68,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     e.preventDefault();
     const budgetValue = parseFloat(budget);
 
-    if (!budgetValue || budgetValue < estimatedTotal + serviceFee) {
-      alert(`Your budget must be at least ${estimatedTotal + serviceFee} CFA to cover the estimated total plus service fee.`);
+    if (!budgetValue || budgetValue < subtotal) {
+      alert(`Your budget must be at least ${subtotal.toFixed(0)} CFA to cover the catalog items you selected. Please increase your budget or remove some items/quantities.`);
       return;
     }
 
@@ -95,7 +97,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 We shop for you based on your selections and budget. Prices shown are estimates and may vary slightly based on market availability.
               </p>
               <p className="text-sm text-blue-700">
-                Shopping and delivery fee: Minimum 500 CFA, increases based on order size and value.
+                Shopping fee: Minimum 500 CFA, increases based on order size and value.<br />
+                Delivery fee: Fixed {DELIVERY_FEE} CFA per order.
               </p>
             </div>
 
@@ -106,12 +109,13 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
                 required
-                min={estimatedTotal + serviceFee}
+                min={subtotal}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                placeholder={`Minimum: ${estimatedTotal + serviceFee} CFA`}
+                placeholder={`Minimum: ${subtotal.toFixed(0)} CFA`}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Your budget should cover estimated items ({estimatedTotal} CFA) plus service fee ({serviceFee} CFA)
+                Your budget must be at least the total for catalog items you selected: <span className="font-semibold">{subtotal.toFixed(0)} CFA</span>.<br />
+                Shopping and delivery fees will be added to your payment summary.
               </p>
             </div>
 
@@ -203,8 +207,11 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
 
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
               <h4 className="font-semibold text-sm text-gray-700">Selected Items:</h4>
+              {cart.length === 0 && (
+                <p className="text-xs text-gray-500">No catalog items selected.</p>
+              )}
               {cart.map(item => (
-                <div key={item.id} className="flex gap-3">
+                <div key={item.id} className="flex gap-3 items-center border-b last:border-b-0 py-2">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -213,18 +220,17 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                   <div className="flex-1">
                     <h4 className="font-medium text-sm">{item.name}</h4>
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
-                    <p className="text-[#7cb342] font-bold text-sm">
-                      {(item.price * item.quantity).toFixed(0)} CFA
-                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[#7cb342] font-bold text-sm">{(item.price * item.quantity).toFixed(0)} CFA</span>
                   </div>
                 </div>
               ))}
-
               {additionalItems.length > 0 && (
                 <>
                   <h4 className="font-semibold text-sm text-gray-700 mt-4">Additional Items:</h4>
                   {additionalItems.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm">
+                    <div key={index} className="flex justify-between text-sm border-b last:border-b-0 py-2">
                       <span>{item.name}</span>
                       <span className="font-semibold">{item.estimatedPrice} CFA</span>
                     </div>
@@ -245,12 +251,16 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Shopping & Delivery Fee:</span>
+                <span className="text-gray-600">Shopping Fee:</span>
                 <span className="font-semibold">{serviceFee} CFA</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Delivery Fee:</span>
+                <span className="font-semibold">{DELIVERY_FEE} CFA</span>
               </div>
               <div className="border-t pt-2 flex justify-between text-lg font-bold">
                 <span>Estimated Total:</span>
-                <span className="text-[#7cb342]">{(estimatedTotal + serviceFee).toFixed(0)} CFA</span>
+                <span className="text-[#7cb342]">{(estimatedTotal + totalFee).toFixed(0)} CFA</span>
               </div>
               <p className="text-xs text-gray-500 mt-2">
                 Final cost may vary slightly based on actual market prices. Any unused budget will be refunded.
