@@ -147,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
               />
               <div className="flex-1">
                 <h4 className="font-medium text-[#7cb342] text-sm mb-1">{product.name}</h4>
-                <div className="text-lg font-semibold mb-1">${product.price.toFixed(2)}</div>
+                <div className="text-lg font-semibold mb-1">{product.price.toFixed(0)} CFA</div>
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
