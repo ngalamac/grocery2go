@@ -4,6 +4,7 @@ type AuthUser = {
   id: string;
   email: string;
   name?: string;
+  role?: 'user' | 'admin';
 };
 
 type Credentials = {
@@ -27,7 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const USERS_KEY = 'g2g_auth_users';
 const USER_KEY = 'g2g_auth_user';
 
-function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string }> {
+function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }> {
   try {
     const raw = localStorage.getItem(USERS_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -36,7 +37,7 @@ function loadUsers(): Record<string, { email: string; password: string; name?: s
   }
 }
 
-function saveUsers(users: Record<string, { email: string; password: string; name?: string; id: string }>) {
+function saveUsers(users: Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }>) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!found || found.password !== password) {
       throw new Error('Invalid email or password');
     }
-    const newUser: AuthUser = { id: found.id, email: found.email, name: found.name };
+    const newUser: AuthUser = { id: found.id, email: found.email, name: found.name, role: (found as any).role || 'user' };
     setUser(newUser);
     setIsAuthModalOpen(false);
   }, []);
@@ -92,9 +93,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('An account with this email already exists');
     }
     const id = `user_${Math.random().toString(36).slice(2, 10)}`;
-    users[key] = { email, password, name, id };
+    users[key] = { email, password, name, id, role: 'user' };
     saveUsers(users);
-    const newUser: AuthUser = { id, email, name };
+    const newUser: AuthUser = { id, email, name, role: 'user' };
     setUser(newUser);
     setIsAuthModalOpen(false);
   }, []);

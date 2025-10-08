@@ -26,7 +26,10 @@ import QuickViewModal from './components/QuickViewModal';
 import ProfilePage from './components/ProfilePage';
 import { ThemeProvider } from './context/ThemeContext';
 import { CouponProvider } from './context/CouponContext';
+import { ReviewsProvider } from './context/ReviewsContext';
+import { ProductsProvider } from './context/ProductsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -85,6 +88,7 @@ function App() {
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/success" element={
               <div className="max-w-2xl mx-auto px-4 py-20 text-center">
                 <div className="bg-white rounded-lg shadow-lg p-12">
@@ -136,16 +140,20 @@ function App() {
       <CouponProvider>
         <ToastProvider>
           <AuthProvider>
-            <WishlistProvider>
-              <QuickViewProvider>
-                <CartProvider>
-                  <BrowserRouter>
-                    <AppWithNavigation />
-                    <ToastViewport />
-                  </BrowserRouter>
-                </CartProvider>
-              </QuickViewProvider>
-            </WishlistProvider>
+            <ReviewsProvider>
+              <ProductsProvider>
+                <WishlistProvider>
+                  <QuickViewProvider>
+                    <CartProvider>
+                      <BrowserRouter>
+                        <AppWithNavigation />
+                        <ToastViewport />
+                      </BrowserRouter>
+                    </CartProvider>
+                  </QuickViewProvider>
+                </WishlistProvider>
+              </ProductsProvider>
+            </ReviewsProvider>
           </AuthProvider>
         </ToastProvider>
       </CouponProvider>
