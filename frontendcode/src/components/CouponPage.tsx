@@ -19,10 +19,10 @@ const CouponPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
+    <div className="max-w-4xl mx-auto px-4 py-8 md:py-10">
       <h1 className="text-3xl font-bold mb-6">Coupons & Offers</h1>
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-white rounded-lg shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 bg-white rounded-lg shadow-sm p-4 md:p-6">
           <p className="mb-4 text-gray-600">Enter your coupon code below to get a discount on your next order.</p>
           <form className="flex gap-2" onSubmit={onSubmit}>
             <input className="flex-1 border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Enter coupon code" value={code} onChange={e => setCode(e.target.value)} />

@@ -19,8 +19,8 @@ const ProductDetailsPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="grid md:grid-cols-2 gap-6 bg-white rounded-lg shadow-sm p-6">
-        <img src={product.image} alt={product.name} className="w-full h-80 object-cover rounded" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-lg shadow-sm p-4 md:p-6">
+        <img src={product.image} alt={product.name} className="w-full h-64 md:h-80 object-cover rounded" />
         <div className="space-y-3">
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <div className="text-3xl font-bold text-[#7cb342]">{product.price} CFA</div>
@@ -35,8 +35,8 @@ const ProductDetailsPage: React.FC = () => {
         </div>
       </div>
       {/* Reviews */}
-      <div className="mt-8 grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <h2 className="text-lg font-semibold mb-3">Customer Reviews</h2>
           <div className="space-y-4">
             {getReviews(product.id).length === 0 && (
@@ -52,7 +52,7 @@ const ProductDetailsPage: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <h2 className="text-lg font-semibold mb-3">Write a review</h2>
           {user ? (
             <ReviewForm onSubmit={(rating, text) => { addReview(product.id, user.name || user.email, rating, text); show('Review submitted for approval', { type: 'success' }); }} />

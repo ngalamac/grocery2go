@@ -66,7 +66,7 @@ function App() {
           onHomeClick={() => navigate('/')}
         />
 
-        <main className="flex-1 pt-[220px] md:pt-[200px]">
+        <main className="flex-1 pt-36 md:pt-44">
           <Routes>
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />

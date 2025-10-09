@@ -106,7 +106,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar */}
         <div className="hidden lg:block w-80 flex-shrink-0">
           <Sidebar />
@@ -117,7 +117,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           {/* Hero Section */}
           <div className="relative bg-gradient-to-r from-[#7cb342] to-[#558b2f] rounded-lg overflow-hidden shadow-lg">
             <div className="flex items-center min-h-[400px]">
-              <div className="w-full md:w-1/2 p-6 md:p-12 text-white z-10">
+              <div className="w-full lg:w-1/2 p-6 md:p-12 text-white z-10">
                 <p className="text-yellow-300 italic text-xl mb-2">Introducing</p>
                 {/* Countdown Timer */}
                 <div className="mb-4">
@@ -129,7 +129,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                   </div>
                   <div className="text-xs text-white mt-1">Shop now and get exclusive discounts before time runs out!</div>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
                   {heroSlides[currentSlide].title}
                   <br />
                   <span className="text-white">{heroSlides[currentSlide].subtitle}</span>
@@ -147,11 +147,11 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                   </button>
                 </div>
               </div>
-              <div className="hidden md:block w-1/2 relative">
+              <div className="hidden lg:block w-1/2 relative">
                 <img
                   src={heroSlides[currentSlide].image}
                   alt="Hero"
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[320px] md:h-[400px] object-cover"
                 />
               </div>
             </div>
@@ -179,8 +179,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Quick Categories */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4">
               {quickCategories.map((cat, index) => (
                 cat.link ? (
                   <a
@@ -205,8 +205,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Features */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
               {features.map((feature, index) => (
                 <div key={index} className="text-center">
                   <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -227,7 +227,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Category Banners */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative rounded-lg overflow-hidden shadow-md group cursor-pointer">
               <img
                 src="https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=500"
@@ -257,7 +257,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Featured Products */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <div className="flex items-center justify-center gap-6 mb-6 border-b pb-4">
               <button className="text-[#7cb342] font-semibold border-b-2 border-[#7cb342] pb-2">
                 Featured Product
@@ -269,7 +269,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                 Best Sellers
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {featuredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -277,7 +277,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Category Sections */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative rounded-lg overflow-hidden shadow-md group cursor-pointer">
               <img
                 src="https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=500"
@@ -306,7 +306,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
 
           {/* Promotional Banner */}
           <div className="relative rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-purple-100 to-pink-100">
-            <div className="p-8 md:p-12 text-center">
+            <div className="p-6 md:p-12 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Eat Good Food
                 <br />
@@ -319,11 +319,11 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Logo List */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
               Logo List
             </h3>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="border rounded-lg p-4 flex items-center justify-center hover:shadow-md transition">
                   <div className="text-gray-400 text-xs text-center">Brand Logo</div>
@@ -333,7 +333,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Tags */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <div className="flex flex-wrap gap-2">
               {['Sale', 'New', 'Best', 'Offer', 'Healthy', 'Nutrition', 'Fruits', 'Vegetables', 'Snacks', 'Groceries', 'Ice Cream'].map((tag) => (
                 <button
