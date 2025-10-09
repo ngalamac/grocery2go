@@ -1,6 +1,34 @@
 import React from 'react';
 import { Plus, Star } from 'lucide-react';
-import { categories, testimonials } from '../data/mockData';
+const categories = [
+  { id: 'fruits', name: 'Fruits & Vegetables', icon: '🥕' },
+  { id: 'meat', name: 'Meat & Seafood', icon: '🥩' },
+  { id: 'dairy', name: 'Dairy & Eggs', icon: '🥛' },
+  { id: 'bakery', name: 'Bakery', icon: '🍞' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤' },
+  { id: 'snacks', name: 'Snacks', icon: '🍿' }
+];
+
+const testimonials = [
+  {
+    id: '1',
+    name: 'Sarah Johnson',
+    role: 'Regular Customer',
+    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
+    text: 'Amazing service! Fresh products delivered right to my door.',
+    rating: 5,
+    approved: true
+  },
+  {
+    id: '2',
+    name: 'Michael Chen',
+    role: 'Food Enthusiast',
+    image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+    text: 'Best online grocery shopping experience. Highly recommended!',
+    rating: 5,
+    approved: true
+  }
+];
 import { useProducts } from '../context/ProductsContext';
 
 

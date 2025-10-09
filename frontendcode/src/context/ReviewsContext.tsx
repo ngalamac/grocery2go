@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
+import { reviewsApi } from '../services/api';
 
 export type Review = {
   id: string;
@@ -12,41 +13,62 @@ export type Review = {
 
 type ReviewsContextType = {
   getReviews: (productId: string) => Review[];
-  addReview: (productId: string, author: string, rating: number, text: string) => void;
-  toggleApprove: (reviewId: string) => void;
+  addReview: (productId: string, author: string, rating: number, text: string) => Promise<void>;
+  toggleApprove: (reviewId: string) => Promise<void>;
+  loadProductReviews: (productId: string) => Promise<void>;
 };
 
 const ReviewsContext = createContext<ReviewsContextType | undefined>(undefined);
 
 export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [reviews, setReviews] = useState<Review[]>(() => {
+  const [reviewsCache, setReviewsCache] = useState<Record<string, Review[]>>({});
+
+  const getReviews = (productId: string) => {
+    return reviewsCache[productId] || [];
+  };
+
+  const loadProductReviews = async (productId: string) => {
     try {
-      const raw = localStorage.getItem('g2g_reviews');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
+      const data = await reviewsApi.getProductReviews(productId);
+      const reviews = data.map((r: any) => ({
+        id: r._id,
+        productId: r.productId,
+        author: r.userName,
+        rating: r.rating,
+        text: r.comment,
+        createdAt: r.createdAt,
+        approved: r.approved
+      }));
+      setReviewsCache(prev => ({ ...prev, [productId]: reviews }));
+    } catch (error) {
+      console.error('Failed to load reviews:', error);
     }
-  });
-
-  const persist = (next: Review[]) => {
-    setReviews(next);
-    try { localStorage.setItem('g2g_reviews', JSON.stringify(next)); } catch {}
   };
 
-  const getReviews = (productId: string) => reviews.filter(r => r.productId === productId && r.approved);
-
-  const addReview = (productId: string, author: string, rating: number, text: string) => {
-    const id = Math.random().toString(36).slice(2, 10);
-    const review: Review = { id, productId, author, rating, text, createdAt: new Date().toISOString(), approved: false };
-    persist([review, ...reviews]);
+  const addReview = async (productId: string, author: string, rating: number, text: string) => {
+    try {
+      await reviewsApi.create({
+        productId,
+        userName: author,
+        rating,
+        comment: text
+      });
+      await loadProductReviews(productId);
+    } catch (error) {
+      console.error('Failed to add review:', error);
+      throw error;
+    }
   };
 
-  const toggleApprove = (reviewId: string) => {
-    const next = reviews.map(r => (r.id === reviewId ? { ...r, approved: !r.approved } : r));
-    persist(next);
+  const toggleApprove = async (reviewId: string) => {
+    try {
+      await reviewsApi.approve(reviewId);
+    } catch (error) {
+      console.error('Failed to approve review:', error);
+    }
   };
 
-  const value = useMemo(() => ({ getReviews, addReview, toggleApprove }), [reviews]);
+  const value = useMemo(() => ({ getReviews, addReview, toggleApprove, loadProductReviews }), [reviewsCache]);
   return <ReviewsContext.Provider value={value}>{children}</ReviewsContext.Provider>;
 };
 
@@ -55,4 +77,3 @@ export function useReviews(): ReviewsContextType {
   if (!ctx) throw new Error('useReviews must be used within ReviewsProvider');
   return ctx;
 }
-

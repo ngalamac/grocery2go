@@ -1,11 +1,8 @@
-import { CartItem, AdditionalItem, CustomerInfo, Order, OrderEvent, OrderStatus } from '../types';
+import { CartItem, AdditionalItem, CustomerInfo, Order } from '../types';
+import { ordersApi } from '../services/api';
 
-const USER_ORDERS_KEY = (userId: string) => `g2g_orders_${userId}`;
-const ALL_ORDERS_KEY = 'g2g_orders_all_full';
-
-export function createOrder(params: {
-  userId: string;
-  userEmail: string;
+export async function createOrder(params: {
+  userId?: string;
   items: CartItem[];
   additionalItems: AdditionalItem[];
   subtotal: number;
@@ -15,69 +12,79 @@ export function createOrder(params: {
   budget: number;
   specialInstructions?: string;
   customerInfo: CustomerInfo;
-}): Order {
-  const id = Math.random().toString(36).slice(2, 8).toUpperCase();
-  const createdAt = new Date().toISOString();
-  const events: OrderEvent[] = [
-    { id: `e_${Date.now()}`, timestamp: createdAt, type: 'status', title: 'Order placed' }
-  ];
-  const order: Order = {
-    id,
-    items: params.items,
+}): Promise<Order> {
+  const orderData = {
+    items: params.items.map(item => ({
+      productId: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      quantity: item.quantity
+    })),
     additionalItems: params.additionalItems,
     subtotal: params.subtotal,
     shoppingFee: params.shoppingFee,
     deliveryFee: params.deliveryFee,
     total: params.total,
-    status: 'pending',
-    customerInfo: params.customerInfo,
-    specialInstructions: params.specialInstructions,
     budget: params.budget,
-    createdAt,
-    events
+    specialInstructions: params.specialInstructions,
+    customerInfo: params.customerInfo
   };
-  // Save user-specific summary list
-  const listRaw = localStorage.getItem(USER_ORDERS_KEY(params.userId)) || '[]';
-  const list = JSON.parse(listRaw);
-  const summary = { id: order.id, createdAt: order.createdAt, total: order.total, itemsCount: order.items.reduce((n: number, it: CartItem) => n + it.quantity, 0) + order.additionalItems.length, status: order.status };
-  localStorage.setItem(USER_ORDERS_KEY(params.userId), JSON.stringify([summary, ...list]));
-  // Save full order for admin
-  const fullRaw = localStorage.getItem(ALL_ORDERS_KEY) || '[]';
-  const full = JSON.parse(fullRaw);
-  localStorage.setItem(ALL_ORDERS_KEY, JSON.stringify([{ ...order, userEmail: params.userEmail, userId: params.userId }, ...full]));
-  // Save individual order record for quick lookup
-  localStorage.setItem(`g2g_order_${order.id}`, JSON.stringify(order));
-  return order;
+
+  const response = await ordersApi.create(orderData);
+
+  return {
+    id: response._id,
+    items: params.items,
+    additionalItems: response.additionalItems,
+    subtotal: response.subtotal,
+    shoppingFee: response.shoppingFee,
+    deliveryFee: response.deliveryFee,
+    total: response.total,
+    status: response.status,
+    customerInfo: response.customerInfo,
+    specialInstructions: response.specialInstructions,
+    budget: response.budget,
+    createdAt: response.createdAt,
+    eta: response.eta,
+    riderName: response.riderName,
+    events: response.events?.map((e: any) => ({
+      id: e._id,
+      timestamp: e.timestamp,
+      type: e.type,
+      title: e.title,
+      description: e.description
+    })) || []
+  };
 }
 
-export function getOrderById(orderId: string): Order | null {
+export async function getOrderById(orderId: string): Promise<Order | null> {
   try {
-    const raw = localStorage.getItem(`g2g_order_${orderId}`);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-
-export function updateOrder(orderId: string, patch: Partial<Order>) {
-  const existing = getOrderById(orderId);
-  if (!existing) return;
-  const next: Order = { ...existing, ...patch, id: existing.id };
-  localStorage.setItem(`g2g_order_${orderId}`, JSON.stringify(next));
-  // Update global list summary status if changed
-  try {
-    const fullRaw = localStorage.getItem(ALL_ORDERS_KEY) || '[]';
-    const full = JSON.parse(fullRaw).map((o: any) => (o.id === orderId ? { ...o, ...next } : o));
-    localStorage.setItem(ALL_ORDERS_KEY, JSON.stringify(full));
-  } catch {}
-}
-
-export function addOrderEvent(orderId: string, event: OrderEvent) {
-  const existing = getOrderById(orderId);
-  if (!existing) return;
-  const events = [{ ...event, id: event.id || `e_${Date.now()}`, timestamp: new Date().toISOString() }, ...(existing.events || [])];
-  updateOrder(orderId, { events });
-}
-
-export function setOrderStatus(orderId: string, status: OrderStatus, note?: string) {
-  addOrderEvent(orderId, { id: `e_${Date.now()}`, timestamp: new Date().toISOString(), type: 'status', title: status, description: note });
-  updateOrder(orderId, { status });
+    const response = await ordersApi.getById(orderId);
+    return {
+      id: response._id,
+      items: response.items,
+      additionalItems: response.additionalItems,
+      subtotal: response.subtotal,
+      shoppingFee: response.shoppingFee,
+      deliveryFee: response.deliveryFee,
+      total: response.total,
+      status: response.status,
+      customerInfo: response.customerInfo,
+      specialInstructions: response.specialInstructions,
+      budget: response.budget,
+      createdAt: response.createdAt,
+      eta: response.eta,
+      riderName: response.riderName,
+      events: response.events?.map((e: any) => ({
+        id: e._id,
+        timestamp: e.timestamp,
+        type: e.type,
+        title: e.title,
+        description: e.description
+      })) || []
+    };
+  } catch {
+    return null;
+  }
 }

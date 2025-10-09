@@ -3,7 +3,12 @@ import { ChevronLeft, ChevronRight, TrendingUp, Package, Clock, Shield, Truck, S
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
-import { features } from '../data/mockData';
+const features = [
+  { icon: '🚚', title: 'Fast Delivery', description: 'Same-day delivery available' },
+  { icon: '💰', title: 'Best Price', description: 'Guaranteed lowest prices' },
+  { icon: '🛡️', title: 'Secure', description: 'Safe & secure payment' },
+  { icon: '⭐', title: 'Quality', description: 'Verified quality products' }
+];
 import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
 import Button from './ui/Button';

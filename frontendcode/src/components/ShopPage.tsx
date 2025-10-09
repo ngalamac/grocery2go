@@ -5,7 +5,14 @@ import Sidebar from './Sidebar';
 import { useProducts } from '../context/ProductsContext';
 
 
-import { categories } from '../data/mockData';
+const categories = [
+  { id: 'fruits', name: 'Fruits & Vegetables', icon: '🥕', subcategories: ['Fresh Fruits', 'Fresh Vegetables', 'Organic'] },
+  { id: 'meat', name: 'Meat & Seafood', icon: '🥩', subcategories: ['Beef', 'Chicken', 'Fish', 'Seafood'] },
+  { id: 'dairy', name: 'Dairy & Eggs', icon: '🥛', subcategories: ['Milk', 'Cheese', 'Eggs', 'Yogurt'] },
+  { id: 'bakery', name: 'Bakery', icon: '🍞', subcategories: ['Bread', 'Pastries', 'Cakes'] },
+  { id: 'beverages', name: 'Beverages', icon: '🥤', subcategories: ['Soft Drinks', 'Juices', 'Water'] },
+  { id: 'snacks', name: 'Snacks', icon: '🍿', subcategories: ['Chips', 'Cookies', 'Candy'] }
+];
 
 const getAllSubcategories = (catName: string) => {
   const cat = categories.find(c => c.name === catName);

@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { authApi } from '../services/api';
 
 type AuthUser = {
   id: string;
@@ -25,99 +26,71 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USERS_KEY = 'g2g_auth_users';
 const USER_KEY = 'g2g_auth_user';
-const ADMIN_EMAIL = 'ndibrenda@gmail.com';
-const ADMIN_PASSWORD = 'ca@5G2024';
-const ADMIN_ID = 'admin_root';
-
-function loadUsers(): Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }> {
-  try {
-    const raw = localStorage.getItem(USERS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveUsers(users: Record<string, { email: string; password: string; name?: string; id: string; role?: 'user' | 'admin' }>) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function saveUserSession(user: AuthUser | null) {
-  if (user) {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(USER_KEY);
-  }
-}
-
-function loadUserSession(): AuthUser | null {
-  try {
-    const raw = localStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
+const TOKEN_KEY = 'token';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    const existing = loadUserSession();
-    if (existing) setUser(existing);
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      authApi.getProfile()
+        .then(userData => {
+          setUser({
+            id: userData._id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.isAdmin ? 'admin' : 'user'
+          });
+        })
+        .catch(() => {
+          localStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(USER_KEY);
+        });
+    }
   }, []);
 
   useEffect(() => {
-    saveUserSession(user);
+    if (user) {
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(USER_KEY);
+    }
   }, [user]);
 
   const openAuthModal = useCallback(() => setIsAuthModalOpen(true), []);
   const closeAuthModal = useCallback(() => setIsAuthModalOpen(false), []);
 
   const login = useCallback(async ({ email, password }: Credentials) => {
-    const keyEmail = email.toLowerCase();
-    // Hardcoded admin credentials override
-    if (keyEmail === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      const adminUser: AuthUser = { id: ADMIN_ID, email: ADMIN_EMAIL, name: 'Admin', role: 'admin' };
-      // Ensure stored for persistence
-      const users = loadUsers();
-      users[ADMIN_EMAIL] = { email: ADMIN_EMAIL, password: ADMIN_PASSWORD, name: 'Admin', id: ADMIN_ID, role: 'admin' };
-      saveUsers(users);
-      setUser(adminUser);
-      setIsAuthModalOpen(false);
-      return;
-    }
-    const users = loadUsers();
-    const found = users[keyEmail];
-    if (!found || found.password !== password) {
-      throw new Error('Invalid email or password');
-    }
-    const newUser: AuthUser = { id: found.id, email: found.email, name: found.name, role: (found as any).role || 'user' };
-    setUser(newUser);
+    const response = await authApi.login({ email, password });
+    localStorage.setItem(TOKEN_KEY, response.token);
+    setUser({
+      id: response.user.id,
+      email: response.user.email,
+      name: response.user.name,
+      role: response.user.isAdmin ? 'admin' : 'user'
+    });
     setIsAuthModalOpen(false);
   }, []);
 
   const signup = useCallback(async ({ email, password, name }: Credentials) => {
-    const users = loadUsers();
-    const key = email.toLowerCase();
-    if (key === ADMIN_EMAIL) {
-      throw new Error('This email is reserved for the site administrator. Please log in instead.');
-    }
-    if (users[key]) {
-      throw new Error('An account with this email already exists');
-    }
-    const id = `user_${Math.random().toString(36).slice(2, 10)}`;
-    users[key] = { email, password, name, id, role: 'user' };
-    saveUsers(users);
-    const newUser: AuthUser = { id, email, name, role: 'user' };
-    setUser(newUser);
+    if (!name) throw new Error('Name is required');
+    const response = await authApi.register({ email, password, name });
+    localStorage.setItem(TOKEN_KEY, response.token);
+    setUser({
+      id: response.user.id,
+      email: response.user.email,
+      name: response.user.name,
+      role: response.user.isAdmin ? 'admin' : 'user'
+    });
     setIsAuthModalOpen(false);
   }, []);
 
   const logout = useCallback(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setUser(null);
   }, []);
 

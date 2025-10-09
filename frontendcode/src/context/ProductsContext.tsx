@@ -1,59 +1,70 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Product } from '../types';
-import { products as mockProducts } from '../data/mockData';
+import { productsApi } from '../services/api';
 
 interface ProductsContextType {
 	products: Product[];
-	addProduct: (p: Omit<Product, 'id'>) => Product;
-	updateProduct: (id: string, patch: Partial<Product>) => void;
-	removeProduct: (id: string) => void;
+	addProduct: (p: Omit<Product, 'id'>) => Promise<Product>;
+	updateProduct: (id: string, patch: Partial<Product>) => Promise<void>;
+	removeProduct: (id: string) => Promise<void>;
 	reload: () => void;
+	loading: boolean;
 }
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'g2g_products';
-
 export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [list, setList] = useState<Product[]>([]);
+	const [loading, setLoading] = useState(true);
 
-	const load = () => {
+	const load = async () => {
 		try {
-			const raw = localStorage.getItem(STORAGE_KEY);
-			if (raw) {
-				setList(JSON.parse(raw));
-				return;
-			}
-			setList(mockProducts);
-		} catch {
-			setList(mockProducts);
+			setLoading(true);
+			const data = await productsApi.getAll();
+			setList(data.map((p: any) => ({
+				id: p._id,
+				name: p.name,
+				price: p.price,
+				priceRange: p.priceRange,
+				image: p.image,
+				rating: p.rating,
+				category: p.category,
+				type: p.type,
+				description: p.description,
+				stock: p.stock
+			})));
+		} catch (error) {
+			console.error('Failed to load products:', error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => { load(); }, []);
 
-	useEffect(() => {
-		try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch {}
-	}, [list]);
-
-	const addProduct = (p: Omit<Product, 'id'>): Product => {
-		const id = Math.random().toString(36).slice(2, 8);
-		const np: Product = { id, ...p } as Product;
-		setList(prev => [np, ...prev]);
-		return np;
+	const addProduct = async (p: Omit<Product, 'id'>): Promise<Product> => {
+		const newProduct = await productsApi.create(p);
+		const product: Product = {
+			id: newProduct._id,
+			...newProduct
+		};
+		setList(prev => [product, ...prev]);
+		return product;
 	};
 
-	const updateProduct = (id: string, patch: Partial<Product>) => {
+	const updateProduct = async (id: string, patch: Partial<Product>) => {
+		await productsApi.update(id, patch);
 		setList(prev => prev.map(x => (x.id === id ? { ...x, ...patch, id: x.id } : x)));
 	};
 
-	const removeProduct = (id: string) => {
+	const removeProduct = async (id: string) => {
+		await productsApi.delete(id);
 		setList(prev => prev.filter(x => x.id !== id));
 	};
 
-	const reload = () => load();
+	const reload = () => { load(); };
 
-	const value = useMemo(() => ({ products: list, addProduct, updateProduct, removeProduct, reload }), [list]);
+	const value = useMemo(() => ({ products: list, addProduct, updateProduct, removeProduct, reload, loading }), [list, loading]);
 	return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>;
 };
 
