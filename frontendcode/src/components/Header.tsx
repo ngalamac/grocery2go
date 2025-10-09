@@ -107,7 +107,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <div>On Order Over $9</div>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate('/wishlist')} className="text-white hover:text-yellow-400 transition" title="Wishlist">
+              <button onClick={() => navigate('/wishlist')} className="hidden lg:block text-white hover:text-yellow-400 transition" title="Wishlist">
                 <Heart size={24} />
               </button>
               <button onClick={onCartClick} className="text-white hover:text-yellow-400 transition relative">
@@ -118,7 +118,9 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                   </span>
                 )}
               </button>
-              <LanguageSwitcher variant="header" />
+              <div className="hidden lg:block">
+                <LanguageSwitcher variant="header" />
+              </div>
               <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-2">
@@ -260,6 +262,17 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                 </li>
                 <li>
                   <button onClick={() => { navigate('/orders'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Orders</button>
+                </li>
+                <li className="py-1" />
+                <li className="px-3 py-2">
+                  <div className="text-xs uppercase text-neutral-500 mb-2">Preferences</div>
+                  <div className="flex items-center gap-3">
+                    <LanguageSwitcher variant="compact" />
+                    <button onClick={() => { navigate('/wishlist'); setMobileMenuOpen(false); }} className="px-3 py-2 rounded hover:bg-neutral-100 flex items-center gap-2">
+                      <Heart size={16} />
+                      <span className="text-sm">Wishlist</span>
+                    </button>
+                  </div>
                 </li>
               </ul>
             </nav>
