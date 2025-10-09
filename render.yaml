@@ -2,9 +2,12 @@ services:
   - type: web
     name: grocery2go-frontend
     env: static
+    plan: free
     rootDir: frontendcode
     buildCommand: (npm ci || npm install) && npm run build
     staticPublishPath: dist
+    autoDeploy: true
+    pullRequestPreviewsEnabled: false
     domains:
       - grocery2go.shop
     envVars:
@@ -20,10 +23,13 @@ services:
   - type: web
     name: grocery2go-api
     env: node
+    plan: free
     rootDir: backendcode
     buildCommand: (npm ci || npm install) && npm run build
     startCommand: npm start
     healthCheckPath: /health
+    autoDeploy: true
+    pullRequestPreviewsEnabled: false
     domains:
       - api.grocery2go.shop
     envVars:
