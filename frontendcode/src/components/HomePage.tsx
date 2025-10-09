@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, TrendingUp, Package, Clock, Shield, Truck, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
 import { features } from '../data/mockData';
 import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import Badge from './ui/Badge';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -13,14 +17,17 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products } = useProducts();
-  const featuredProducts = (() => {
-    try {
-      const ids = (localStorage.getItem('g2g_featured_ids') || '').split(',').map(s=>s.trim()).filter(Boolean);
-      if (ids.length === 0) return products.slice(0,8);
-      const picked = products.filter(p => ids.includes(p.id));
-      return picked.length > 0 ? picked : products.slice(0,8);
-    } catch { return products.slice(0,8); }
-  })();
+  const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
+
+  const featuredProducts = products.filter(p => p.featured).slice(0, 8);
+  const newProducts = products.slice(0, 8);
+  const bestsellerProducts = products.filter(p => p.rating >= 4.5).slice(0, 8);
+
+  const displayedProducts = {
+    featured: featuredProducts.length > 0 ? featuredProducts : products.slice(0, 8),
+    new: newProducts,
+    bestseller: bestsellerProducts.length > 0 ? bestsellerProducts : products.slice(8, 16)
+  }[activeTab];
 
   const heroSlides = [
     {

@@ -34,6 +34,7 @@ import AdminLoginPage from './components/AdminLoginPage';
 import DashboardLayout from './components/DashboardLayout';
 import OrderDetailsPage from './components/OrderDetailsPage';
 import { RequireAdmin, RequireAuth } from './components/RouteGuards';
+import ChatbotButton from './components/ChatbotButton';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -146,6 +147,7 @@ function App() {
 
         <AuthModal />
         <QuickViewModal />
+        <ChatbotButton />
         <Footer />
       </div>
     );
