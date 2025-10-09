@@ -1,12 +1,9 @@
 services:
   - type: web
     name: grocery2go-frontend
-    runtime: static
+    env: static
     buildCommand: cd frontendcode && npm ci && npm run build
     staticPublishPath: frontendcode/dist
-    envVars:
-      - key: NODE_VERSION
-        value: 20.11.0
     routes:
       - type: rewrite
         source: /*
@@ -14,10 +11,8 @@ services:
 
   - type: web
     name: grocery2go-backend
-    runtime: docker
+    env: docker
+    plan: free
     dockerfilePath: ./backendcode/Dockerfile
     dockerContext: ./backendcode
     healthCheckPath: /health
-    envVars:
-      - key: PORT
-        value: 10000
