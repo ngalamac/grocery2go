@@ -82,3 +82,43 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
+
+/* Hide Google Translate default widget and toolbar */
+#google_translate_element {
+  display: none !important;
+}
+
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+/* Fix for translated page layout */
+body.translated-ltr {
+  top: 0 !important;
+}
+
+/* Ensure proper font rendering after translation */
+.translated-ltr * {
+  font-family: inherit !important;
+}
+
+/* Prevent Google Translate from breaking flex/grid layouts */
+font {
+  display: inline !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  vertical-align: baseline !important;
+}

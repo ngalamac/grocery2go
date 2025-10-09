@@ -35,6 +35,7 @@ import DashboardLayout from './components/DashboardLayout';
 import OrderDetailsPage from './components/OrderDetailsPage';
 import { RequireAdmin, RequireAuth } from './components/RouteGuards';
 import ChatbotButton from './components/ChatbotButton';
+import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -154,28 +155,30 @@ function App() {
   }
 
   return (
-    <ThemeProvider>
-      <CouponProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <ReviewsProvider>
-              <ProductsProvider>
-                <WishlistProvider>
-                  <QuickViewProvider>
-                    <CartProvider>
-                      <BrowserRouter>
-                        <AppWithNavigation />
-                        <ToastViewport />
-                      </BrowserRouter>
-                    </CartProvider>
-                  </QuickViewProvider>
-                </WishlistProvider>
-              </ProductsProvider>
-            </ReviewsProvider>
-          </AuthProvider>
-        </ToastProvider>
-      </CouponProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <CouponProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <ReviewsProvider>
+                <ProductsProvider>
+                  <WishlistProvider>
+                    <QuickViewProvider>
+                      <CartProvider>
+                        <BrowserRouter>
+                          <AppWithNavigation />
+                          <ToastViewport />
+                        </BrowserRouter>
+                      </CartProvider>
+                    </QuickViewProvider>
+                  </WishlistProvider>
+                </ProductsProvider>
+              </ReviewsProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </CouponProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -117,6 +118,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
                   </span>
                 )}
               </button>
+              <LanguageSwitcher variant="header" />
               <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-2">
