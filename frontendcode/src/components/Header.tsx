@@ -48,17 +48,16 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
           <div className="flex items-center gap-4 sm:gap-6">
             <a href="tel:0000-123456789" className="flex items-center gap-2 hover:text-yellow-400 transition">
               <Phone size={14} />
-              <span>0000 - 123 456789</span>
+              <span>6 79 83 81 82</span>
             </a>
             <a href="mailto:info@example.com" className="hidden md:flex items-center gap-2 hover:text-yellow-400 transition">
               <Mail size={14} />
-              <span>info@example.com</span>
+              <span>info@grocery2go.shop</span>
             </a>
           </div>
           <div className="hidden sm:flex items-center gap-4">
             <button className="hover:text-yellow-400 transition">Store Location</button>
             <button className="hover:text-yellow-400 transition">Track Your Order</button>
-            <button className="hover:text-yellow-400 transition">CM</button>
           </div>
         </div>
       </div>
@@ -99,12 +98,12 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
           {/* Right Icons */}
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="hidden md:block text-white text-xs">
-              <div className="font-semibold">FREE SHIPPING</div>
+              <div className="font-semibold">1000 CFA SHIPPING</div>
               <div>Money Back Guarantee</div>
             </div>
             <div className="hidden md:block text-white text-xs">
               <div className="font-semibold">BIG SAVING MONEY</div>
-              <div>On Order Over $9</div>
+              <div>On Order Over 2,0000 CFA</div>
             </div>
             <div className="flex items-center gap-3">
               <button onClick={() => navigate('/wishlist')} className="text-white hover:text-yellow-400 transition" title="Wishlist">
@@ -123,7 +122,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               {user ? (
                 <div className="flex items-center gap-2">
                   {user.role === 'admin' && (
-                    <button onClick={() => navigate('/admin')} className="hidden sm:block text-white text-sm hover:text-yellow-300">Admin</button>
+                    <button onClick={() => navigate('/admin')} className="hidden sm:block text-white text-sm hover:text-yellow-300">👤</button>
                   )}
                   <button onClick={() => navigate('/dashboard/profile')} className="hidden sm:block text-white text-sm hover:text-yellow-300">{user.name || user.email}</button>
                   <button onClick={logout} className="text-white hover:text-yellow-400 transition" title="Logout">
