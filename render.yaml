@@ -5,11 +5,6 @@ services:
     rootDir: frontendcode
     buildCommand: (npm ci || npm install) && npm run build
     staticPublishPath: dist
-    envVars:
-      - key: NODE_VERSION
-        value: 20
-      - key: VITE_API_URL
-        value: https://grocery2go-api.onrender.com/api
     routes:
       - type: rewrite
         source: /*
@@ -22,14 +17,3 @@ services:
     buildCommand: (npm ci || npm install) && npm run build
     startCommand: npm start
     healthCheckPath: /health
-    envVars:
-      - key: NODE_VERSION
-        value: 20
-      - key: NPM_CONFIG_PRODUCTION
-        value: "false"
-      - key: MONGODB_URI
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-      - key: ALLOWED_ORIGINS
-        value: https://grocery2go-frontend.onrender.com
