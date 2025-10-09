@@ -15,9 +15,9 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="max-w-5xl mx-auto px-4 py-8 md:py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <h1 className="text-2xl font-bold mb-2">Contact Us</h1>
           <p className="text-gray-600 mb-6">{(typeof window !== 'undefined' && localStorage.getItem('g2g_setting_contact')) || "We'd love to hear from you! Fill the form and we'll respond shortly."}</p>
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -31,7 +31,7 @@ const ContactPage: React.FC = () => {
           </form>
         </div>
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <h2 className="text-xl font-semibold mb-4">Get in touch</h2>
             <div className="space-y-3 text-gray-700">
               <div><span className="font-semibold">Phone:</span> 6 79 83 81 82</div>
@@ -41,7 +41,7 @@ const ContactPage: React.FC = () => {
             </div>
           </div>
           <div className="rounded-lg overflow-hidden shadow-sm">
-            <img src="https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Store" className="w-full h-64 object-cover" />
+            <img src="https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Store" className="w-full h-56 md:h-64 object-cover" />
           </div>
         </div>
       </div>

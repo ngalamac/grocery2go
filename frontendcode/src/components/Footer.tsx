@@ -17,9 +17,9 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-[#7cb342] text-white">
       {/* Newsletter Section */}
-      <div className="py-12 px-4">
+      <div className="py-10 md:py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Subscribe to our emails</h2>
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">Subscribe to our emails</h2>
           <p className="mb-6 text-white/90">
             Be the first to know about new collections and exclusive offers.
           </p>

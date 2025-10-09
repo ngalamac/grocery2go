@@ -60,7 +60,7 @@ const ShopPage: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
   {/* Sidebar Drawer Button for Mobile is hidden as requested */}
 
         {/* Sidebar as Drawer on Mobile, static on Desktop */}
@@ -102,7 +102,7 @@ const ShopPage: React.FC = () => {
                 <Filter size={20} />
                 <span className="font-semibold">Filters</span>
               </div>
-              <div className="flex flex-wrap gap-4 flex-1">
+              <div className="flex flex-wrap gap-3 md:gap-4 flex-1 w-full">
                 {/* Category Filter */}
                 <select
                   value={selectedCategory}
@@ -139,7 +139,7 @@ const ShopPage: React.FC = () => {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                  style={{ minWidth: 180 }}
+                  style={{ minWidth: 160 }}
                 />
 
                 {/* Rating Filter */}
@@ -215,7 +215,7 @@ const ShopPage: React.FC = () => {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {loading
               ? Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">

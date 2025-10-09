@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
   const { user, openAuthModal, logout } = useAuth();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/75 shadow-md">
       {/* Promo Banner */}
       <div className="bg-yellow-400 py-2 px-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-sm">
@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
             <span className="font-semibold">50% OFF</span>
             <span className="hidden sm:inline">Long Weekend Sale Up to 50% OFF</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <input
               type="text"
               placeholder="Enter Promotion Code"
@@ -44,8 +44,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
 
       {/* Contact Bar */}
       <div className="bg-black text-white py-2 px-4 text-sm">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-4 sm:gap-6">
             <a href="tel:0000-123456789" className="flex items-center gap-2 hover:text-yellow-400 transition">
               <Phone size={14} />
               <span>0000 - 123 456789</span>
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <span>info@example.com</span>
             </a>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-4">
             <button className="hover:text-yellow-400 transition">Store Location</button>
             <button className="hover:text-yellow-400 transition">Track Your Order</button>
             <button className="hover:text-yellow-400 transition">CM</button>
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
       </div>
 
       {/* Main Header */}
-      <div className="bg-[#7cb342] py-4 px-4">
+      <div className="bg-[#7cb342] py-3 md:py-4 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Logo */}
           <button onClick={onHomeClick} className="flex items-center gap-2">
@@ -97,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="hidden md:block text-white text-xs">
               <div className="font-semibold">FREE SHIPPING</div>
               <div>Money Back Guarantee</div>

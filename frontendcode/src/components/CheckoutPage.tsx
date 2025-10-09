@@ -257,7 +257,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
               {currentStep === 'info' && (
@@ -507,7 +507,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
           </div>
 
           <div className="lg:col-span-1">
-            <Card className="sticky top-24">
+            <Card className="lg:sticky top-24">
               <h3 className="text-xl font-bold mb-4 font-display">Order Summary</h3>
 
               <div className="space-y-3 text-sm">

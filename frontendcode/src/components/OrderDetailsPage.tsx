@@ -9,13 +9,13 @@ const OrderDetailsPage: React.FC = () => {
   if (!order) return <div className="max-w-3xl mx-auto px-4 py-10">Order not found.</div>;
   const events = (order.events || []).slice().reverse();
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-4">
+    <div className="max-w-5xl mx-auto px-4 py-8 md:py-10">
+      <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h1 className="text-xl font-bold">Order #{order.id}</h1>
           <div className={`text-xs px-2 py-1 rounded ${order.status==='delivered'?'bg-green-100 text-green-700':order.status==='cancelled'?'bg-red-100 text-red-700':'bg-yellow-100 text-yellow-700'}`}>{order.status}</div>
         </div>
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-gray-50 rounded p-3">
             <div className="text-xs text-gray-500">Placed</div>
             <div className="font-semibold">{new Date(order.createdAt).toLocaleString()}</div>
@@ -29,7 +29,7 @@ const OrderDetailsPage: React.FC = () => {
             <div className="font-semibold">{order.riderName || '—'}</div>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h2 className="font-semibold mb-2">Items</h2>
             <div className="space-y-2">
