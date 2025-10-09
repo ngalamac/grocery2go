@@ -2,7 +2,6 @@ services:
   - type: web
     name: grocery2go-frontend
     env: static
-    plan: free
     rootDir: frontendcode
     buildCommand: (npm ci || npm install) && npm run build
     staticPublishPath: dist
@@ -19,7 +18,6 @@ services:
   - type: web
     name: grocery2go-api
     env: node
-    plan: free
     rootDir: backendcode
     buildCommand: (npm ci || npm install) && npm run build
     startCommand: npm start
