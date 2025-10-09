@@ -1,7 +1,8 @@
 services:
   - type: web
     name: grocery2go-frontend
-    env: static
+    runtime: static
+    plan: free
     rootDir: frontendcode
     buildCommand: (npm ci || npm install) && npm run build
     staticPublishPath: dist
@@ -12,8 +13,7 @@ services:
 
   - type: web
     name: grocery2go-api
-    env: node
+    runtime: docker
+    plan: free
     rootDir: backendcode
-    buildCommand: (npm ci || npm install) && npm run build
-    startCommand: npm start
     healthCheckPath: /health
