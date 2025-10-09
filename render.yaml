@@ -1,0 +1,38 @@
+services:
+  - type: static
+    name: grocery2go-frontend
+    rootDir: frontendcode
+    buildCommand: (npm ci --include=dev || npm install) && npm run build
+    staticPublishPath: dist
+    domains:
+      - grocery2go.shop
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: VITE_API_URL
+        value: https://api.grocery2go.shop/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  - type: web
+    name: grocery2go-api
+    env: node
+    rootDir: backendcode
+    buildCommand: (npm ci || npm install) && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    domains:
+      - api.grocery2go.shop
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NPM_CONFIG_PRODUCTION
+        value: "false"
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://grocery2go.shop
