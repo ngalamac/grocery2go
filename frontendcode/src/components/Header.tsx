@@ -237,8 +237,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <input type="text" placeholder="Search products" className="flex-1 px-3 py-2 border rounded" />
               <button className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 transition"><Search size={18} /></button>
             </div>
-            <nav className="p-2 overflow-y-auto">
-              <ul className="flex flex-col divide-y">
+            <nav className="p-2 flex-1 overflow-y-auto">
+              <ul className="flex flex-col divide-y divide-neutral-200">
                 <li>
                   <button onClick={() => { onHomeClick(); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3 font-medium text-[#2e7d32]">Home</button>
                 </li>
