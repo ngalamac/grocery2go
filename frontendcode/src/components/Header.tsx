@@ -148,8 +148,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
       </div>
 
       {/* Navigation */}
-      {/* Desktop nav */}
-      <nav className={"bg-white border-t hidden lg:block"}>
+      {/* Collapsible nav under header on mobile, always visible on desktop */}
+      <nav className={`bg-white border-t ${mobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
         <div className="max-w-7xl mx-auto px-4">
           <ul className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-0 lg:gap-8 py-2">
             <li>
@@ -220,64 +220,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
         </div>
       </nav>
 
-      {/* Mobile hamburger drawer */}
-      {mobileMenuOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/40 z-[60] lg:hidden" onClick={() => setMobileMenuOpen(false)} />
-          <div className="fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white z-[61] shadow-2xl lg:hidden flex flex-col">
-            <div className="p-4 border-b flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="bg-[#7cb342] text-white rounded-md w-9 h-9 flex items-center justify-center">🛒</div>
-                <span className="font-bold text-[#2e7d32]">Grocery2Go</span>
-              </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded hover:bg-gray-100"><X size={20} /></button>
-            </div>
-            <div className="p-4 border-b flex gap-2">
-              <input type="text" placeholder="Search products" className="flex-1 px-3 py-2 border rounded" />
-              <button className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 transition"><Search size={18} /></button>
-            </div>
-            <nav className="p-2 flex-1 overflow-y-auto">
-              <ul className="flex flex-col divide-y divide-neutral-200">
-                <li>
-                  <button onClick={() => { onHomeClick(); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3 font-medium text-[#2e7d32]">Home</button>
-                </li>
-                <li>
-                  <button onClick={() => { onShopClick(); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Shop</button>
-                </li>
-                <li>
-                  <button onClick={() => { onMarketClick(); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Market Products</button>
-                </li>
-                <li>
-                  <button onClick={() => { navigate('/about'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">About</button>
-                </li>
-                <li>
-                  <button onClick={() => { navigate('/contact'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Contact</button>
-                </li>
-                <li>
-                  <button onClick={() => { navigate('/coupon'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Coupon</button>
-                </li>
-                <li>
-                  <button onClick={() => { navigate('/track-order'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Track Order</button>
-                </li>
-                <li>
-                  <button onClick={() => { navigate('/orders'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-3">Orders</button>
-                </li>
-                <li className="py-1" />
-                <li className="px-3 py-2">
-                  <div className="text-xs uppercase text-neutral-500 mb-2">Preferences</div>
-                  <div className="flex items-center gap-3">
-                    <LanguageSwitcher variant="compact" />
-                    <button onClick={() => { navigate('/wishlist'); setMobileMenuOpen(false); }} className="px-3 py-2 rounded hover:bg-neutral-100 flex items-center gap-2">
-                      <Heart size={16} />
-                      <span className="text-sm">Wishlist</span>
-                    </button>
-                  </div>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </>
-      )}
+      {/* Removed mobile drawer; links shown below header when open */}
     </header>
   );
 };
