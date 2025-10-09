@@ -1,9 +1,9 @@
 services:
-  - type: static
+  - type: static_site
     name: grocery2go-frontend
     rootDir: frontendcode
-    buildCommand: (npm ci --include=dev || npm install) && npm run build
-    staticPublishPath: dist
+    buildCommand: (npm ci || npm install) && npm run build
+    publishPath: dist
     domains:
       - grocery2go.shop
     envVars:
