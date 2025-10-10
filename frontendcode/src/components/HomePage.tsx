@@ -11,6 +11,7 @@ const features = [
 ];
 import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
+import { useQuickView } from '../context/QuickViewContext';
 import Button from './ui/Button';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
@@ -22,6 +23,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products, loading } = useProducts();
+  const { open } = useQuickView();
   const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
 
   const featuredProducts = (
@@ -321,13 +323,19 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                       {products.filter(p => p.type === 'shop').map((p) => (
-                        <img
+                        <button
                           key={p.id}
-                          src={p.image}
-                          alt={p.name}
-                          loading="lazy"
-                          className="w-full aspect-square object-cover rounded"
-                        />
+                          onClick={() => open(p)}
+                          className="w-full aspect-square rounded overflow-hidden group bg-neutral-100"
+                          title={p.name}
+                        >
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -340,13 +348,19 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                       {products.filter(p => p.type === 'market').map((p) => (
-                        <img
+                        <button
                           key={p.id}
-                          src={p.image}
-                          alt={p.name}
-                          loading="lazy"
-                          className="w-full aspect-square object-cover rounded"
-                        />
+                          onClick={() => open(p)}
+                          className="w-full aspect-square rounded overflow-hidden group bg-neutral-100"
+                          title={p.name}
+                        >
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </button>
                       ))}
                     </div>
                   </div>
