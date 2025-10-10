@@ -11,6 +11,7 @@ const features = [
 ];
 import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
+import { useNavigate } from 'react-router-dom';
 import { useQuickView } from '../context/QuickViewContext';
 import Button from './ui/Button';
 import Card from './ui/Card';
@@ -24,6 +25,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products, loading } = useProducts();
   const { open } = useQuickView();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
 
   const featuredProducts = (
@@ -418,14 +420,19 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
               {[
-                { name: 'Fresh Valley', image: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                { name: 'Daily Dairy', image: 'https://images.pexels.com/photos/728273/pexels-photo-728273.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                { name: 'Bakehouse Co.', image: 'https://images.pexels.com/photos/263168/pexels-photo-263168.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                { name: 'Vital Drinks', image: 'https://images.pexels.com/photos/1556706/pexels-photo-1556706.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                { name: 'PantryPro', image: 'https://images.pexels.com/photos/3952047/pexels-photo-3952047.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                { name: 'MarketHub', image: 'https://images.pexels.com/photos/4051786/pexels-photo-4051786.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Fresh Valley', category: 'Fruits & Vegetables', image: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Daily Dairy', category: 'Dairy & Eggs', image: 'https://images.pexels.com/photos/728273/pexels-photo-728273.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Bakehouse Co.', category: 'Bakery', image: 'https://images.pexels.com/photos/263168/pexels-photo-263168.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Vital Drinks', category: 'Beverages', image: 'https://images.pexels.com/photos/1556706/pexels-photo-1556706.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'PantryPro', category: 'Snacks', image: 'https://images.pexels.com/photos/3952047/pexels-photo-3952047.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'MarketHub', category: 'Meat & Seafood', image: 'https://images.pexels.com/photos/4051786/pexels-photo-4051786.jpeg?auto=compress&cs=tinysrgb&w=600' },
               ].map(brand => (
-                <div key={brand.name} className="rounded-lg overflow-hidden border hover:shadow-md transition group bg-white">
+                <button
+                  key={brand.name}
+                  onClick={() => navigate(`/shop?category=${encodeURIComponent(brand.category)}`)}
+                  className="rounded-lg overflow-hidden border hover:shadow-md transition group bg-white text-left"
+                  title={`Shop ${brand.name}`}
+                >
                   <div className="w-full aspect-[3/2] bg-neutral-100 overflow-hidden">
                     <img
                       src={brand.image}
@@ -435,7 +442,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                     />
                   </div>
                   <div className="px-3 py-2 text-center text-sm font-medium">{brand.name}</div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
