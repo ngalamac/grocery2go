@@ -167,7 +167,8 @@ const AdminProducts: React.FC = () => {
   const [edit, setEdit] = useState(draft);
   const [preview, setPreview] = useState('');
 
-  const create = async () => {
+  const create = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!draft.name || !draft.price || !draft.image) return;
     await addProduct({ ...draft, price: Number(draft.price) });
     setDraft({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop', description: '', stock: 0 });
@@ -176,20 +177,128 @@ const AdminProducts: React.FC = () => {
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
-      <div className="bg-white rounded-lg shadow-sm p-4 space-y-3">
-        <h2 className="font-semibold">Add Product</h2>
-        <input value={draft.name} onChange={e=>setDraft({ ...draft, name: e.target.value })} placeholder="Name" className="w-full border rounded px-3 py-2" />
-        <input type="number" value={draft.price} onChange={e=>setDraft({ ...draft, price: Number(e.target.value) })} placeholder="Price (CFA)" className="w-full border rounded px-3 py-2" />
-        <input value={draft.image} onChange={e=>{ setDraft({ ...draft, image: e.target.value }); setPreview(e.target.value); }} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
-        {preview && <img src={preview} alt="preview" className="w-full h-32 object-cover rounded" onError={()=>setPreview('')} />}
-        <input value={draft.category} onChange={e=>setDraft({ ...draft, category: e.target.value })} placeholder="Category" className="w-full border rounded px-3 py-2" />
-        <select value={draft.type} onChange={e=>setDraft({ ...draft, type: e.target.value as any })} className="w-full border rounded px-3 py-2">
-          <option value="shop">Shop</option>
-          <option value="market">Market</option>
-        </select>
-        <input type="number" value={draft.stock} onChange={e=>setDraft({ ...draft, stock: Number(e.target.value) })} placeholder="Stock" className="w-full border rounded px-3 py-2" />
-        <textarea value={draft.description} onChange={e=>setDraft({ ...draft, description: e.target.value })} placeholder="Description" className="w-full border rounded px-3 py-2" rows={3} />
-        <button onClick={create} className="px-3 py-2 bg-[#7cb342] text-white rounded">Create</button>
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <h2 className="font-semibold mb-3">Add Product</h2>
+        <form onSubmit={create} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-1">Product name</label>
+            <input
+              id="name"
+              className="input"
+              value={draft.name}
+              onChange={e=>setDraft({ ...draft, name: e.target.value })}
+              placeholder="e.g., Organic Apples"
+              required
+            />
+            <p className="text-xs text-neutral-600 mt-1">Shown to customers on cards and details.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium mb-1">Price (CFA)</label>
+              <input
+                id="price"
+                type="number"
+                min={0}
+                step={1}
+                className="input"
+                value={draft.price}
+                onChange={e=>setDraft({ ...draft, price: Number(e.target.value) })}
+                placeholder="e.g., 2500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="stock" className="block text-sm font-medium mb-1">Stock</label>
+              <input
+                id="stock"
+                type="number"
+                min={0}
+                step={1}
+                className="input"
+                value={draft.stock}
+                onChange={e=>setDraft({ ...draft, stock: Number(e.target.value) })}
+                placeholder="e.g., 12"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="image" className="block text-sm font-medium mb-1">Image URL</label>
+            <input
+              id="image"
+              className="input"
+              value={draft.image}
+              onChange={e=>{ setDraft({ ...draft, image: e.target.value }); setPreview(e.target.value); }}
+              placeholder="https://..."
+              required
+            />
+            {preview && (
+              <img
+                src={preview}
+                alt="preview"
+                className="w-full h-32 object-cover rounded mt-2"
+                onError={()=>setPreview('')}
+              />
+            )}
+            <p className="text-xs text-neutral-600 mt-1">Use a square image for best results.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium mb-1">Category</label>
+              <input
+                id="category"
+                className="input"
+                value={draft.category}
+                onChange={e=>setDraft({ ...draft, category: e.target.value })}
+                placeholder="e.g., Fruits & Vegetables"
+              />
+            </div>
+            <div>
+              <label htmlFor="type" className="block text-sm font-medium mb-1">Type</label>
+              <select
+                id="type"
+                className="input"
+                value={draft.type}
+                onChange={e=>setDraft({ ...draft, type: e.target.value as any })}
+              >
+                <option value="shop">Shop</option>
+                <option value="market">Market</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="rating" className="block text-sm font-medium mb-1">Rating</label>
+              <input
+                id="rating"
+                type="number"
+                min={0}
+                max={5}
+                step={0.5}
+                className="input"
+                value={draft.rating}
+                onChange={e=>setDraft({ ...draft, rating: Number(e.target.value) })}
+                placeholder="0–5"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium mb-1">Description</label>
+            <textarea
+              id="description"
+              className="input"
+              rows={3}
+              value={draft.description}
+              onChange={e=>setDraft({ ...draft, description: e.target.value })}
+              placeholder="Short, helpful details customers should know"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button type="submit" className="btn btn-primary">Create product</button>
+          </div>
+        </form>
       </div>
       <div className="bg-white rounded-lg shadow-sm p-4">
         <h2 className="font-semibold mb-2">Products</h2>
