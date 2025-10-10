@@ -21,12 +21,18 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
 
-  const featuredProducts = products.filter(p => p.featured).slice(0, 8);
+  const featuredProducts = (
+    products.filter(p => (p.rating ?? 0) >= 4.5).slice(0, 8).length > 0
+      ? products.filter(p => (p.rating ?? 0) >= 4.5).slice(0, 8)
+      : products.slice(0, 8)
+  );
   const newProducts = products.slice(0, 8);
-  const bestsellerProducts = products.filter(p => p.rating >= 4.5).slice(0, 8);
+  const bestsellerProducts = [...products]
+    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+    .slice(0, 8);
 
   const displayedProducts = {
     featured: featuredProducts.length > 0 ? featuredProducts : products.slice(0, 8),
@@ -256,24 +262,50 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </div>
           </div>
 
-          {/* Featured Products */}
+          {/* Products Section with Tabs */}
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <div className="flex items-center justify-center gap-6 mb-6 border-b pb-4">
-              <button className="text-[#7cb342] font-semibold border-b-2 border-[#7cb342] pb-2">
-                Featured Product
-              </button>
-              <button className="text-gray-600 hover:text-[#7cb342] font-semibold pb-2">
-                New Arrival
-              </button>
-              <button className="text-gray-600 hover:text-[#7cb342] font-semibold pb-2">
-                Best Sellers
-              </button>
+            <div className="flex items-center justify-between gap-4 mb-6 border-b pb-4 flex-wrap">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setActiveTab('featured')}
+                  className={`pb-2 font-semibold ${activeTab==='featured' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                >
+                  Featured
+                </button>
+                <button
+                  onClick={() => setActiveTab('new')}
+                  className={`pb-2 font-semibold ${activeTab==='new' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                >
+                  New Arrivals
+                </button>
+                <button
+                  onClick={() => setActiveTab('bestseller')}
+                  className={`pb-2 font-semibold ${activeTab==='bestseller' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                >
+                  Best Sellers
+                </button>
+              </div>
+              <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {featuredProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
+                      <div className="w-full h-40 bg-gray-200 rounded-t-lg" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                        <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                        <div className="h-6 w-1/4 bg-gray-200 rounded" />
+                      </div>
+                    </div>
+                  ))
+                : displayedProducts.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
             </div>
+            {!loading && displayedProducts.length === 0 && (
+              <div className="text-center text-sm text-gray-500 py-8">No products to display.</div>
+            )}
           </div>
 
           {/* Category Sections */}
