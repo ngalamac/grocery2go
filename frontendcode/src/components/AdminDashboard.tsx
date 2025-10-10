@@ -168,8 +168,11 @@ const AdminProducts: React.FC = () => {
   const [editId, setEditId] = useState<string|null>(null);
   const [edit, setEdit] = useState(draft);
   const [preview, setPreview] = useState('');
+  const [editPreview, setEditPreview] = useState('');
   const [isImporting, setIsImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const imageFileRef = useRef<HTMLInputElement | null>(null);
+  const editImageFileRef = useRef<HTMLInputElement | null>(null);
 
   const csvHeader = useMemo(() => ['name','price','image','category','type','rating','description','stock'], []);
 
@@ -272,6 +275,34 @@ const AdminProducts: React.FC = () => {
 
   const onPickFile = () => fileInputRef.current?.click();
 
+  const onPickImageAdd = () => imageFileRef.current?.click();
+  const onImageFileSelectedAdd: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || '');
+      setDraft(prev => ({ ...prev, image: dataUrl }));
+      setPreview(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onPickImageEdit = () => editImageFileRef.current?.click();
+  const onImageFileSelectedEdit: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || '');
+      setEdit(prev => ({ ...prev, image: dataUrl }));
+      setEditPreview(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const onImportFile: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     const file = e.target.files?.[0];
     e.target.value = '';
@@ -370,15 +401,19 @@ const AdminProducts: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="image" className="block text-sm font-medium mb-1">Image URL</label>
+            <label htmlFor="image" className="block text-sm font-medium mb-1">Image</label>
             <input
               id="image"
               className="input"
               value={draft.image}
               onChange={e=>{ setDraft({ ...draft, image: e.target.value }); setPreview(e.target.value); }}
-              placeholder="https://..."
+              placeholder="https://... or data:image/..."
               required
             />
+            <div className="mt-2 flex items-center gap-2">
+              <input ref={imageFileRef} type="file" accept="image/*" className="hidden" onChange={onImageFileSelectedAdd} />
+              <button type="button" className="btn btn-outline text-sm px-3 py-2" onClick={onPickImageAdd}>Upload from device</button>
+            </div>
             {preview && (
               <img
                 src={preview}
@@ -456,7 +491,7 @@ const AdminProducts: React.FC = () => {
                 <div className="font-semibold text-sm">{p.name}</div>
                 <div className="text-xs text-gray-500">{p.price} CFA • {p.category} • {p.type}</div>
               </div>
-              <button onClick={()=>{ setEditId(p.id); setEdit({ name: p.name, price: p.price, image: p.image, rating: p.rating, category: p.category, type: p.type, description: p.description || '', stock: p.stock || 0 }); }} className="text-blue-600 text-sm">Edit</button>
+              <button onClick={()=>{ setEditId(p.id); setEdit({ name: p.name, price: p.price, image: p.image, rating: p.rating, category: p.category, type: p.type, description: p.description || '', stock: p.stock || 0 }); setEditPreview(p.image); }} className="text-blue-600 text-sm">Edit</button>
               <button onClick={()=>removeProduct(p.id)} className="text-red-600 text-sm">Delete</button>
             </div>
           ))}
@@ -470,7 +505,14 @@ const AdminProducts: React.FC = () => {
             <h3 className="font-semibold">Edit Product</h3>
             <input value={edit.name} onChange={e=>setEdit({ ...edit, name: e.target.value })} placeholder="Name" className="w-full border rounded px-3 py-2" />
             <input type="number" value={edit.price} onChange={e=>setEdit({ ...edit, price: Number(e.target.value) })} placeholder="Price" className="w-full border rounded px-3 py-2" />
-            <input value={edit.image} onChange={e=>setEdit({ ...edit, image: e.target.value })} placeholder="Image URL" className="w-full border rounded px-3 py-2" />
+            <div>
+              <input value={edit.image} onChange={e=>setEdit({ ...edit, image: e.target.value })} placeholder="Image URL or data URL" className="w-full border rounded px-3 py-2" />
+              <div className="mt-2 flex items-center gap-2">
+                <input ref={editImageFileRef} type="file" accept="image/*" className="hidden" onChange={onImageFileSelectedEdit} />
+                <button type="button" className="px-3 py-2 bg-gray-100 rounded" onClick={onPickImageEdit}>Upload from device</button>
+              </div>
+              {editPreview && <img src={editPreview} alt="preview" className="w-full h-32 object-cover rounded mt-2" onError={()=>setEditPreview('')} />}
+            </div>
             <input value={edit.category} onChange={e=>setEdit({ ...edit, category: e.target.value })} placeholder="Category" className="w-full border rounded px-3 py-2" />
             <select value={edit.type} onChange={e=>setEdit({ ...edit, type: e.target.value as any })} className="w-full border rounded px-3 py-2">
               <option value="shop">Shop</option>
