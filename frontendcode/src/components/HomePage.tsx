@@ -411,15 +411,30 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </div>
           </div>
 
-          {/* Logo List */}
+          {/* Featured Brands */}
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
-              Logo List
+              Featured Brands
             </h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="border rounded-lg p-4 flex items-center justify-center hover:shadow-md transition">
-                  <div className="text-gray-400 text-xs text-center">Brand Logo</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
+              {[
+                { name: 'Fresh Valley', image: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Daily Dairy', image: 'https://images.pexels.com/photos/728273/pexels-photo-728273.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Bakehouse Co.', image: 'https://images.pexels.com/photos/263168/pexels-photo-263168.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'Vital Drinks', image: 'https://images.pexels.com/photos/1556706/pexels-photo-1556706.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'PantryPro', image: 'https://images.pexels.com/photos/3952047/pexels-photo-3952047.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                { name: 'MarketHub', image: 'https://images.pexels.com/photos/4051786/pexels-photo-4051786.jpeg?auto=compress&cs=tinysrgb&w=600' },
+              ].map(brand => (
+                <div key={brand.name} className="rounded-lg overflow-hidden border hover:shadow-md transition group bg-white">
+                  <div className="w-full aspect-[3/2] bg-neutral-100 overflow-hidden">
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  </div>
+                  <div className="px-3 py-2 text-center text-sm font-medium">{brand.name}</div>
                 </div>
               ))}
             </div>
