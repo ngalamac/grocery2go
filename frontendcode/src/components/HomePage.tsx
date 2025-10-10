@@ -308,6 +308,53 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             )}
           </div>
 
+          {/* Image gallery by product type */}
+          {(products?.length || 0) > 0 && (
+            <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+              <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">Browse by Type</h3>
+              <div className="space-y-8">
+                {products.some(p => p.type === 'shop') && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold text-[#2e7d32]">Shop</h4>
+                      <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
+                    </div>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+                      {products.filter(p => p.type === 'shop').map((p) => (
+                        <img
+                          key={p.id}
+                          src={p.image}
+                          alt={p.name}
+                          loading="lazy"
+                          className="w-full aspect-square object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {products.some(p => p.type === 'market') && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold text-[#2e7d32]">Market</h4>
+                      <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
+                    </div>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+                      {products.filter(p => p.type === 'market').map((p) => (
+                        <img
+                          key={p.id}
+                          src={p.image}
+                          alt={p.name}
+                          loading="lazy"
+                          className="w-full aspect-square object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Category Sections */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative rounded-lg overflow-hidden shadow-md group cursor-pointer">
