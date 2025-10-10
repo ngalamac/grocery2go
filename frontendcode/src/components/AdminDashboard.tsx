@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useReviews } from '../context/ReviewsContext';
 import { useProducts } from '../context/ProductsContext';
+import { useToast } from '../context/ToastContext';
 import { reviewsApi, ordersApi, couponsApi } from '../services/api';
 
 const AdminDashboard: React.FC = () => {
@@ -162,10 +163,146 @@ const AdminCoupons: React.FC = () => {
 
 const AdminProducts: React.FC = () => {
   const { products, addProduct, updateProduct, removeProduct } = useProducts();
+  const { show } = useToast();
   const [draft, setDraft] = useState({ name: '', price: 0, image: '', rating: 5, category: 'Pantry', type: 'shop' as 'shop'|'market', description: '', stock: 0 });
   const [editId, setEditId] = useState<string|null>(null);
   const [edit, setEdit] = useState(draft);
   const [preview, setPreview] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const csvHeader = useMemo(() => ['name','price','image','category','type','rating','description','stock'], []);
+
+  const saveFile = (filename: string, content: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportJSON = () => {
+    const rows = products.map(p => ({
+      name: p.name,
+      price: p.price,
+      image: p.image,
+      category: p.category,
+      type: p.type,
+      rating: p.rating,
+      description: p.description ?? '',
+      stock: p.stock ?? 0,
+    }));
+    saveFile('products-export.json', JSON.stringify(rows, null, 2), 'application/json');
+  };
+
+  const escapeCSV = (value: any) => {
+    const s = value == null ? '' : String(value);
+    if (/[",\n]/.test(s)) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  };
+
+  const exportCSV = () => {
+    const header = csvHeader.join(',');
+    const body = products.map(p => [
+      p.name,
+      p.price,
+      p.image,
+      p.category,
+      p.type,
+      p.rating,
+      p.description ?? '',
+      p.stock ?? 0,
+    ].map(escapeCSV).join(',')).join('\n');
+    saveFile('products-export.csv', header + '\n' + body + '\n', 'text/csv;charset=utf-8');
+  };
+
+  const downloadTemplate = () => {
+    const header = csvHeader.join(',');
+    const sample = ['Organic Apples', '2500', 'https://example.com/apple.jpg', 'Fruits & Vegetables', 'shop', '4.5', 'Crisp and sweet', '24']
+      .map(escapeCSV).join(',');
+    saveFile('products-template.csv', header + '\n' + sample + '\n', 'text/csv;charset=utf-8');
+  };
+
+  const parseCSV = (text: string): Record<string, string>[] => {
+    const rows: string[][] = [];
+    let i = 0, field = '', row: string[] = [], inQuotes = false;
+    while (i < text.length) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else { field += c; }
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++; // CRLF
+          row.push(field); field = '';
+          if (row.length > 1 || row[0] !== '') rows.push(row);
+          row = [];
+        } else { field += c; }
+      }
+      i++;
+    }
+    if (field.length > 0 || row.length) { row.push(field); rows.push(row); }
+    if (rows.length === 0) return [];
+    const header = rows[0];
+    return rows.slice(1).filter(r => r.some(cell => cell && cell.trim() !== '')).map(r => Object.fromEntries(header.map((h, idx) => [h.trim(), (r[idx] ?? '').trim()])));
+  };
+
+  const coerceProduct = (raw: any) => {
+    const name = String(raw.name || '').trim();
+    const image = String(raw.image || '').trim();
+    const price = Number(raw.price);
+    const rating = raw.rating === undefined || raw.rating === '' ? 5 : Number(raw.rating);
+    const stock = raw.stock === undefined || raw.stock === '' ? 0 : Number(raw.stock);
+    const category = String(raw.category || 'Pantry');
+    const type = (raw.type === 'market' ? 'market' : 'shop') as 'shop'|'market';
+    const description = String(raw.description || '');
+    if (!name || !image || !Number.isFinite(price)) return null;
+    return { name, price, image, category, type, rating: Number.isFinite(rating) ? rating : 5, description, stock: Number.isFinite(stock) ? stock : 0 };
+  };
+
+  const onPickFile = () => fileInputRef.current?.click();
+
+  const onImportFile: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const text = await file.text();
+      let records: any[] = [];
+      if (/\.json$/i.test(file.name) || text.trim().startsWith('[')) {
+        const data = JSON.parse(text);
+        records = Array.isArray(data) ? data : [data];
+      } else {
+        records = parseCSV(text);
+      }
+      const items = records.map(coerceProduct).filter(Boolean) as Array<Omit<ReturnType<typeof coerceProduct>, 'id'>> as any[];
+      if (items.length === 0) {
+        show('No valid products found in file.', { type: 'error' });
+        return;
+      }
+      setIsImporting(true);
+      let success = 0, failed = 0;
+      for (const item of items) {
+        try { await addProduct(item as any); success++; }
+        catch { failed++; }
+      }
+      show(`Imported ${success} products${failed ? `, ${failed} failed` : ''}.`, { type: failed ? 'warning' : 'success' });
+    } catch (err) {
+      show('Failed to import file. Ensure it is valid JSON or CSV.', { type: 'error' });
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   const create = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -178,7 +315,16 @@ const AdminProducts: React.FC = () => {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <div className="bg-white rounded-lg shadow-sm p-4">
-        <h2 className="font-semibold mb-3">Add Product</h2>
+        <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+          <h2 className="font-semibold">Add Product</h2>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={exportJSON} className="btn btn-outline text-sm px-3 py-2">Export JSON</button>
+            <button type="button" onClick={exportCSV} className="btn btn-outline text-sm px-3 py-2">Export CSV</button>
+            <button type="button" onClick={downloadTemplate} className="btn btn-ghost text-sm px-3 py-2">Template CSV</button>
+            <input ref={fileInputRef} type="file" accept=".json,.csv,text/csv,application/json" className="hidden" onChange={onImportFile} />
+            <button type="button" onClick={onPickFile} className="btn btn-secondary text-sm px-3 py-2" disabled={isImporting}>{isImporting ? 'Importing…' : 'Import JSON/CSV'}</button>
+          </div>
+        </div>
         <form onSubmit={create} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-1">Product name</label>
