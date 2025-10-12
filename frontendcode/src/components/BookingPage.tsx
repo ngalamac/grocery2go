@@ -86,7 +86,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
         Back to Cart
       </button>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-2xl font-bold mb-6">Complete Your Shopping Request</h2>
 
@@ -122,25 +122,25 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
             <div>
               <h3 className="font-semibold mb-3">Additional Items Not in Catalog</h3>
               <div className="space-y-3">
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={newItemName}
                     onChange={(e) => setNewItemName(e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
+                    className="w-full sm:flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
                     placeholder="Item name"
                   />
                   <input
                     type="number"
                     value={newItemPrice}
                     onChange={(e) => setNewItemPrice(e.target.value)}
-                    className="w-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
+                    className="w-full sm:w-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
                     placeholder="Price CFA"
                   />
                   <button
                     type="button"
                     onClick={handleAddItem}
-                    className="bg-[#7cb342] text-white px-4 py-2 rounded-md hover:bg-[#689f38] transition flex items-center gap-1"
+                    className="w-full sm:w-auto bg-[#7cb342] text-white px-4 py-2 rounded-md hover:bg-[#689f38] transition flex items-center justify-center gap-1"
                   >
                     <Plus size={16} />
                     Add
@@ -150,8 +150,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 {additionalItems.length > 0 && (
                   <div className="space-y-2">
                     {additionalItems.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
-                        <div>
+                      <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-md">
+                        <div className="min-w-0">
                           <span className="font-medium">{item.name}</span>
                           <span className="text-gray-600 ml-2">- {item.estimatedPrice} CFA</span>
                         </div>
@@ -202,7 +202,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
         </div>
 
         <div>
-          <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 lg:sticky top-24">
             <h3 className="text-xl font-bold mb-4">Shopping Summary</h3>
 
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
@@ -218,7 +218,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                     className="w-12 h-12 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <h4 className="font-medium text-sm">{item.name}</h4>
+                    <h4 className="font-medium text-sm break-words">{item.name}</h4>
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                   </div>
                   <div className="text-right">
