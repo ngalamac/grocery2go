@@ -33,7 +33,9 @@ app.use(
     },
   })
 );
-app.use(express.json());
+// Increase body size limits to allow base64 image payloads from the admin UI
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 connectDB();
 
