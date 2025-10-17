@@ -16,6 +16,7 @@ import { useQuickView } from '../context/QuickViewContext';
 import Button from './ui/Button';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
+import { Container } from './ui';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -115,7 +116,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   }, [heroSlides.length]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <Container className="py-6">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar */}
         <div className="hidden lg:block w-80 flex-shrink-0">
@@ -464,7 +465,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
 
         <BrandGallery />
       </div>
-    </div>
+    </Container>
   );
 };
 

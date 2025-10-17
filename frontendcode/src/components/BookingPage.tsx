@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { AdditionalItem } from '../types';
+import { Container } from './ui';
 
 interface BookingPageProps {
   onBack: () => void;
@@ -77,10 +78,10 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <Container className="py-6">
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-[#7cb342] hover:text-[#689f38] mb-6 transition"
+        className="flex items-center gap-2 text-primary-600 hover:text-primary-700 mb-6 transition"
       >
         <ArrowLeft size={20} />
         Back to Cart
@@ -269,7 +270,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
