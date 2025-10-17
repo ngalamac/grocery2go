@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, ShoppingCart, Heart, Eye, Zap } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Eye, Zap, Clock, Bike, BadgePercent } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
@@ -48,6 +48,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const discountPercentage = product.featured ? 15 : 0;
   const hasDiscount = discountPercentage > 0;
+  const etaMins = 25 + Math.floor(Math.random() * 20); // demo ETA
+  const deliveryFee = product.type === 'market' ? 700 : 500; // demo fee
 
   return (
     <motion.div
@@ -92,7 +94,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Heart size={18} fill={inWishlist ? 'currentColor' : 'none'} />
       </motion.button>
 
-      <div className="relative overflow-hidden aspect-square bg-neutral-100">
+      <div className="relative overflow-hidden aspect-[4/3] bg-neutral-100">
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
@@ -109,35 +111,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           loading="lazy"
         />
 
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            <div className="flex gap-2">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleQuickView}
-                className="flex-1 bg-white/95 hover:bg-white text-neutral-900 py-2.5 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm"
-              >
-                <Eye size={16} />
-                Quick View
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleAddToCart}
-                className="bg-primary-500 hover:bg-primary-600 text-white p-2.5 rounded-lg transition-all shadow-sm"
-                title="Add to cart"
-              >
-                <ShoppingCart size={18} />
-              </motion.button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        {/* Overlay ETA and fee badges */}
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
+          <div className="px-2 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur border text-neutral-800 flex items-center gap-1">
+            <Clock size={14} /> {etaMins}-{etaMins + 10} min
+          </div>
+          <div className="px-2 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur border text-neutral-800 flex items-center gap-1">
+            <Bike size={14} /> {deliveryFee} CFA
+          </div>
+        </div>
       </div>
 
       <div className="p-4">
