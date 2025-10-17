@@ -35,6 +35,7 @@ import DashboardLayout from './components/DashboardLayout';
 import OrderDetailsPage from './components/OrderDetailsPage';
 import { RequireAdmin, RequireAuth } from './components/RouteGuards';
 import ChatbotButton from './components/ChatbotButton';
+import { BottomNav } from './components/ui';
 import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
@@ -150,6 +151,7 @@ function App() {
         <QuickViewModal />
         <ChatbotButton />
         <Footer />
+        <BottomNav onCart={() => setIsCartOpen(true)} />
       </div>
     );
   }

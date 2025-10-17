@@ -8,3 +8,4 @@ export { default as SkeletonCard } from './SkeletonCard';
 export { default as Select } from './Select';
 export { default as Textarea } from './Textarea';
 export { default as Container } from './Container';
+export { default as BottomNav } from './BottomNav';
