@@ -55,8 +55,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      whileHover={{ y: -4 }}
-      className="group relative bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden cursor-pointer"
+      whileHover={{ y: -2 }}
+      className="group relative bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer border border-gray-100"
       onClick={handleNavigateToProduct}
     >
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
@@ -93,17 +93,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Heart size={18} fill={inWishlist ? 'currentColor' : 'none'} />
       </motion.button>
 
-      <div className="relative overflow-hidden aspect-[4/3] bg-neutral-100">
+      <div className="relative overflow-hidden aspect-square bg-gray-50">
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full" />
+            <div className="animate-spin h-6 w-6 border-2 border-primary-500 border-t-transparent rounded-full" />
           </div>
         )}
         <img
           src={product.image}
           alt={product.name}
           className={cn(
-            'w-full h-full object-cover transition-all duration-500 group-hover:scale-110',
+            'w-full h-full object-cover transition-all duration-300 group-hover:scale-105',
             imageLoaded ? 'opacity-100' : 'opacity-0'
           )}
           onLoad={() => setImageLoaded(true)}
@@ -142,57 +142,45 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-neutral-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
+        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-sm leading-tight">
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-1.5 mb-2">
+        <div className="flex items-center gap-1.5 mb-3">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                size={14}
+                size={12}
                 className={
                   i < Math.floor(product.rating)
-                    ? 'fill-secondary-500 text-secondary-500'
-                    : 'text-neutral-300'
+                    ? 'fill-yellow-400 text-yellow-400'
+                    : 'text-gray-300'
                 }
               />
             ))}
           </div>
-          <span className="text-sm text-neutral-600">({product.rating})</span>
+          <span className="text-xs text-gray-600 font-medium">({product.rating})</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             {hasDiscount && (
-              <span className="text-sm text-neutral-500 line-through">
+              <span className="text-xs text-gray-500 line-through">
                 {product.price} CFA
               </span>
             )}
-            <div className="text-xl font-bold text-primary-600">
+            <div className="text-lg font-bold text-gray-900">
               {hasDiscount
                 ? `${Math.round(product.price * (1 - discountPercentage / 100))} CFA`
                 : (product.priceRange || `${product.price} CFA`)}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="text-xs text-neutral-500 inline-flex items-center gap-1">
-              <Timer size={14} />
+          <div className="flex items-center gap-1">
+            <div className="text-xs text-gray-500 inline-flex items-center gap-1">
+              <Timer size={12} />
               <span>25-40 min</span>
             </div>
-            {product.stock !== undefined && (
-              <div className={cn(
-                'text-xs font-medium px-2 py-1 rounded-full',
-                product.stock > 10
-                  ? 'bg-green-100 text-green-700'
-                  : product.stock > 0
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-red-100 text-red-700'
-              )}>
-                {product.stock > 10 ? 'In Stock' : product.stock > 0 ? `Only ${product.stock} left` : 'Out of Stock'}
-              </div>
-            )}
           </div>
         </div>
       </div>

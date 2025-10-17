@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Heart, Search, Menu, X, LogOut, MapPin } from 'lucide-react';
+import { ShoppingCart, User, Heart, Search, Menu, X, LogOut, MapPin, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -23,39 +23,40 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
   const [isLocationOpen, setIsLocationOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-primary-500 text-white shadow-md">
-      <Container className="py-2">
+    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+      <Container className="py-3">
         <div className="flex items-center justify-between gap-3">
-          {/* Brand / Home */}
+          {/* Brand / Home - Talabat style */}
           <button onClick={onHomeClick} className="flex items-center gap-2">
-            <div className="bg-white text-primary-600 w-9 h-9 rounded-lg grid place-items-center font-bold">
-              🛒
+            <div className="bg-primary-500 text-white w-10 h-10 rounded-lg grid place-items-center font-bold text-lg">
+              T
             </div>
-            <span className="hidden sm:block font-semibold">Grocery2Go</span>
+            <span className="hidden sm:block font-bold text-xl text-gray-900">Talabat</span>
           </button>
 
-          {/* Location selector */}
+          {/* Location selector - Talabat style */}
           <button
             onClick={() => setIsLocationOpen(true)}
-            className="flex-1 hidden md:flex items-center gap-2 max-w-md bg-primary-600/40 hover:bg-primary-600/60 rounded-md px-3 py-2"
+            className="flex-1 hidden md:flex items-center gap-2 max-w-md bg-gray-50 hover:bg-gray-100 rounded-lg px-4 py-3 border border-gray-200"
             aria-label="Change location"
           >
-            <MapPin size={16} className="opacity-90" />
+            <MapPin size={18} className="text-primary-500" />
             <div className="text-left leading-tight truncate">
-              <div className="text-[10px] uppercase opacity-90">Deliver to</div>
-              <div className="text-sm font-semibold truncate">{location.city}{location.area ? `, ${location.area}` : ''}</div>
+              <div className="text-xs text-gray-500">Deliver to</div>
+              <div className="text-sm font-semibold text-gray-900 truncate">{location.city}{location.area ? `, ${location.area}` : ''}</div>
             </div>
+            <ChevronDown size={16} className="text-gray-400" />
           </button>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button onClick={() => navigate('/wishlist')} className="hidden sm:inline-flex p-2 rounded-full hover:bg-primary-600/40" title="Wishlist">
-              <Heart size={22} />
+          {/* Actions - Talabat style */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button onClick={() => navigate('/wishlist')} className="hidden sm:inline-flex p-2 rounded-lg hover:bg-gray-100" title="Wishlist">
+              <Heart size={20} className="text-gray-600" />
             </button>
-            <button onClick={onCartClick} className="relative inline-flex p-2 rounded-full hover:bg-primary-600/40" title="Cart">
-              <ShoppingCart size={22} />
+            <button onClick={onCartClick} className="relative inline-flex p-2 rounded-lg hover:bg-gray-100" title="Cart">
+              <ShoppingCart size={20} className="text-gray-600" />
               {getCartCount() > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-accent-500 text-white text-[10px] w-5 h-5 rounded-full grid place-items-center">
+                <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs w-5 h-5 rounded-full grid place-items-center font-semibold">
                   {getCartCount()}
                 </span>
               )}
@@ -63,60 +64,60 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
             {user ? (
               <>
                 {user.role === 'admin' && (
-                  <button onClick={() => navigate('/admin')} className="hidden sm:inline-flex px-2 py-1 rounded hover:bg-primary-600/40 text-sm">Admin</button>
+                  <button onClick={() => navigate('/admin')} className="hidden sm:inline-flex px-3 py-1.5 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700">Admin</button>
                 )}
-                <button onClick={() => navigate('/dashboard/profile')} className="hidden sm:inline-flex px-2 py-1 rounded hover:bg-primary-600/40 text-sm">
+                <button onClick={() => navigate('/dashboard/profile')} className="hidden sm:inline-flex px-3 py-1.5 rounded-lg hover:bg-gray-100 text-sm font-medium text-gray-700">
                   {user.name || user.email}
                 </button>
-                <button onClick={logout} className="inline-flex p-2 rounded-full hover:bg-primary-600/40" title="Logout">
-                  <LogOut size={20} />
+                <button onClick={logout} className="inline-flex p-2 rounded-lg hover:bg-gray-100" title="Logout">
+                  <LogOut size={18} className="text-gray-600" />
                 </button>
               </>
             ) : (
-              <button onClick={openAuthModal} className="inline-flex p-2 rounded-full hover:bg-primary-600/40">
-                <User size={22} />
+              <button onClick={openAuthModal} className="inline-flex p-2 rounded-lg hover:bg-gray-100">
+                <User size={20} className="text-gray-600" />
               </button>
             )}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden inline-flex p-2 rounded-full hover:bg-primary-600/40">
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden inline-flex p-2 rounded-lg hover:bg-gray-100">
+              {mobileMenuOpen ? <X size={20} className="text-gray-600" /> : <Menu size={20} className="text-gray-600" />}
             </button>
           </div>
         </div>
 
-        {/* Search input - visible on all viewports under the top row */}
-        <div className="mt-2">
-          <div className="flex items-center gap-2 bg-white text-neutral-700 rounded-lg px-3 py-2 shadow-sm">
-            <Search className="text-neutral-400" size={18} />
+        {/* Search input - Talabat style */}
+        <div className="mt-3">
+          <div className="flex items-center gap-3 bg-gray-50 text-gray-700 rounded-lg px-4 py-3 border border-gray-200">
+            <Search className="text-gray-400" size={18} />
             <input
               type="text"
               placeholder="Search for restaurants, groceries or items"
-              className="flex-1 bg-transparent placeholder-neutral-400 focus:outline-none text-sm"
+              className="flex-1 bg-transparent placeholder-gray-400 focus:outline-none text-sm"
             />
           </div>
         </div>
       </Container>
 
-      {/* Secondary nav (chips) */}
-      <nav className={`${mobileMenuOpen ? 'block' : 'hidden md:block'} bg-white text-neutral-700`}>
-        <Container className="py-2">
-          <ul className="flex items-center gap-4 overflow-x-auto whitespace-nowrap">
+      {/* Secondary nav - Talabat style */}
+      <nav className={`${mobileMenuOpen ? 'block' : 'hidden md:block'} bg-white border-t border-gray-100`}>
+        <Container className="py-3">
+          <ul className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
             <li>
-              <button onClick={onHomeClick} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Home</button>
+              <button onClick={onHomeClick} className="px-4 py-2 rounded-full text-sm font-medium bg-primary-500 text-white hover:bg-primary-600 transition-colors">Home</button>
             </li>
             <li>
-              <button onClick={onShopClick} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Shop</button>
+              <button onClick={onShopClick} className="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Shop</button>
             </li>
             <li>
-              <button onClick={onMarketClick} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Market</button>
+              <button onClick={onMarketClick} className="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Market</button>
             </li>
             <li>
-              <button onClick={() => navigate('/orders')} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Orders</button>
+              <button onClick={() => navigate('/orders')} className="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Orders</button>
             </li>
             <li>
-              <button onClick={() => navigate('/track-order')} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Track</button>
+              <button onClick={() => navigate('/track-order')} className="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Track</button>
             </li>
             <li>
-              <button onClick={() => navigate('/coupon')} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Offers</button>
+              <button onClick={() => navigate('/coupon')} className="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Offers</button>
             </li>
           </ul>
         </Container>

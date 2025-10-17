@@ -96,53 +96,63 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   return (
     <Container className="py-4">
       <div className="space-y-6">
-        {/* Hero carousel simplified to app-like banner */}
-        <div className="relative rounded-xl overflow-hidden shadow-medium">
+        {/* Hero carousel - Talabat style */}
+        <div className="relative rounded-2xl overflow-hidden shadow-lg">
           <img
             src={heroSlides[currentSlide].image}
             alt="Hero"
-            className="w-full h-44 sm:h-56 md:h-64 object-cover"
+            className="w-full h-48 sm:h-56 md:h-64 object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight">
-              {heroSlides[currentSlide].title} <span className="font-medium">{heroSlides[currentSlide].subtitle}</span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6 text-white">
+            <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-2">
+              {heroSlides[currentSlide].title} <span className="font-normal">{heroSlides[currentSlide].subtitle}</span>
             </h1>
-            <p className="text-sm opacity-90">{heroSlides[currentSlide].tagline}</p>
+            <p className="text-base opacity-90 mb-4">{heroSlides[currentSlide].tagline}</p>
+            <button className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+              Order Now
+            </button>
           </div>
           {heroSlides.length > 1 && (
-            <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-2">
+            <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2">
               {heroSlides.map((_, i) => (
-                <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2 h-2 rounded-full ${i===currentSlide?'bg-white':'bg-white/40'}`} />
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2 h-2 rounded-full transition-colors ${i===currentSlide?'bg-white':'bg-white/40'}`} />
               ))}
             </div>
           )}
-          <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full">
-            <ChevronLeft size={20} />
+          <button onClick={prevSlide} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg">
+            <ChevronLeft size={20} className="text-gray-700" />
           </button>
-          <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full">
-            <ChevronRight size={20} />
+          <button onClick={nextSlide} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg">
+            <ChevronRight size={20} className="text-gray-700" />
           </button>
         </div>
 
-        {/* Quick chips row */}
-        <div className="bg-white rounded-xl shadow-soft p-3">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        {/* Quick categories - Talabat style */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Categories</h2>
+          <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
             {quickCategories.map((cat, idx) => (
-              <button key={idx} className="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-sm">
-                <span className="text-lg">{cat.icon}</span>
-                <span>{cat.name}</span>
+              <button 
+                key={idx} 
+                className="shrink-0 flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors min-w-[80px]"
+              >
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                  <span className="text-2xl">{cat.icon}</span>
+                </div>
+                <span className="text-xs font-medium text-gray-700 text-center">{cat.name}</span>
               </button>
             ))}
           </div>
         </div>
 
-          {/* Features */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+          {/* Features - Talabat style */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <h2 className="text-lg font-bold text-gray-900 mb-6">Why Choose Us</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {features.map((feature, index) => (
                 <div key={index} className="text-center">
-                  <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="bg-primary-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <span className="text-2xl">
                       {feature.icon === 'truck' && '🚚'}
                       {feature.icon === 'clock' && '⏰'}
@@ -152,77 +162,86 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                       {feature.icon === 'award' && '🏆'}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-sm mb-1">{feature.title}</h3>
-                  <p className="text-xs text-gray-500">{feature.description}</p>
+                  <h3 className="font-bold text-sm mb-1 text-gray-900">{feature.title}</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">{feature.description}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Category Banners */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="relative rounded-lg overflow-hidden shadow-md group cursor-pointer">
+          {/* Category Banners - Talabat style */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative rounded-2xl overflow-hidden shadow-sm group cursor-pointer border border-gray-100">
               <img
                 src="https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=500"
                 alt="Groceries"
-                className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
+                className="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
                 <div className="text-white">
                   <h3 className="text-2xl font-bold mb-2">Groceries</h3>
-                  <p className="text-sm mb-2">Sale Off 25% Get Over 20$ In saving</p>
+                  <p className="text-sm mb-3 opacity-90">Sale Off 25% Get Over 20$ In saving</p>
+                  <button className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">
+                    Shop Now
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="relative rounded-lg overflow-hidden shadow-md group cursor-pointer">
+            <div className="relative rounded-2xl overflow-hidden shadow-sm group cursor-pointer border border-gray-100">
               <img
                 src="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=500"
                 alt="Nutrition Foods"
-                className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
+                className="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
                 <div className="text-white">
                   <h3 className="text-2xl font-bold mb-2">Nutrition Foods</h3>
-                  <p className="text-sm mb-2">In Store Now Plus Gift Set With Deal</p>
+                  <p className="text-sm mb-3 opacity-90">In Store Now Plus Gift Set With Deal</p>
+                  <button className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">
+                    Shop Now
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Products Section with Tabs styled like Talabat sections */}
-          <div className="bg-white rounded-xl shadow-soft p-4 md:p-6">
-            <div className="flex items-center justify-between gap-4 mb-6 border-b pb-4 flex-wrap">
-              <div className="flex items-center gap-4">
+          {/* Products Section - Talabat style */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-6">
                 <button
                   onClick={() => setActiveTab('featured')}
-                  className={`pb-2 font-semibold ${activeTab==='featured' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
+                  className={`pb-2 font-bold text-lg ${activeTab==='featured' ? 'text-primary-500 border-b-2 border-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
                 >
                   Featured
                 </button>
                 <button
                   onClick={() => setActiveTab('new')}
-                  className={`pb-2 font-semibold ${activeTab==='new' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
+                  className={`pb-2 font-bold text-lg ${activeTab==='new' ? 'text-primary-500 border-b-2 border-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
                 >
                   New Arrivals
                 </button>
                 <button
                   onClick={() => setActiveTab('bestseller')}
-                  className={`pb-2 font-semibold ${activeTab==='bestseller' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
+                  className={`pb-2 font-bold text-lg ${activeTab==='bestseller' ? 'text-primary-500 border-b-2 border-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
                 >
                   Best Sellers
                 </button>
               </div>
-              <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
+              <button onClick={onShopClick} className="text-sm font-semibold text-primary-500 hover:text-primary-600 flex items-center gap-1">
+                See all
+                <ChevronRight size={16} />
+              </button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {loading
                 ? Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
-                      <div className="w-full h-40 bg-gray-200 rounded-t-lg" />
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 w-1/2 bg-gray-200 rounded" />
-                        <div className="h-3 w-1/3 bg-gray-200 rounded" />
-                        <div className="h-6 w-1/4 bg-gray-200 rounded" />
+                    <div key={i} className="animate-pulse bg-gray-50 rounded-xl p-4">
+                      <div className="w-full h-32 bg-gray-200 rounded-lg mb-3" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                        <div className="h-3 w-1/2 bg-gray-200 rounded" />
+                        <div className="h-6 w-1/3 bg-gray-200 rounded" />
                       </div>
                     </div>
                   ))
@@ -231,27 +250,34 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                   ))}
             </div>
             {!loading && displayedProducts.length === 0 && (
-              <div className="text-center text-sm text-gray-500 py-8">No products to display.</div>
+              <div className="text-center text-gray-500 py-12">
+                <div className="text-4xl mb-2">🍽️</div>
+                <p className="text-lg font-medium">No products available</p>
+                <p className="text-sm">Check back later for new items</p>
+              </div>
             )}
           </div>
 
-          {/* Image gallery by product type */}
+          {/* Image gallery by product type - Talabat style */}
           {(products?.length || 0) > 0 && (
-            <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-              <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">Browse by Type</h3>
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+              <h3 className="text-xl font-bold mb-6 text-gray-900">Browse by Type</h3>
               <div className="space-y-8">
                 {products.some(p => p.type === 'shop') && (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-primary-700">Shop</h4>
-                      <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-lg text-gray-900">Shop</h4>
+                      <button onClick={onShopClick} className="text-sm font-semibold text-primary-500 hover:text-primary-600 flex items-center gap-1">
+                        See all
+                        <ChevronRight size={16} />
+                      </button>
                     </div>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
                       {products.filter(p => p.type === 'shop').map((p) => (
                         <button
                           key={p.id}
                           onClick={() => open(p)}
-                          className="w-full aspect-square rounded overflow-hidden group bg-neutral-100"
+                          className="w-full aspect-square rounded-xl overflow-hidden group bg-gray-50 border border-gray-100"
                           title={p.name}
                         >
                           <img
@@ -267,16 +293,19 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                 )}
                 {products.some(p => p.type === 'market') && (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-primary-700">Market</h4>
-                      <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-lg text-gray-900">Market</h4>
+                      <button onClick={onShopClick} className="text-sm font-semibold text-primary-500 hover:text-primary-600 flex items-center gap-1">
+                        See all
+                        <ChevronRight size={16} />
+                      </button>
                     </div>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
                       {products.filter(p => p.type === 'market').map((p) => (
                         <button
                           key={p.id}
                           onClick={() => open(p)}
-                          className="w-full aspect-square rounded overflow-hidden group bg-neutral-100"
+                          className="w-full aspect-square rounded-xl overflow-hidden group bg-gray-50 border border-gray-100"
                           title={p.name}
                         >
                           <img
