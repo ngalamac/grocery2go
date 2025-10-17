@@ -145,29 +145,26 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             )}
           </div>
 
-          {/* Quick Categories */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4">
-              {quickCategories.map((cat, index) => (
-                cat.link ? (
-                  <a
-                    key={index}
-                    href={cat.link}
-                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
-                  >
-                    <div className="text-4xl">{cat.icon}</div>
-                    <span className="text-xs text-center">{cat.name}</span>
+          {/* Quick Categories - horizontal chips */}
+          <div className="overflow-x-auto -mx-4 px-4">
+            <div className="flex gap-2">
+              {quickCategories.map((cat, index) => {
+                const content = (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white border text-sm shadow-sm">
+                    <span className="text-lg leading-none">{cat.icon}</span>
+                    <span>{cat.name}</span>
+                  </div>
+                );
+                return cat.link ? (
+                  <a key={index} href={cat.link} className="flex-shrink-0">
+                    {content}
                   </a>
                 ) : (
-                  <button
-                    key={index}
-                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
-                  >
-                    <div className="text-4xl">{cat.icon}</div>
-                    <span className="text-xs text-center">{cat.name}</span>
+                  <button key={index} className="flex-shrink-0">
+                    {content}
                   </button>
-                )
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -248,21 +245,27 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
               </div>
               <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {loading
-                ? Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
-                      <div className="w-full h-40 bg-gray-200 rounded-t-lg" />
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 w-1/2 bg-gray-200 rounded" />
-                        <div className="h-3 w-1/3 bg-gray-200 rounded" />
-                        <div className="h-6 w-1/4 bg-gray-200 rounded" />
+            <div className="overflow-x-auto -mx-4 px-4">
+              <div className="flex gap-3">
+                {loading
+                  ? Array.from({ length: 8 }).map((_, i) => (
+                      <div key={i} className="w-40 sm:w-48 flex-shrink-0">
+                        <div className="animate-pulse bg-white rounded-2xl shadow-soft">
+                          <div className="w-full h-40 bg-gray-200 rounded-t-2xl" />
+                          <div className="p-4 space-y-3">
+                            <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                            <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                            <div className="h-6 w-1/4 bg-gray-200 rounded" />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                : displayedProducts.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+                    ))
+                  : displayedProducts.map(product => (
+                      <div key={product.id} className="w-40 sm:w-48 flex-shrink-0">
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+              </div>
             </div>
             {!loading && displayedProducts.length === 0 && (
               <div className="text-center text-sm text-gray-500 py-8">No products to display.</div>
