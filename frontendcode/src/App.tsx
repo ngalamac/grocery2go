@@ -37,6 +37,7 @@ import { RequireAdmin, RequireAuth } from './components/RouteGuards';
 import ChatbotButton from './components/ChatbotButton';
 import { BottomNav } from './components/ui';
 import { LanguageProvider } from './context/LanguageContext';
+import { LocationProvider } from './context/LocationContext';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -167,10 +168,12 @@ function App() {
                   <WishlistProvider>
                     <QuickViewProvider>
                       <CartProvider>
-                        <BrowserRouter>
-                          <AppWithNavigation />
-                          <ToastViewport />
-                        </BrowserRouter>
+                        <LocationProvider>
+                          <BrowserRouter>
+                            <AppWithNavigation />
+                            <ToastViewport />
+                          </BrowserRouter>
+                        </LocationProvider>
                       </CartProvider>
                     </QuickViewProvider>
                   </WishlistProvider>

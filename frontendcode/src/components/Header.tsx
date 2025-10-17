@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail, LogOut } from 'lucide-react';
+import { ShoppingCart, User, Heart, Search, Menu, X, Phone, Mail, LogOut, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 import { Container } from './ui';
+import LocationModal from './LocationModal';
+import { useLocationCtx } from '../context/LocationContext';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -19,6 +21,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
   const { getCartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, openAuthModal, logout } = useAuth();
+  const { location } = useLocationCtx();
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/75 shadow-md">
@@ -47,6 +51,10 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
       <div className="bg-neutral-900 text-white py-2 text-sm">
         <Container className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-4 sm:gap-6">
+            <button onClick={() => setIsLocationOpen(true)} className="flex items-center gap-2 hover:text-secondary-200 transition" aria-label="Change location">
+              <MapPin size={14} />
+              <span>Deliver to: {location.city}{location.area ? `, ${location.area}` : ''}</span>
+            </button>
             <a href="tel:0000-123456789" className="flex items-center gap-2 hover:text-secondary-200 transition">
               <Phone size={14} />
               <span>6 79 83 81 82</span>
@@ -222,6 +230,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
       </nav>
 
       {/* Removed mobile drawer; links shown below header when open */}
+      <LocationModal isOpen={isLocationOpen} onClose={() => setIsLocationOpen(false)} />
     </header>
   );
 };
