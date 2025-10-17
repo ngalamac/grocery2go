@@ -19,16 +19,14 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const raw = localStorage.getItem('g2g_location');
       if (raw) {
         const parsed = JSON.parse(raw) as Location;
-        // Clamp to Yaoundé only
-        setLocationState({ city: 'Yaoundé', area: parsed.area || 'Center' });
+        setLocationState(parsed);
       }
     } catch {}
   }, []);
 
   const setLocation = (loc: Location) => {
-    const clamped = { city: 'Yaoundé', area: loc.area || 'Center' } as Location;
-    setLocationState(clamped);
-    try { localStorage.setItem('g2g_location', JSON.stringify(clamped)); } catch {}
+    setLocationState(loc);
+    try { localStorage.setItem('g2g_location', JSON.stringify(loc)); } catch {}
   };
 
   const value = useMemo(() => ({ location, setLocation }), [location]);
