@@ -4,7 +4,6 @@ import { useLocationCtx } from '../context/LocationContext';
 
 const cities: { city: string; areas: string[] }[] = [
   { city: 'Yaoundé', areas: ['Center', 'Biyem-Assi', 'Bastos', 'Mimboman', 'Nkolbisson'] },
-  { city: 'Douala', areas: ['Akwa', 'Bonapriso', 'Bonamoussadi', 'Deido', 'Makepe'] },
 ];
 
 interface Props { isOpen: boolean; onClose: () => void; }
@@ -26,9 +25,7 @@ const LocationModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">City</label>
-          <select value={city} onChange={e => setCity(e.target.value)} className="input">
-            {cities.map(c => (<option key={c.city} value={c.city}>{c.city}</option>))}
-          </select>
+          <input value={city} readOnly className="input" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Area</label>
