@@ -82,6 +82,11 @@
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+
+  /* Ensure content clears the fixed bottom nav on mobile */
+  .safe-bottom {
+    padding-bottom: 5rem; /* ~ bottom nav height */
+  }
 }
 
 /* App-like safe area for mobile bottom nav spacing */
