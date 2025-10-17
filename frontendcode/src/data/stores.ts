@@ -10,6 +10,7 @@ export interface Store {
   deliveryFeeCFA: number;
   etaRangeMins: [number, number];
   tags?: string[];
+  mapsQuery?: string; // optional Google Maps query string
 }
 
 export const yaoundeAreas = [
@@ -26,7 +27,8 @@ export const stores: Store[] = [
     image: 'https://images.pexels.com/photos/3962285/pexels-photo-3962285.jpeg?auto=compress&cs=tinysrgb&w=800',
     deliveryFeeCFA: 700,
     etaRangeMins: [30, 45],
-    tags: ['Groceries', 'Household', 'Snacks']
+    tags: ['Groceries', 'Household', 'Snacks'],
+    mapsQuery: 'Dovv Mimboman Yaounde'
   },
   {
     id: 'st-2',
@@ -37,7 +39,8 @@ export const stores: Store[] = [
     image: 'https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=800',
     deliveryFeeCFA: 800,
     etaRangeMins: [35, 50],
-    tags: ['Imported', 'Bakery', 'Beverages']
+    tags: ['Imported', 'Bakery', 'Beverages'],
+    mapsQuery: 'Mahima Bastos Yaounde'
   },
   {
     id: 'st-3',
@@ -48,7 +51,8 @@ export const stores: Store[] = [
     image: 'https://images.pexels.com/photos/1408306/pexels-photo-1408306.jpeg?auto=compress&cs=tinysrgb&w=800',
     deliveryFeeCFA: 500,
     etaRangeMins: [25, 40],
-    tags: ['Fresh Produce', 'Butchery']
+    tags: ['Fresh Produce', 'Butchery'],
+    mapsQuery: 'Marche Mokolo Yaounde'
   },
   {
     id: 'st-4',
@@ -59,7 +63,8 @@ export const stores: Store[] = [
     image: 'https://images.pexels.com/photos/1346132/pexels-photo-1346132.jpeg?auto=compress&cs=tinysrgb&w=800',
     deliveryFeeCFA: 600,
     etaRangeMins: [30, 45],
-    tags: ['Groceries', 'Deli']
+    tags: ['Groceries', 'Deli'],
+    mapsQuery: 'Santa Lucia Mendong Yaounde'
   },
   {
     id: 'st-5',
@@ -70,6 +75,7 @@ export const stores: Store[] = [
     image: 'https://images.pexels.com/photos/5610153/pexels-photo-5610153.jpeg?auto=compress&cs=tinysrgb&w=800',
     deliveryFeeCFA: 900,
     etaRangeMins: [35, 55],
-    tags: ['Groceries', 'Gourmet']
+    tags: ['Groceries', 'Gourmet'],
+    mapsQuery: 'Carrefour Market Etoudi Yaounde'
   }
 ];

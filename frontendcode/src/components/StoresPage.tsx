@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Container } from './ui';
 import { stores, yaoundeAreas } from '../data/stores';
 import { useNavigate } from 'react-router-dom';
-import { Star, MapPin, Clock, Bike } from 'lucide-react';
+import { Star, MapPin, Clock, Bike, MapPinned } from 'lucide-react';
 
 const Tabs: React.FC<{ value: string; onChange: (v: string) => void }>= ({ value, onChange }) => {
   const items = [
@@ -67,7 +67,21 @@ const StoresPage: React.FC = () => {
               </div>
             </div>
             <div className="p-3">
-              <div className="font-semibold line-clamp-1">{s.name}</div>
+              <div className="font-semibold line-clamp-1 flex items-center justify-between gap-2">
+                <span className="truncate">{s.name}</span>
+                {s.mapsQuery && (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.mapsQuery)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs px-2 py-1 rounded-full border hover:bg-neutral-50 flex items-center gap-1"
+                    onClick={(e)=>e.stopPropagation()}
+                    title="Open in Google Maps"
+                  >
+                    <MapPinned size={14} /> Map
+                  </a>
+                )}
+              </div>
               <div className="flex items-center gap-1 text-sm text-neutral-600">
                 <Star size={14} className="text-yellow-400 fill-yellow-400" /> {s.rating}
                 <span className="mx-1">•</span>

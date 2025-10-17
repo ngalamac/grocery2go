@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { stores } from '../data/stores';
 import { Container } from './ui';
-import { ArrowLeft, Star, MapPin, Clock, Bike } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Clock, Bike, MapPinned } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { useProducts } from '../context/ProductsContext';
 
@@ -28,8 +28,21 @@ const StoreDetailsPage: React.FC = () => {
           </button>
         </div>
         <div className="absolute bottom-3 left-3 right-3 text-white">
-          <h1 className="text-2xl font-bold">{store.name}</h1>
-          <div className="flex items-center gap-2 text-sm opacity-90">
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-2xl font-bold">{store.name}</h1>
+            {store.mapsQuery && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.mapsQuery)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded-full bg-white/90 text-neutral-900 border text-sm flex items-center gap-1"
+                title="Open in Google Maps"
+              >
+                <MapPinned size={16} /> Map
+              </a>
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-sm opacity-90 mt-1">
             <Star size={16} className="text-yellow-400 fill-yellow-400" /> {store.rating}
             <span className="mx-1">•</span>
             <MapPin size={16} /> {store.area}
