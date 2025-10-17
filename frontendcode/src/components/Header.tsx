@@ -45,7 +45,6 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <div className="text-[10px] uppercase opacity-90">Deliver to</div>
               <div className="text-sm font-semibold truncate">{location.city}{location.area ? `, ${location.area}` : ''}</div>
             </div>
-            <ChevronDown size={16} className="text-neutral-500" />
           </button>
 
           {/* Actions */}
@@ -121,7 +120,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
             </li>
           </ul>
         </Container>
-      </div>
+      </nav>
 
       <LocationModal isOpen={isLocationOpen} onClose={() => setIsLocationOpen(false)} />
     </header>

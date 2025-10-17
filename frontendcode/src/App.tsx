@@ -29,8 +29,6 @@ import { CouponProvider } from './context/CouponContext';
 import { ReviewsProvider } from './context/ReviewsContext';
 import { ProductsProvider } from './context/ProductsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
-import StoresPage from './components/StoresPage';
-import StoreDetailsPage from './components/StoreDetailsPage';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLoginPage from './components/AdminLoginPage';
 import DashboardLayout from './components/DashboardLayout';
@@ -74,8 +72,6 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />
-            <Route path="/stores" element={<StoresPage />} />
-            <Route path="/store/:id" element={<StoreDetailsPage />} />
             <Route path="/market" element={<ShopPage />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/booking" element={

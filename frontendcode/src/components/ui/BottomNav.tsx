@@ -1,11 +1,11 @@
 import React from 'react';
-import { Home, Search, ShoppingCart, User, Package, Store } from 'lucide-react';
+import { Home, ShoppingBag, ShoppingCart, User, Package } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 
 const items = [
   { key: 'home', label: 'Home', icon: Home, to: '/' },
-  { key: 'stores', label: 'Stores', icon: Store, to: '/stores' },
+  { key: 'shop', label: 'Shop', icon: ShoppingBag, to: '/shop' },
   { key: 'cart', label: 'Cart', icon: ShoppingCart, to: '#cart' },
   { key: 'orders', label: 'Orders', icon: Package, to: '/orders' },
   { key: 'profile', label: 'Profile', icon: User, to: '/profile' },

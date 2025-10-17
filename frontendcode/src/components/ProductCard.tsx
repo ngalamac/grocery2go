@@ -49,8 +49,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   // Use rating-based pseudo discount to avoid missing field
   const discountPercentage = (product.rating ?? 0) >= 4.8 ? 10 : 0;
   const hasDiscount = discountPercentage > 0;
-  const etaMins = 25 + Math.floor(Math.random() * 20); // demo ETA
-  const deliveryFee = product.type === 'market' ? 700 : 500; // demo fee
 
   return (
     <motion.div
