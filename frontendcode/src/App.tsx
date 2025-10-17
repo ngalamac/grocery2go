@@ -62,7 +62,7 @@ function App() {
   function AppWithNavigation() {
     const navigate = useNavigate();
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-gray-50 flex flex-col safe-bottom">
         <Header
           onCartClick={() => setIsCartOpen(true)}
           onShopClick={() => navigate('/shop')}
@@ -70,7 +70,7 @@ function App() {
           onHomeClick={() => navigate('/')}
         />
 
-        <main className="flex-1 pt-28 md:pt-32 safe-bottom">
+        <main className="flex-1 pt-36 md:pt-40">
           <Routes>
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />

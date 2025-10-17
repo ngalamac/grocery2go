@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, ShoppingCart, Heart, Eye, Zap, Clock, Bike, BadgePercent } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Eye, Zap, Timer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
@@ -46,7 +46,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     navigate(`/product/${product.id}`);
   };
 
-  const discountPercentage = product.featured ? 15 : 0;
+  // Use rating-based pseudo discount to avoid missing field
+  const discountPercentage = (product.rating ?? 0) >= 4.8 ? 10 : 0;
   const hasDiscount = discountPercentage > 0;
   const etaMins = 25 + Math.floor(Math.random() * 20); // demo ETA
   const deliveryFee = product.type === 'market' ? 700 : 500; // demo fee
@@ -56,15 +57,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      whileHover={{ y: -8 }}
-      className="group relative bg-white rounded-2xl shadow-soft hover:shadow-large transition-all duration-300 overflow-hidden cursor-pointer"
+      whileHover={{ y: -4 }}
+      className="group relative bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden cursor-pointer"
       onClick={handleNavigateToProduct}
     >
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-        {product.featured && (
+        {(product.rating ?? 0) >= 4.8 && (
           <Badge variant="accent" size="sm" className="shadow-sm">
             <Zap size={12} className="mr-1" />
-            Featured
+            Top Rated
           </Badge>
         )}
         {hasDiscount && (
@@ -111,23 +112,43 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           loading="lazy"
         />
 
-        {/* Overlay ETA and fee badges */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
-          <div className="px-2 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur border text-neutral-800 flex items-center gap-1">
-            <Clock size={14} /> {etaMins}-{etaMins + 10} min
-          </div>
-          <div className="px-2 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur border text-neutral-800 flex items-center gap-1">
-            <Bike size={14} /> {deliveryFee} CFA
-          </div>
-        </div>
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 18 }}
+            className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <div className="flex gap-2">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleQuickView}
+                className="flex-1 bg-white/95 hover:bg-white text-neutral-900 py-2 px-3 rounded-md font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm"
+              >
+                <Eye size={14} />
+                Quick View
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleAddToCart}
+                className="bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-md transition-all shadow-sm"
+                title="Add to cart"
+              >
+                <ShoppingCart size={16} />
+              </motion.button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+        <h3 className="font-semibold text-neutral-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-1.5 mb-3">
+        <div className="flex items-center gap-1.5 mb-2">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -157,19 +178,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 : (product.priceRange || `${product.price} CFA`)}
             </div>
           </div>
-
-          {product.stock !== undefined && (
-            <div className={cn(
-              'text-xs font-medium px-2 py-1 rounded-full',
-              product.stock > 10
-                ? 'bg-green-100 text-green-700'
-                : product.stock > 0
-                ? 'bg-yellow-100 text-yellow-700'
-                : 'bg-red-100 text-red-700'
-            )}>
-              {product.stock > 10 ? 'In Stock' : product.stock > 0 ? `Only ${product.stock} left` : 'Out of Stock'}
+          <div className="flex items-center gap-2">
+            <div className="text-xs text-neutral-500 inline-flex items-center gap-1">
+              <Timer size={14} />
+              <span>25-40 min</span>
             </div>
-          )}
+            {product.stock !== undefined && (
+              <div className={cn(
+                'text-xs font-medium px-2 py-1 rounded-full',
+                product.stock > 10
+                  ? 'bg-green-100 text-green-700'
+                  : product.stock > 0
+                  ? 'bg-yellow-100 text-yellow-700'
+                  : 'bg-red-100 text-red-700'
+              )}>
+                {product.stock > 10 ? 'In Stock' : product.stock > 0 ? `Only ${product.stock} left` : 'Out of Stock'}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

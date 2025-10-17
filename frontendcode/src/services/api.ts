@@ -6,14 +6,16 @@ const getAuthToken = () => {
 
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...options.headers,
   };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  if (options.headers) {
+    Object.entries(options.headers as Record<string, string>).forEach(([k, v]) => {
+      headers[k] = v as string;
+    });
   }
+
+  if (token) headers.Authorization = `Bearer ${token}`;
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
