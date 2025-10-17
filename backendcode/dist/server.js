@@ -34,7 +34,9 @@ app.use((0, cors_1.default)({
         return callback(new Error('Not allowed by CORS'));
     },
 }));
-app.use(express_1.default.json());
+// Increase body size limits to allow base64 image payloads from the admin UI
+app.use(express_1.default.json({ limit: '10mb' }));
+app.use(express_1.default.urlencoded({ extended: true, limit: '10mb' }));
 (0, database_1.connectDB)();
 app.use('/api/auth', auth_1.default);
 app.use('/api/products', products_1.default);
