@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, TrendingUp, Package, Clock, Shield, Truck, Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
-import Sidebar from './Sidebar';
 const features = [
   { icon: '🚚', title: 'Fast Delivery', description: 'Same-day delivery available' },
   { icon: '💰', title: 'Best Price', description: 'Guaranteed lowest prices' },
@@ -13,9 +11,7 @@ import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
 import { useNavigate } from 'react-router-dom';
 import { useQuickView } from '../context/QuickViewContext';
-import Button from './ui/Button';
-import Card from './ui/Card';
-import Badge from './ui/Badge';
+// removed unused UI imports
 import { Container } from './ui';
 
 interface HomePageProps {
@@ -89,25 +85,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
-  // Countdown logic
-  const [timeLeft, setTimeLeft] = useState(0);
-  // Set countdown to next midnight (or any promo end time)
-  useEffect(() => {
-    const promoEnd = new Date();
-    promoEnd.setHours(23, 59, 59, 999);
-    const updateCountdown = () => {
-      const now = new Date();
-      const diff = promoEnd.getTime() - now.getTime();
-      setTimeLeft(diff > 0 ? diff : 0);
-    };
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  // removed countdown logic for simplified banner
 
   // Autoplay
   useEffect(() => {
@@ -116,104 +94,48 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   }, [heroSlides.length]);
 
   return (
-    <Container className="py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar */}
-        <div className="hidden lg:block w-80 flex-shrink-0">
-          <Sidebar />
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 space-y-8">
-          {/* Hero Section */}
-          <div className="relative bg-gradient-to-r from-primary-400 to-primary-600 rounded-lg overflow-hidden shadow-lg">
-            <div className="flex items-center min-h-[400px]">
-              <div className="w-full lg:w-1/2 p-6 md:p-12 text-white z-10">
-                <p className="text-yellow-300 italic text-xl mb-2">Introducing</p>
-                {/* Countdown Timer */}
-                <div className="mb-4">
-                  <div className="bg-white/80 rounded-lg px-6 py-3 inline-block shadow">
-                    <span className="text-lg font-bold text-primary-600">FLASH DISCOUNT ENDS IN:</span>
-                    <span className="ml-4 text-2xl font-mono text-red-600">
-                      {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
-                    </span>
-                  </div>
-                  <div className="text-xs text-white mt-1">Shop now and get exclusive discounts before time runs out!</div>
-                </div>
-                <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
-                  {heroSlides[currentSlide].title}
-                  <br />
-                  <span className="text-white">{heroSlides[currentSlide].subtitle}</span>
-                </h1>
-                <p className="text-lg mb-6">{heroSlides[currentSlide].tagline}</p>
-                <div className="flex gap-4 flex-wrap">
-                  <button
-                    onClick={onShopClick}
-                    className="bg-yellow-400 text-black px-8 py-3 rounded-md font-semibold hover:bg-yellow-500 transition"
-                  >
-                    Shop Now
-                  </button>
-                  <button className="bg-primary-700 text-white px-8 py-3 rounded-md font-semibold hover:bg-primary-800 transition">
-                    Read More
-                  </button>
-                </div>
-              </div>
-              <div className="hidden lg:block w-1/2 relative">
-                <img
-                  src={heroSlides[currentSlide].image}
-                  alt="Hero"
-                  className="w-full h-[320px] md:h-[400px] object-cover"
-                />
-              </div>
-            </div>
-            {heroSlides.length > 1 && (
-              <>
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full transition"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full transition"
-                >
-                  <ChevronRight size={24} />
-                </button>
-                <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2">
-                  {heroSlides.map((_, i) => (
-                    <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2.5 h-2.5 rounded-full ${i===currentSlide?'bg-white':'bg-white/50'} hover:bg-white transition`} />
-                  ))}
-                </div>
-              </>
-            )}
+    <Container className="py-4">
+      <div className="space-y-6">
+        {/* Hero carousel simplified to app-like banner */}
+        <div className="relative rounded-xl overflow-hidden shadow-medium">
+          <img
+            src={heroSlides[currentSlide].image}
+            alt="Hero"
+            className="w-full h-44 sm:h-56 md:h-64 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+              {heroSlides[currentSlide].title} <span className="font-medium">{heroSlides[currentSlide].subtitle}</span>
+            </h1>
+            <p className="text-sm opacity-90">{heroSlides[currentSlide].tagline}</p>
           </div>
-
-          {/* Quick Categories */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4">
-              {quickCategories.map((cat, index) => (
-                cat.link ? (
-                  <a
-                    key={index}
-                    href={cat.link}
-                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
-                  >
-                    <div className="text-4xl">{cat.icon}</div>
-                    <span className="text-xs text-center">{cat.name}</span>
-                  </a>
-                ) : (
-                  <button
-                    key={index}
-                    className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-lg transition"
-                  >
-                    <div className="text-4xl">{cat.icon}</div>
-                    <span className="text-xs text-center">{cat.name}</span>
-                  </button>
-                )
+          {heroSlides.length > 1 && (
+            <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-2">
+              {heroSlides.map((_, i) => (
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2 h-2 rounded-full ${i===currentSlide?'bg-white':'bg-white/40'}`} />
               ))}
             </div>
+          )}
+          <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full">
+            <ChevronLeft size={20} />
+          </button>
+          <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full">
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        {/* Quick chips row */}
+        <div className="bg-white rounded-xl shadow-soft p-3">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+            {quickCategories.map((cat, idx) => (
+              <button key={idx} className="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-sm">
+                <span className="text-lg">{cat.icon}</span>
+                <span>{cat.name}</span>
+              </button>
+            ))}
           </div>
+        </div>
 
           {/* Features */}
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
@@ -267,8 +189,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
             </div>
           </div>
 
-          {/* Products Section with Tabs */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+          {/* Products Section with Tabs styled like Talabat sections */}
+          <div className="bg-white rounded-xl shadow-soft p-4 md:p-6">
             <div className="flex items-center justify-between gap-4 mb-6 border-b pb-4 flex-wrap">
               <div className="flex items-center gap-4">
                 <button
@@ -415,7 +337,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           </div>
 
           {/* Featured Brands */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+          <div className="bg-white rounded-xl shadow-soft p-4 md:p-6">
             <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">
               Featured Brands
             </h3>
@@ -461,8 +383,6 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
               ))}
             </div>
           </div>
-        </div>
-
         <BrandGallery />
       </div>
     </Container>

@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-export type Toast = { id: string; title?: string; message: string; type?: 'success' | 'error' | 'info' };
+export type Toast = { id: string; title?: string; message: string; type?: 'success' | 'error' | 'info' | 'warning' };
 
 type ToastContextType = {
   toasts: Toast[];

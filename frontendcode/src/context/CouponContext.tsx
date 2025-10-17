@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { couponsApi } from '../services/api';
 
-type Coupon = { code: string; discount: number };
+export type Coupon = { code: string; type: 'percent' | 'amount'; value: number };
 
 type CouponContextType = {
   applied: Coupon | null;

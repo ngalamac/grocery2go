@@ -37,7 +37,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const { applied } = useCoupon();
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('info');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderId, setOrderId] = useState<string>('');
+  const [, setOrderId] = useState<string>('');
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -134,9 +134,8 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setIsProcessing(true);
 
     try {
-      const newOrderId = await createOrder({
+      const newOrder = await createOrder({
         userId: user.id,
-        userEmail: user.email,
         items: cart,
         additionalItems,
         subtotal,
@@ -147,7 +146,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
         specialInstructions,
         customerInfo: formData
       });
-
+      const newOrderId = newOrder.id;
       setOrderId(newOrderId);
 
       const reference = CampayPayment.generateReference();
@@ -161,20 +160,20 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
       await campay.initialize();
 
-      campay.onSuccess((data) => {
+      campay.onSuccess(() => {
         clearCart();
         show('Payment successful! Your order has been placed.', { type: 'success', title: 'Success' });
         setIsProcessing(false);
         onSuccess();
       });
 
-      campay.onFail((data) => {
-        show(`Payment failed: ${data.status}. Please try again.`, { type: 'error', title: 'Payment Failed' });
+      campay.onFail(() => {
+        show('Payment failed. Please try again.', { type: 'error', title: 'Payment Failed' });
         setIsProcessing(false);
       });
 
       campay.onModalClose((data) => {
-        if (data.status === 'closed') {
+        if ((data as any)?.status === 'closed') {
           setIsProcessing(false);
           show('Payment cancelled', { type: 'info' });
         }
