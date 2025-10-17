@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
-import { motion } from 'framer-motion';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -11,22 +10,18 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ children, hoverable = false, noPadding = false, className, ...props }, ref) => {
     return (
-      <motion.div
+      <div
         ref={ref}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        whileHover={hoverable ? { y: -4, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' } : undefined}
         className={cn(
           'bg-white rounded-xl shadow-soft transition-all duration-300',
-          hoverable && 'cursor-pointer',
+          hoverable && 'cursor-pointer hover:shadow-medium -translate-y-[1px]',
           !noPadding && 'p-6',
           className
         )}
         {...props}
       >
         {children}
-      </motion.div>
+      </div>
     );
   }
 );

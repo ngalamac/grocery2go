@@ -8,14 +8,14 @@ const TrackOrderPage: React.FC = () => {
   const [step, setStep] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTrack = (e: React.FormEvent) => {
+  const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!orderId) {
       setStep(null);
       return;
     }
-    const order = getOrderById(orderId);
+    const order = await getOrderById(orderId);
     if (!order) {
       setError('Order not found. Please check your ID.');
       setStep(null);

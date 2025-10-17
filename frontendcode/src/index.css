@@ -84,6 +84,11 @@
   }
 }
 
+/* App-like safe area for mobile bottom nav spacing */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* Hide Google Translate default widget and toolbar */
 #google_translate_element {
   display: none !important;

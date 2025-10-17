@@ -11,10 +11,13 @@ const CouponPage: React.FC = () => {
   const [applied, setApplied] = useState<string | null>(null);
   const { apply: applyCoupon, clear } = useCoupon();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const found = promos.find(p => p.code.toLowerCase() === code.toLowerCase());
-    if (found && applyCoupon(found.code)) setApplied(found.code);
+    if (found) {
+      const ok = await applyCoupon(found.code);
+      if (ok) setApplied(found.code);
+    }
     setCode('');
   };
 

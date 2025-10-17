@@ -24,7 +24,7 @@ const BottomNav: React.FC<{ onCart?: () => void }>= ({ onCart }) => {
   };
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-neutral-200 md:hidden">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-neutral-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] md:hidden">
       <ul className="grid grid-cols-5">
         {items.map(({ key, label, icon: Icon, to }) => {
           const active = to !== '#cart' && (to === '/' ? pathname === '/' : pathname.startsWith(to));
@@ -33,12 +33,12 @@ const BottomNav: React.FC<{ onCart?: () => void }>= ({ onCart }) => {
               <button
                 onClick={() => handleClick(to)}
                 className={cn(
-                  'w-full h-14 flex flex-col items-center justify-center gap-0.5 text-xs',
+                  'w-full h-14 flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium',
                   active ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900'
                 )}
                 aria-label={label}
               >
-                <Icon size={20} />
+                <Icon size={22} />
                 <span>{label}</span>
               </button>
             </li>
