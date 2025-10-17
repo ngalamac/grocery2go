@@ -25,7 +25,9 @@ const Footer: React.FC = () => {
             Be the first to know about new collections and exclusive offers.
           </p>
           <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+            <label htmlFor="newsletter-email" className="sr-only">Email Address</label>
             <input
+              id="newsletter-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

@@ -126,14 +126,14 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
         {/* Main Content */}
         <div className="flex-1 space-y-8">
           {/* Hero Section */}
-          <div className="relative bg-gradient-to-r from-[#7cb342] to-[#558b2f] rounded-lg overflow-hidden shadow-lg">
+          <div className="relative bg-gradient-to-r from-primary-400 to-primary-600 rounded-lg overflow-hidden shadow-lg">
             <div className="flex items-center min-h-[400px]">
               <div className="w-full lg:w-1/2 p-6 md:p-12 text-white z-10">
                 <p className="text-yellow-300 italic text-xl mb-2">Introducing</p>
                 {/* Countdown Timer */}
                 <div className="mb-4">
                   <div className="bg-white/80 rounded-lg px-6 py-3 inline-block shadow">
-                    <span className="text-lg font-bold text-[#7cb342]">FLASH DISCOUNT ENDS IN:</span>
+                    <span className="text-lg font-bold text-primary-600">FLASH DISCOUNT ENDS IN:</span>
                     <span className="ml-4 text-2xl font-mono text-red-600">
                       {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
                     </span>
@@ -153,7 +153,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                   >
                     Shop Now
                   </button>
-                  <button className="bg-[#689f38] text-white px-8 py-3 rounded-md font-semibold hover:bg-[#558b2f] transition">
+                  <button className="bg-primary-700 text-white px-8 py-3 rounded-md font-semibold hover:bg-primary-800 transition">
                     Read More
                   </button>
                 </div>
@@ -273,24 +273,24 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setActiveTab('featured')}
-                  className={`pb-2 font-semibold ${activeTab==='featured' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                  className={`pb-2 font-semibold ${activeTab==='featured' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
                 >
                   Featured
                 </button>
                 <button
                   onClick={() => setActiveTab('new')}
-                  className={`pb-2 font-semibold ${activeTab==='new' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                  className={`pb-2 font-semibold ${activeTab==='new' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
                 >
                   New Arrivals
                 </button>
                 <button
                   onClick={() => setActiveTab('bestseller')}
-                  className={`pb-2 font-semibold ${activeTab==='bestseller' ? 'text-[#7cb342] border-b-2 border-[#7cb342]' : 'text-gray-600 hover:text-[#7cb342]'}`}
+                  className={`pb-2 font-semibold ${activeTab==='bestseller' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-600 hover:text-primary-600'}`}
                 >
                   Best Sellers
                 </button>
               </div>
-              <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
+              <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {loading
@@ -316,13 +316,13 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
           {/* Image gallery by product type */}
           {(products?.length || 0) > 0 && (
             <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-              <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">Browse by Type</h3>
+              <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">Browse by Type</h3>
               <div className="space-y-8">
                 {products.some(p => p.type === 'shop') && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-[#2e7d32]">Shop</h4>
-                      <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
+                      <h4 className="font-semibold text-primary-700">Shop</h4>
+                      <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                       {products.filter(p => p.type === 'shop').map((p) => (
@@ -346,8 +346,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                 {products.some(p => p.type === 'market') && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-[#2e7d32]">Market</h4>
-                      <button onClick={onShopClick} className="text-sm text-[#2e7d32] hover:underline">See all</button>
+                      <h4 className="font-semibold text-primary-700">Market</h4>
+                      <button onClick={onShopClick} className="text-sm text-primary-700 hover:underline">See all</button>
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                       {products.filter(p => p.type === 'market').map((p) => (
@@ -416,7 +416,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
 
           {/* Featured Brands */}
           <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
+            <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">
               Featured Brands
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
@@ -454,7 +454,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
               {['Sale', 'New', 'Best', 'Offer', 'Healthy', 'Nutrition', 'Fruits', 'Vegetables', 'Snacks', 'Groceries', 'Ice Cream'].map((tag) => (
                 <button
                   key={tag}
-                  className="px-4 py-2 bg-gray-100 hover:bg-[#7cb342] hover:text-white rounded-md text-sm transition"
+                  className="px-4 py-2 bg-gray-100 hover:bg-primary-500 hover:text-white rounded-md text-sm transition"
                 >
                   {tag}
                 </button>

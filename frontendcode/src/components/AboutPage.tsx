@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutPage: React.FC = () => (
   <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-    <div className="relative rounded-lg overflow-hidden shadow-md bg-gradient-to-r from-[#7cb342] to-[#558b2f] mb-8">
+    <div className="relative rounded-lg overflow-hidden shadow-md bg-gradient-to-r from-primary-400 to-primary-600 mb-8">
       <div className="p-6 md:p-14 text-white">
         <h1 className="text-3xl md:text-4xl font-bold mb-3">About Grocery2Go</h1>
         <p className="text-white/90 max-w-3xl">{(typeof window !== 'undefined' && localStorage.getItem('g2g_setting_about')) || 'We deliver market-fresh groceries across Yaoundé. Local, affordable, and fast — we exist to save your time without compromising quality.'}</p>

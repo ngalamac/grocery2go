@@ -141,7 +141,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                   <button
                     type="button"
                     onClick={handleAddItem}
-                    className="w-full sm:w-auto bg-[#7cb342] text-white px-4 py-2 rounded-md hover:bg-[#689f38] transition flex items-center justify-center gap-1"
+                    className="w-full sm:w-auto bg-primary-500 text-white px-4 py-2 rounded-md hover:bg-primary-600 transition flex items-center justify-center gap-1"
                   >
                     <Plus size={16} />
                     Add
@@ -195,7 +195,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
 
             <button
               type="submit"
-              className="w-full bg-[#7cb342] text-white py-3 rounded-lg font-semibold hover:bg-[#689f38] transition"
+              className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
             >
               Proceed to Payment Details
             </button>
@@ -223,7 +223,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[#7cb342] font-bold text-sm">{(item.price * item.quantity).toFixed(0)} CFA</span>
+                <span className="text-primary-600 font-bold text-sm">{(item.price * item.quantity).toFixed(0)} CFA</span>
                   </div>
                 </div>
               ))}
@@ -261,7 +261,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
               </div>
               <div className="border-t pt-2 flex justify-between text-lg font-bold">
                 <span>Estimated Total:</span>
-                <span className="text-[#7cb342]">{(estimatedTotal + totalFee).toFixed(0)} CFA</span>
+                <span className="text-primary-600">{(estimatedTotal + totalFee).toFixed(0)} CFA</span>
               </div>
               <p className="text-xs text-gray-500 mt-2">
                 Final cost may vary slightly based on actual market prices. Any unused budget will be refunded.

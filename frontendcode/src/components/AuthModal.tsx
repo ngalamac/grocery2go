@@ -81,7 +81,7 @@ const AuthModal: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#7cb342] text-white py-2 rounded-md font-semibold hover:bg-[#689f38] disabled:opacity-50"
+            className="w-full bg-primary-500 text-white py-2 rounded-md font-semibold hover:bg-primary-600 disabled:opacity-50"
           >
             {loading ? 'Please wait…' : (mode === 'login' ? 'Login' : 'Create Account')}
           </button>
@@ -89,12 +89,12 @@ const AuthModal: React.FC = () => {
             {mode === 'login' ? (
               <>
                 Don't have an account?{' '}
-                <button type="button" onClick={() => setMode('signup')} className="text-[#7cb342] hover:underline">Sign up</button>
+                <button type="button" onClick={() => setMode('signup')} className="text-primary-600 hover:underline">Sign up</button>
               </>
             ) : (
               <>
                 Already have an account?{' '}
-                <button type="button" onClick={() => setMode('login')} className="text-[#7cb342] hover:underline">Login</button>
+                <button type="button" onClick={() => setMode('login')} className="text-primary-600 hover:underline">Login</button>
               </>
             )}
           </div>

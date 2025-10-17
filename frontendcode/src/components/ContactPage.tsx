@@ -24,7 +24,7 @@ const ContactPage: React.FC = () => {
             <input className="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Your Name" value={name} onChange={e => setName(e.target.value)} required />
             <input className="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Your Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
             <textarea className="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Your Message" rows={5} value={message} onChange={e => setMessage(e.target.value)} required />
-            <button className="w-full bg-[#7cb342] text-white px-6 py-3 rounded font-semibold hover:bg-[#689f38] transition" type="submit">Send Message</button>
+            <button className="w-full bg-primary-500 text-white px-6 py-3 rounded font-semibold hover:bg-primary-600 transition" type="submit">Send Message</button>
             {status === 'sent' && (
               <div className="text-green-700 bg-green-50 border border-green-200 rounded p-3 text-sm">Message sent! We'll get back to you soon.</div>
             )}

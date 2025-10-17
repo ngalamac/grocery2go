@@ -91,7 +91,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               placeholder="Search"
               className="flex-1 px-4 py-2 border border-gray-300 text-sm"
             />
-            <button className="bg-secondary-500 text-neutral-900 px-6 py-2 rounded-r-md hover:bg-secondary-400 transition">
+            <button className="bg-secondary-500 text-neutral-900 px-6 py-2 rounded-r-md hover:bg-secondary-400 transition" aria-label="Search">
               <Search size={20} />
             </button>
           </div>

@@ -32,11 +32,11 @@ const AdminLoginPage: React.FC = () => {
         <form onSubmit={onSubmit} className="space-y-3">
           <div>
             <label className="block text-sm font-medium mb-1">Admin Email</label>
-            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="admin@example.com" required />
+            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="admin@example.com" required />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Password</label>
-            <input type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="••••••••" required />
+            <input type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="••••••••" required />
           </div>
           {error && <div className="text-sm text-red-600">{error}</div>}
           <button className="w-full bg-black text-white py-2 rounded font-semibold hover:bg-gray-800 transition">Sign in</button>

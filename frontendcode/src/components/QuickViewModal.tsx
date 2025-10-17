@@ -19,10 +19,10 @@ const QuickViewModal: React.FC = () => {
           <div className="p-6 space-y-3">
             <h3 className="text-xl font-semibold">{product.name}</h3>
             {product.description && <p className="text-sm text-gray-600">{product.description}</p>}
-            <div className="text-2xl font-bold text-[#7cb342]">{product.price} CFA</div>
+            <div className="text-2xl font-bold text-primary-600">{product.price} CFA</div>
             <button
               onClick={() => { addToCart(product); show('Added to cart', { type: 'success' }); close(); }}
-              className="w-full bg-[#7cb342] text-white py-3 rounded font-semibold hover:bg-[#689f38] transition"
+              className="w-full bg-primary-500 text-white py-3 rounded font-semibold hover:bg-primary-600 transition"
             >
               Add to Cart
             </button>

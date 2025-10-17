@@ -57,7 +57,7 @@ const OrderDetailsPage: React.FC = () => {
               <div className="flex justify-between"><span>Subtotal</span><span className="font-semibold">{order.subtotal.toFixed(0)} CFA</span></div>
               <div className="flex justify-between"><span>Shopping Fee</span><span className="font-semibold">{order.shoppingFee.toFixed(0)} CFA</span></div>
               <div className="flex justify-between"><span>Delivery Fee</span><span className="font-semibold">{order.deliveryFee.toFixed(0)} CFA</span></div>
-              <div className="flex justify-between border-t pt-1 text-lg font-bold"><span>Total</span><span className="text-[#7cb342]">{order.total.toFixed(0)} CFA</span></div>
+              <div className="flex justify-between border-t pt-1 text-lg font-bold"><span>Total</span><span className="text-primary-600">{order.total.toFixed(0)} CFA</span></div>
             </div>
           </div>
           <div>
