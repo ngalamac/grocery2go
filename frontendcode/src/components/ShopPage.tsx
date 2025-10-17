@@ -60,7 +60,7 @@ const ShopPage: React.FC = () => {
     });
 
   return (
-    <Container className="py-6">
+    <Container className="py-4 pb-24">
       <div className="flex flex-col lg:flex-row gap-6">
   {/* Sidebar Drawer Button for Mobile is hidden as requested */}
 
@@ -96,127 +96,51 @@ const ShopPage: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1">
-          {/* Filters Bar */}
-          <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Filter size={20} />
-                <span className="font-semibold">Filters</span>
-              </div>
-              <div className="flex flex-wrap gap-3 md:gap-4 flex-1 w-full">
-                {/* Category Filter */}
-                <select
-                  value={selectedCategory}
-                  onChange={e => {
-                    setSelectedCategory(e.target.value);
-                    setSelectedSubcategory('all');
-                  }}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                >
-                  <option value="all">All Categories</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.name}>{cat.name}</option>
-                  ))}
-                </select>
-
-                {/* Subcategory Filter */}
-                {subcategories.length > 0 && (
-                  <select
-                    value={selectedSubcategory}
-                    onChange={e => setSelectedSubcategory(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                  >
-                    <option value="all">All Subcategories</option>
-                    {subcategories.map(sub => (
-                      <option key={sub} value={sub}>{sub}</option>
-                    ))}
-                  </select>
-                )}
-
-                {/* Search Filter */}
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                  style={{ minWidth: 160 }}
-                />
-
-                {/* Rating Filter */}
-                <select
-                  value={minRating}
-                  onChange={e => setMinRating(Number(e.target.value))}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                >
-                  <option value={0}>All Ratings</option>
-                  <option value={5}>5 Stars</option>
-                  <option value={4.5}>4.5 Stars & up</option>
-                  <option value={4}>4 Stars & up</option>
-                  <option value={3}>3 Stars & up</option>
-                </select>
-
-                {/* Sort Filter */}
-                <select
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="name">Name: A to Z</option>
-                </select>
-
-                {/* Price Filter */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <label className="text-sm">Price Filter:</label>
-                  <input
-                    type="number"
-                    value={priceRange[0]}
-                    onChange={e => setPriceRange([Number(e.target.value), priceRange[1]])}
-                    className="w-20 px-2 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                    min="0"
-                  />
-                  <span>-</span>
-                  <input
-                    type="number"
-                    value={priceRange[1]}
-                    onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
-                    className="w-20 px-2 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
-                    min="0"
-                  />
-                </div>
-              </div>
-              <div className="text-sm text-gray-600">
-                {filteredProducts.length} products found
+          {/* Filters Bar - simplified, Talabat-like chips and quick sort */}
+          <div className="space-y-3 mb-4">
+            {/* Categories chips */}
+            <div className="overflow-x-auto -mx-4 px-4">
+              <div className="flex gap-2">
+                <button
+                  className={`px-3 py-2 rounded-full border text-sm ${selectedCategory==='all' ? 'bg-primary-50 border-primary-200 text-primary-700' : 'bg-white'}`}
+                  onClick={() => { setSelectedCategory('all'); setSelectedSubcategory('all'); }}
+                >All</button>
+                {categories.map(cat => (
+                  <button
+                    key={cat.id}
+                    className={`px-3 py-2 rounded-full border text-sm ${selectedCategory===cat.name ? 'bg-primary-50 border-primary-200 text-primary-700' : 'bg-white'}`}
+                    onClick={() => { setSelectedCategory(cat.name); setSelectedSubcategory('all'); }}
+                  >{cat.icon} {cat.name}</button>
+                ))}
               </div>
             </div>
-            {/* Applied filter chips */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              {selectedCategory !== 'all' && (
-                <button onClick={() => setSelectedCategory('all')} className="px-2 py-1 text-xs bg-gray-100 rounded">Category: {selectedCategory} ×</button>
-              )}
-              {selectedSubcategory !== 'all' && (
-                <button onClick={() => setSelectedSubcategory('all')} className="px-2 py-1 text-xs bg-gray-100 rounded">Sub: {selectedSubcategory} ×</button>
-              )}
-              {search && (
-                <button onClick={() => setSearch('')} className="px-2 py-1 text-xs bg-gray-100 rounded">Search: {search} ×</button>
-              )}
-              {minRating > 0 && (
-                <button onClick={() => setMinRating(0)} className="px-2 py-1 text-xs bg-gray-100 rounded">Rating ≥ {minRating} ×</button>
-              )}
-              {(priceRange[0] !== 0 || priceRange[1] !== 10000) && (
-                <button onClick={() => setPriceRange([0, 10000])} className="px-2 py-1 text-xs bg-gray-100 rounded">Price: {priceRange[0]}-{priceRange[1]} ×</button>
-              )}
-              {(selectedCategory !== 'all' || selectedSubcategory !== 'all' || search || minRating > 0 || priceRange[0] !== 0 || priceRange[1] !== 10000) && (
-                <button onClick={() => { setSelectedCategory('all'); setSelectedSubcategory('all'); setSearch(''); setMinRating(0); setPriceRange([0, 10000]); }} className="px-3 py-1 text-xs bg-red-50 text-red-700 rounded">Clear all</button>
-              )}
+            {/* Sort and rating */}
+            <div className="flex items-center gap-2">
+              <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value)}
+                className="px-3 py-2 border rounded-full text-sm"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name: A to Z</option>
+              </select>
+              <select
+                value={minRating}
+                onChange={e => setMinRating(Number(e.target.value))}
+                className="px-3 py-2 border rounded-full text-sm"
+              >
+                <option value={0}>All ratings</option>
+                <option value={4}>4+ stars</option>
+                <option value={4.5}>4.5+ stars</option>
+                <option value={5}>5 stars</option>
+              </select>
             </div>
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-20">
             {loading
               ? Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
