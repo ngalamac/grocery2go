@@ -21,6 +21,8 @@ import ToastViewport from './components/ToastViewport';
 import { WishlistProvider } from './context/WishlistContext';
 import WishlistPage from './components/WishlistPage';
 import OrdersPage from './components/OrdersPage';
+import RestaurantsPage from './components/RestaurantsPage';
+import RestaurantDetailsPage from './components/RestaurantDetailsPage';
 import { QuickViewProvider } from './context/QuickViewContext';
 import QuickViewModal from './components/QuickViewModal';
 import ProfilePage from './components/ProfilePage';
@@ -28,6 +30,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { CouponProvider } from './context/CouponContext';
 import { ReviewsProvider } from './context/ReviewsContext';
 import { ProductsProvider } from './context/ProductsContext';
+import { RestaurantsProvider } from './context/RestaurantsContext';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLoginPage from './components/AdminLoginPage';
@@ -73,6 +76,8 @@ function App() {
             <Route path="/" element={<HomePage onShopClick={() => navigate('/shop')} />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/market" element={<ShopPage />} />
+            <Route path="/restaurants" element={<RestaurantsPage />} />
+            <Route path="/restaurants/:slug" element={<RestaurantDetailsPage />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/booking" element={
               <BookingPage
@@ -169,10 +174,12 @@ function App() {
                     <QuickViewProvider>
                       <CartProvider>
                         <LocationProvider>
-                          <BrowserRouter>
-                            <AppWithNavigation />
-                            <ToastViewport />
-                          </BrowserRouter>
+                          <RestaurantsProvider>
+                            <BrowserRouter>
+                              <AppWithNavigation />
+                              <ToastViewport />
+                            </BrowserRouter>
+                          </RestaurantsProvider>
                         </LocationProvider>
                       </CartProvider>
                     </QuickViewProvider>

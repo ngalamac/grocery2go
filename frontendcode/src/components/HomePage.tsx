@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuickView } from '../context/QuickViewContext';
 // removed unused UI imports
 import { Container } from './ui';
+import { useRestaurants } from '../context/RestaurantsContext';
 
 interface HomePageProps {
   onShopClick: () => void;
@@ -24,6 +25,7 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const { open } = useQuickView();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
+  const { restaurants, loading: loadingRestaurants } = useRestaurants();
 
   const featuredProducts = (
     products.filter(p => (p.rating ?? 0) >= 4.5).slice(0, 8).length > 0
@@ -364,6 +366,37 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
+
+        {/* Popular Restaurants (Talabat-like section) */}
+        <div className="bg-white rounded-xl shadow-soft p-4 md:p-6">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <h3 className="text-xl font-semibold">Popular Restaurants</h3>
+            <button onClick={() => navigate('/restaurants')} className="text-sm text-primary-700 hover:underline">See all</button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {loadingRestaurants
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm">
+                    <div className="w-full aspect-square bg-gray-200 rounded-t-lg" />
+                    <div className="p-3 space-y-2">
+                      <div className="h-4 w-2/3 bg-gray-200 rounded" />
+                      <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                    </div>
+                  </div>
+                ))
+              : (restaurants || []).slice(0, 12).map(r => (
+                  <button key={r.id} onClick={() => navigate(`/restaurants/${r.slug}`)} className="rounded-lg overflow-hidden border hover:shadow-md transition group bg-white text-left">
+                    <div className="w-full aspect-square bg-neutral-100 overflow-hidden">
+                      <img src={r.logo || r.coverImage || 'https://via.placeholder.com/300'} alt={r.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    </div>
+                    <div className="px-3 py-2">
+                      <div className="font-medium text-sm truncate">{r.name}</div>
+                      <div className="text-xs text-neutral-500 truncate">{r.cuisine?.join(', ')}</div>
+                    </div>
+                  </button>
+                ))}
+          </div>
+        </div>
                   <div className="px-3 py-2 text-center text-sm font-medium">{brand.name}</div>
                 </button>
               ))}
