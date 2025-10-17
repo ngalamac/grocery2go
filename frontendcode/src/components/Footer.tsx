@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowUp, Send } from 'lucide-react';
+import { Container } from './ui';
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,16 +16,18 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#7cb342] text-white">
+    <footer className="bg-primary-500 text-white">
       {/* Newsletter Section */}
-      <div className="py-10 md:py-12 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="py-10 md:py-12">
+        <Container className="max-w-4xl text-center">
           <h2 className="text-2xl md:text-4xl font-bold mb-4">Subscribe to our emails</h2>
           <p className="mb-6 text-white/90">
             Be the first to know about new collections and exclusive offers.
           </p>
           <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+            <label htmlFor="newsletter-email" className="sr-only">Email Address</label>
             <input
+              id="newsletter-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -34,18 +37,18 @@ const Footer: React.FC = () => {
             />
             <button
               type="submit"
-              className="bg-white text-[#7cb342] px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
+              className="bg-white text-primary-500 px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
             >
               Subscribe
               <Send size={18} />
             </button>
           </form>
-        </div>
+        </Container>
       </div>
 
       {/* Social Media Links */}
       <div className="border-t border-white/20 py-6">
-        <div className="max-w-7xl mx-auto px-4">
+        <Container>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <a
               href="https://twitter.com"
@@ -80,12 +83,12 @@ const Footer: React.FC = () => {
               <span>Instagram</span>
             </a>
           </div>
-        </div>
+        </Container>
       </div>
 
       {/* Footer Bottom */}
       <div className="border-t border-white/20 py-6">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <Container className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/80">
             © 2024 Grocery2Go. All rights reserved.
           </p>
@@ -94,13 +97,13 @@ const Footer: React.FC = () => {
             <a href="#" className="hover:text-yellow-400 transition">Terms of Service</a>
             <a href="#" className="hover:text-yellow-400 transition">Contact Us</a>
           </div>
-        </div>
+        </Container>
       </div>
 
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className="fixed bottom-8 right-8 bg-white text-[#7cb342] w-12 h-12 rounded-full shadow-lg hover:bg-gray-100 transition flex items-center justify-center z-40"
+        className="fixed bottom-8 right-8 bg-white text-primary-500 w-12 h-12 rounded-full shadow-lg hover:bg-gray-100 transition flex items-center justify-center z-40"
         aria-label="Scroll to top"
       >
         <ArrowUp size={24} />

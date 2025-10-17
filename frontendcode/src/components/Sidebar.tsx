@@ -51,13 +51,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
           {categories.map(category => (
             <li key={category.id} className="flex items-center justify-between">
               <button
-                className="flex items-center gap-2 text-gray-700 hover:text-[#7cb342] transition"
+                className="flex items-center gap-2 text-gray-700 hover:text-primary-600 transition"
                 onClick={() => onCategorySelect && onCategorySelect(category.name)}
               >
-                <span className="w-2 h-2 bg-[#7cb342] rounded-full"></span>
+                <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
                 <span>{category.name}</span>
               </button>
-              <button className="text-gray-400 hover:text-[#7cb342] transition">
+              <button className="text-gray-400 hover:text-primary-600 transition">
                 <Plus size={18} />
               </button>
             </li>
@@ -67,13 +67,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
 
       {/* Contact Information */}
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm p-8 text-center">
-        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">Contact Us</h3>
+        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">Contact Us</h3>
         <div className="mb-4">
-          <div className="text-lg font-bold text-[#7cb342] mb-2">Phone:</div>
+          <div className="text-lg font-bold text-primary-600 mb-2">Phone:</div>
           <div className="text-2xl font-bold mb-2">6 79 83 81 82</div>
-          <div className="text-lg font-bold text-[#7cb342] mb-2">Email:</div>
+          <div className="text-lg font-bold text-primary-600 mb-2">Email:</div>
           <div className="text-base font-semibold mb-2">info@grocery2go.shop</div>
-          <div className="text-lg font-bold text-[#7cb342] mb-2">Store Location:</div>
+          <div className="text-lg font-bold text-primary-600 mb-2">Store Location:</div>
           <div className="text-base font-semibold">Mimboman- Chateaux Yaounde</div>
         </div>
         <div className="mt-6">
@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
 
       {/* Featured Product */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
+        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">
           Featured Product
         </h3>
         <div className="space-y-4">
@@ -129,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
 
       {/* Testimonials */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
+        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">
           Testimonials
         </h3>
         <div className="space-y-6">
@@ -140,7 +140,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
                 alt={testimonial.name}
                 className="w-20 h-20 rounded-full mx-auto mb-3 object-cover"
               />
-              <h4 className="font-semibold text-[#7cb342]">{testimonial.name}</h4>
+              <h4 className="font-semibold text-primary-600">{testimonial.name}</h4>
               <p className="text-sm text-gray-500 mb-3">{testimonial.role}</p>
               <div className="text-2xl text-gray-300 mb-2">"</div>
               <p className="text-sm text-gray-600 mb-3">{testimonial.text}</p>
@@ -164,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
 
       {/* Top Sellers */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-[#7cb342]">
+        <h3 className="text-xl font-semibold mb-4 pb-2 border-b-2 border-primary-500">
           Top Sellers
         </h3>
         <div className="space-y-4">
@@ -176,7 +176,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onCategorySelect }) => {
                 className="w-16 h-16 object-cover rounded"
               />
               <div className="flex-1">
-                <h4 className="font-medium text-[#7cb342] text-sm mb-1">{product.name}</h4>
+                <h4 className="font-medium text-primary-600 text-sm mb-1">{product.name}</h4>
                 <div className="text-lg font-semibold mb-1">{product.price.toFixed(0)} CFA</div>
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (

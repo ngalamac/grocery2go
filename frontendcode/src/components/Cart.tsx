@@ -30,7 +30,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
       {/* Cart Sidebar */}
       <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="bg-[#7cb342] text-white p-4 flex items-center justify-between">
+        <div className="bg-primary-500 text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShoppingBag size={24} />
             <h2 className="text-xl font-semibold">Shopping Cart</h2>
@@ -62,7 +62,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
                   />
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm mb-1">{item.name}</h3>
-                    <p className="text-[#7cb342] font-bold mb-2">
+                    <p className="text-primary-600 font-bold mb-2">
                       {item.price} CFA
                     </p>
                     <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
                 }
                 onCheckout();
               }}
-              className="w-full bg-[#7cb342] text-white py-3 rounded-lg font-semibold hover:bg-[#689f38] transition"
+              className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
             >
               Proceed to Booking
             </button>

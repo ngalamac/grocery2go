@@ -35,7 +35,7 @@ const TrackOrderPage: React.FC = () => {
           value={orderId}
           onChange={e => setOrderId(e.target.value)}
         />
-        <button className="bg-[#7cb342] text-white px-6 py-3 rounded font-semibold hover:bg-[#689f38] transition" type="submit">Track</button>
+        <button className="bg-primary-500 text-white px-6 py-3 rounded font-semibold hover:bg-primary-600 transition" type="submit">Track</button>
       </form>
       {error && <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3 mb-4">{error}</div>}
       {step !== null && (

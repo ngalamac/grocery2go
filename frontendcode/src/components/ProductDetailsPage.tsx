@@ -23,12 +23,12 @@ const ProductDetailsPage: React.FC = () => {
         <img src={product.image} alt={product.name} className="w-full h-64 md:h-80 object-cover rounded" />
         <div className="space-y-3">
           <h1 className="text-2xl font-bold">{product.name}</h1>
-          <div className="text-3xl font-bold text-[#7cb342]">{product.price} CFA</div>
+          <div className="text-3xl font-bold text-primary-600">{product.price} CFA</div>
           {product.description && <p className="text-gray-600">{product.description}</p>}
           <div className="text-sm text-gray-500">Category: {product.category}</div>
           <button
             onClick={() => { addToCart(product); show('Added to cart', { type: 'success' }); }}
-            className="w-full bg-[#7cb342] text-white py-3 rounded font-semibold hover:bg-[#689f38] transition"
+            className="w-full bg-primary-500 text-white py-3 rounded font-semibold hover:bg-primary-600 transition"
           >
             Add to Cart
           </button>
@@ -80,7 +80,7 @@ const ReviewForm: React.FC<{ onSubmit: (rating: number, text: string) => void }>
         <label className="block text-sm font-medium mb-1">Review</label>
         <textarea value={text} onChange={e => setText(e.target.value)} className="w-full border rounded px-3 py-2" rows={4} placeholder="Share your experience" required />
       </div>
-      <button className="bg-[#7cb342] text-white px-4 py-2 rounded hover:bg-[#689f38] transition">Submit</button>
+      <button className="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600 transition">Submit</button>
     </form>
   );
 };

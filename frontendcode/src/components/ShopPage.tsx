@@ -3,6 +3,7 @@ import { Filter } from 'lucide-react';
 import ProductCard from './ProductCard';
 import Sidebar from './Sidebar';
 import { useProducts } from '../context/ProductsContext';
+import { Container } from './ui';
 
 
 const categories = [
@@ -59,7 +60,7 @@ const ShopPage: React.FC = () => {
     });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <Container className="py-6">
       <div className="flex flex-col lg:flex-row gap-6">
   {/* Sidebar Drawer Button for Mobile is hidden as requested */}
 
@@ -241,7 +242,7 @@ const ShopPage: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 

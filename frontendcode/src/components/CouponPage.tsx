@@ -26,7 +26,7 @@ const CouponPage: React.FC = () => {
           <p className="mb-4 text-gray-600">Enter your coupon code below to get a discount on your next order.</p>
           <form className="flex gap-2" onSubmit={onSubmit}>
             <input className="flex-1 border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#7cb342]" placeholder="Enter coupon code" value={code} onChange={e => setCode(e.target.value)} />
-            <button className="bg-[#7cb342] text-white px-6 py-3 rounded font-semibold hover:bg-[#689f38] transition" type="submit">Apply</button>
+            <button className="bg-primary-500 text-white px-6 py-3 rounded font-semibold hover:bg-primary-600 transition" type="submit">Apply</button>
           </form>
           {applied && (
             <div className="mt-4 text-sm text-green-800 bg-green-50 border border-green-200 rounded p-3 flex items-center justify-between">

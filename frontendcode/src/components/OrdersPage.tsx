@@ -41,7 +41,7 @@ const OrdersPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-sm text-gray-600">{o.itemsCount} items</div>
-                <div className="font-semibold text-[#7cb342]">{o.total.toFixed(0)} CFA</div>
+                <div className="font-semibold text-primary-600">{o.total.toFixed(0)} CFA</div>
                 <div className={`text-xs px-2 py-1 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : o.status === 'in-progress' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>{o.status}</div>
               </div>
             </a>

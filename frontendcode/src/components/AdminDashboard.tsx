@@ -18,7 +18,7 @@ const AdminDashboard: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <div className="flex gap-2 mb-6 flex-wrap">
         {(['reviews','coupons','orders','products'] as const).map(k => (
-          <button key={k} onClick={() => setTab(k)} className={`px-3 py-2 rounded ${tab===k?'bg-[#7cb342] text-white':'bg-gray-100'}`}>
+          <button key={k} onClick={() => setTab(k)} className={`px-3 py-2 rounded ${tab===k?'bg-primary-500 text-white':'bg-gray-100'}`}>
             {k.charAt(0).toUpperCase() + k.slice(1)}
           </button>
         ))}
@@ -143,7 +143,7 @@ const AdminCoupons: React.FC = () => {
           onChange={e=>setExpiresAt(e.target.value)}
           className="border rounded px-3 py-2"
         />
-        <button onClick={add} className="px-3 py-2 bg-[#7cb342] text-white rounded">Add</button>
+        <button onClick={add} className="px-3 py-2 bg-primary-500 text-white rounded">Add</button>
       </div>
       <div className="space-y-2">
         {list.map(c => (
@@ -522,7 +522,7 @@ const AdminProducts: React.FC = () => {
             <textarea value={edit.description} onChange={e=>setEdit({ ...edit, description: e.target.value })} placeholder="Description" className="w-full border rounded px-3 py-2" rows={3} />
             <div className="flex justify-end gap-2">
               <button onClick={()=>setEditId(null)} className="px-3 py-2 bg-gray-100 rounded">Cancel</button>
-              <button onClick={()=>{ updateProduct(editId, edit as any); setEditId(null); }} className="px-3 py-2 bg-[#7cb342] text-white rounded">Save</button>
+              <button onClick={()=>{ updateProduct(editId, edit as any); setEditId(null); }} className="px-3 py-2 bg-primary-500 text-white rounded">Save</button>
             </div>
           </div>
         </div>
@@ -564,7 +564,7 @@ const AdminOrders: React.FC = () => {
               <div className="font-mono">{o._id}</div>
               <div>{new Date(o.createdAt).toLocaleString()}</div>
               <div>{o.items?.length || 0} items</div>
-              <div className="font-semibold text-[#7cb342]">{o.total?.toFixed(0)} CFA</div>
+              <div className="font-semibold text-primary-600">{o.total?.toFixed(0)} CFA</div>
               <div className="text-xs">{o.customerInfo?.email}</div>
             </div>
             <div className="mt-2 flex items-center gap-2">
