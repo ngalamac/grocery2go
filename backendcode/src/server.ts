@@ -7,6 +7,7 @@ import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
 import orderRoutes from './routes/orders';
 import reviewRoutes from './routes/reviews';
+import restaurantRoutes from './routes/restaurants';
 import couponRoutes from './routes/coupons';
 import wishlistRoutes from './routes/wishlist';
 
@@ -43,6 +44,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/restaurants', restaurantRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });

@@ -78,3 +78,33 @@ export interface Feature {
   title: string;
   description: string;
 }
+
+export interface MenuItem {
+  id?: string;
+  name: string;
+  description?: string;
+  price: number;
+  image?: string;
+  category?: string;
+  isAvailable?: boolean;
+}
+
+export interface Restaurant {
+  id: string;
+  slug: string;
+  name: string;
+  logo?: string;
+  coverImage?: string;
+  cuisine: string[];
+  rating: number;
+  deliveryTimeMin: number;
+  deliveryTimeMax: number;
+  deliveryFee: number;
+  minOrder?: number;
+  address?: string;
+  city?: string;
+  isOpen: boolean;
+  isFeatured?: boolean;
+  tags?: string[];
+  menu: MenuItem[];
+}
