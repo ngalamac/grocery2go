@@ -2,6 +2,8 @@
 
 A complete e-commerce platform with MongoDB backend and React frontend.
 
+> **📋 Conversation Log:** See [CONVERSATION_CONTINUATION_LOG.md](./CONVERSATION_CONTINUATION_LOG.md) for detailed setup and troubleshooting information from conversation `bc-5604aba0-3abc-45b3-aae4-640a90afdc87`.
+
 ## Project Structure
 
 ```
