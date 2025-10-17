@@ -170,3 +170,48 @@ export const wishlistApi = {
       method: 'DELETE',
     }),
 };
+
+export const restaurantsApi = {
+  getAll: (params?: { city?: string; cuisine?: string; search?: string; isOpen?: boolean; isFeatured?: boolean }) => {
+    const query = new URLSearchParams((params as any) || {}).toString();
+    return apiRequest(`/restaurants${query ? `?${query}` : ''}`);
+  },
+
+  getById: (id: string) => apiRequest(`/restaurants/${id}`),
+
+  getBySlug: (slug: string) => apiRequest(`/restaurants/slug/${slug}`),
+
+  create: (data: any) =>
+    apiRequest('/restaurants', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: string, data: any) =>
+    apiRequest(`/restaurants/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: string) =>
+    apiRequest(`/restaurants/${id}`, {
+      method: 'DELETE',
+    }),
+
+  addMenuItem: (id: string, data: any) =>
+    apiRequest(`/restaurants/${id}/menu`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateMenuItem: (id: string, itemId: string, data: any) =>
+    apiRequest(`/restaurants/${id}/menu/${itemId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  deleteMenuItem: (id: string, itemId: string) =>
+    apiRequest(`/restaurants/${id}/menu/${itemId}`, {
+      method: 'DELETE',
+    }),
+};

@@ -107,6 +107,9 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onShopClick, onMarketClick
               <button onClick={onShopClick} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Shop</button>
             </li>
             <li>
+              <button onClick={() => navigate('/restaurants')} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Eat</button>
+            </li>
+            <li>
               <button onClick={onMarketClick} className="px-3 py-1.5 rounded-full text-sm bg-neutral-100 hover:bg-neutral-200">Market</button>
             </li>
             <li>

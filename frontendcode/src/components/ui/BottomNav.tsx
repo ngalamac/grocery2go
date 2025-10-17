@@ -5,7 +5,7 @@ import { cn } from '../../utils/cn';
 
 const items = [
   { key: 'home', label: 'Home', icon: Home, to: '/' },
-  { key: 'shop', label: 'Shop', icon: ShoppingBag, to: '/shop' },
+  { key: 'restaurants', label: 'Eat', icon: ShoppingBag, to: '/restaurants' },
   { key: 'cart', label: 'Cart', icon: ShoppingCart, to: '#cart' },
   { key: 'orders', label: 'Orders', icon: Package, to: '/orders' },
   { key: 'profile', label: 'Profile', icon: User, to: '/profile' },
