@@ -84,6 +84,7 @@ export interface CheckPaymentResponse {
 const BASE_URL = process.env.MONETBIL_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/payment/v1';
 const SERVICE_KEY = process.env.MONETBIL_SERVICE_KEY || '';
 const NOTIFY_URL = process.env.MONETBIL_NOTIFY_URL;
+const MONETBIL_MOCK = process.env.MONETBIL_MOCK === 'true' || !SERVICE_KEY;
 
 export function normalizeCameroonMsisdn(input: string): string {
   const digits = input.replace(/\D/g, '');
@@ -134,6 +135,20 @@ export async function placePayment(params: {
 }): Promise<PlacePaymentResponse> {
   const msisdn = normalizeCameroonMsisdn(params.phonenumber);
   const operator = params.operator || detectCameroonOperator(msisdn);
+
+  if (MONETBIL_MOCK) {
+    const paymentId = `mock_${Date.now()}`;
+    return {
+      status: 'REQUEST_ACCEPTED',
+      message: 'Mocked payment initiated',
+      channel: operator,
+      channel_name: operator === 'CM_MTNMOBILEMONEY' ? 'MTN Mobile Money' : operator === 'CM_ORANGEMONEY' ? 'Orange Money' : 'EU Mobile Money',
+      channel_ussd: operator === 'CM_MTNMOBILEMONEY' ? '*126*1#' : '*150#',
+      paymentId,
+      payment_url: `https://mock.monetbil.com/pay/${paymentId}`,
+    };
+  }
+
   const payload: PlacePaymentRequest = {
     service: SERVICE_KEY,
     phonenumber: msisdn,
@@ -159,6 +174,24 @@ export async function placePayment(params: {
 }
 
 export async function checkPayment(paymentId: string): Promise<CheckPaymentResponse> {
+  if (MONETBIL_MOCK) {
+    return {
+      paymentId,
+      message: 'payment finish',
+      transaction: {
+        transaction_UUID: `uuid_${paymentId}`,
+        status: 1,
+        message: 'Transaction successful (mock)',
+        amount: 1000,
+        fee: 0,
+        revenue: 1000,
+        currency: 'XAF',
+        msisdn: '237600000000',
+        mobile_operator_code: 'CM_MTNMOBILEMONEY',
+      },
+    };
+  }
+
   const url = `${BASE_URL}/checkPayment`;
   const params = new URLSearchParams({ paymentId });
   const { data } = await axios.post<CheckPaymentResponse>(url, params.toString(), {
