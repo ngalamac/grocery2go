@@ -295,7 +295,7 @@ For production, consider:
 - [ ] Context-aware translations
 - [ ] A/B testing translations
 
-## Cost Considerations
+## Cost Considerations...
 
 ### Google Translate API Pricing
 
