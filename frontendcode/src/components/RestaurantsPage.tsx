@@ -11,7 +11,7 @@ const RestaurantsPage: React.FC = () => {
     <Container className="py-4">
       <div className="bg-white rounded-xl shadow-soft p-4 md:p-6">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold">Restaurants</h1>
+          <h1 className="text-xl font-semibold">Restaurants..</h1>
         </div>
 
         {loading ? (
