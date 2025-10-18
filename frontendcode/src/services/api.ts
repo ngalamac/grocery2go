@@ -78,6 +78,15 @@ export const productsApi = {
     }),
 };
 
+export const monetbil = async (amount: number, phoneNumber: string) => {
+  const response = await paymentsApi.startMonetbil({
+    orderId: `ORD-${Date.now()}`,
+    phone: phoneNumber,
+    amount,
+  });
+  return response.paymentUrl;
+};
+
 export const ordersApi = {
   create: (data: any) =>
     apiRequest('/orders', {
@@ -105,7 +114,12 @@ export const ordersApi = {
 };
 
 export const paymentsApi = {
-  startMonetbil: (data: { orderId: string; phone: string; operator?: string }) =>
+  startMonetbil: (data: {
+    orderId: string;
+    phone: string;
+    amount: number;
+    operator?: string;
+  }) =>
     apiRequest('/payments/monetbil/start', {
       method: 'POST',
       body: JSON.stringify(data),

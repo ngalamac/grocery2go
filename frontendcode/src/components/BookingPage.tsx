@@ -5,6 +5,7 @@ import { AdditionalItem } from '../types';
 import { Container } from './ui';
 import Button from './ui/Button';
 import { CreditCard } from 'lucide-react';
+import { monetbil } from "../services/api";
 
 interface BookingPageProps {
   onBack: () => void;
@@ -22,6 +23,22 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   const [additionalItems, setAdditionalItems] = useState<AdditionalItem[]>([]);
   const [newItemName, setNewItemName] = useState('');
   const [newItemPrice, setNewItemPrice] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handleMonetbilPayment = async () => {
+    if (!phoneNumber) {
+      alert('Please enter your phone number to proceed with the payment.');
+      return;
+    }
+    const totalAmount = estimatedTotal + totalFee;
+    try {
+      const paymentUrl = await monetbil(totalAmount, phoneNumber);
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.error("Payment Initialization failed", error);
+      alert("Failed to start payment. Please try again.");
+    }
+  };
 
   const MIN_SERVICE_FEE = 500;
   const DELIVERY_FEE = 1000;
@@ -195,6 +212,17 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
               </p>
             </div>
 
+            <div>
+              <label className="block text-sm font-semibold mb-2">Phone Number for Mobile Payment</label>
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
+                placeholder="e.g., 67XXXXXXX"
+              />
+            </div>
+
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
                 type="submit"
@@ -203,9 +231,11 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 Proceed to Payment Details
               </button>
               <Button
-                type="submit"
+                id="monetbil-pay-button"
+                type="button"
                 className="w-full"
                 size="md"
+                onClick={handleMonetbilPayment}
               >
                 <CreditCard size={18} className="mr-2" />
                 pay with Mobile Money
