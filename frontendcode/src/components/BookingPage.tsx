@@ -268,7 +268,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 type="submit"
                 className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
               >
-                Proceed to Payment Details
+                Click Proceed to Payment Details
               </button>
               <Button
                 id="monetbil-pay-button"
