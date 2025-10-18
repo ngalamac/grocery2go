@@ -156,7 +156,6 @@ npm start
 cd frontendcode
 npm run build
 ```
-
 The production build will be in `frontendcode/dist/`
 
 ## Troubleshooting
@@ -172,7 +171,6 @@ The production build will be in `frontendcode/dist/`
 - Verify VITE_API_URL in .env matches backend URL
 
 ## Notes
-
 - All localStorage and Supabase dependencies have been removed
 - The application now uses MongoDB exclusively for data persistence
 - Mock data has been removed - all data comes from the database
