@@ -26,10 +26,16 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   const [newItemName, setNewItemName] = useState('');
   const [newItemPrice, setNewItemPrice] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('Yaoundé');
 
   const handleMonetbilPayment = async () => {
     if (!phoneNumber) {
       alert('Please enter your phone number to proceed with the payment.');
+      return;
+    }
+    if (!address.trim()) {
+      alert('Please enter your delivery address.');
       return;
     }
     if (!user) {
@@ -60,6 +66,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
         name: user.name,
         email: user.email,
         phone: phoneNumber,
+        address,
+        city,
       },
       payment: {
         provider: 'monetbil',
@@ -250,6 +258,35 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
               <p className="text-sm text-yellow-700">
                 Payment must be completed before we begin shopping. You will proceed to payment details on the next page.
               </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3">Delivery Information</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Delivery Address *</label>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7cb342]"
+                    placeholder="Street address, building, floor"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2">City</label>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700"
+                    placeholder="Yaoundé"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Delivery currently available in Yaoundé.</p>
+                </div>
+              </div>
             </div>
 
             <div>
