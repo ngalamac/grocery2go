@@ -208,7 +208,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 size="md"
               >
                 <CreditCard size={18} className="mr-2" />
-                pay with momo
+                pay with Mobile Money
               </Button>
             </div>
           </form>
