@@ -3,6 +3,8 @@ import { useCart } from '../context/CartContext';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { AdditionalItem } from '../types';
 import { Container } from './ui';
+import Button from './ui/Button';
+import { CreditCard } from 'lucide-react';
 
 interface BookingPageProps {
   onBack: () => void;
@@ -193,12 +195,22 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
               </p>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
-            >
-              Proceed to Payment Details
-            </button>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                type="submit"
+                className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
+              >
+                Proceed to Payment Details
+              </button>
+              <Button
+                type="submit"
+                className="w-full"
+                size="md"
+              >
+                <CreditCard size={18} className="mr-2" />
+                pay with Mobile Money
+              </Button>
+            </div>
           </form>
         </div>
 

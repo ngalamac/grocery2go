@@ -50,7 +50,10 @@ app.use('/api/payments', payments_1.default);
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
 });
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Only start the server when this file is executed directly
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 exports.default = app;
