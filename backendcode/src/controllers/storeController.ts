@@ -93,7 +93,7 @@ export const updateStoreItem = async (req: Request, res: Response) => {
     const { id, itemId } = req.params as any;
     const store = await Store.findById(id);
     if (!store) return res.status(404).json({ message: 'Store not found' });
-    const item = store.menu.id(itemId);
+    const item = (store.menu as any).id(itemId);
     if (!item) return res.status(404).json({ message: 'Item not found' });
     Object.assign(item, req.body);
     await store.save();
@@ -108,7 +108,7 @@ export const deleteStoreItem = async (req: Request, res: Response) => {
     const { id, itemId } = req.params as any;
     const store = await Store.findById(id);
     if (!store) return res.status(404).json({ message: 'Store not found' });
-    const item = store.menu.id(itemId);
+    const item = (store.menu as any).id(itemId);
     if (!item) return res.status(404).json({ message: 'Item not found' });
     item.deleteOne();
     await store.save();

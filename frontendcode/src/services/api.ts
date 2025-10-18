@@ -104,6 +104,17 @@ export const ordersApi = {
     apiRequest(`/orders/track?orderId=${orderId}&email=${email}`),
 };
 
+export const paymentsApi = {
+  startMonetbil: (data: { orderId: string; phone: string; operator?: string }) =>
+    apiRequest('/payments/monetbil/start', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  checkMonetbil: (orderId: string) =>
+    apiRequest(`/payments/monetbil/check?orderId=${orderId}`),
+};
+
 export const reviewsApi = {
   create: (data: any) =>
     apiRequest('/reviews', {
