@@ -509,7 +509,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
                           size="lg"
                         >
                           <CreditCard size={20} className="mr-2" />
-                          Pay {total.toFixed(0)} CFA with Monetbil
+                          pay with momo
                         </Button>
                         <Button variant="outline" onClick={handlePreviousStep} className="w-full">
                           Back to Review
