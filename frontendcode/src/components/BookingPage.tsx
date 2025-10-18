@@ -40,7 +40,13 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     const totalAmount = estimatedTotal + totalFee;
 
     const orderData = {
-      items: cart,
+      items: cart.map(item => ({
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      })),
       additionalItems,
       specialInstructions,
       total: totalAmount,
