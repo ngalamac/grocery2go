@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useCoupon } from '../context/CouponContext';
 import { createOrder } from '../utils/orders';
-import { CampayPayment } from '../utils/campay';
+import { paymentsApi } from '../services/api';
 import Button from './ui/Button';
 import Card from './ui/Card';
 import Input from './ui/Input';
@@ -149,40 +149,58 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const newOrderId = newOrder.id;
       setOrderId(newOrderId);
 
-      const reference = CampayPayment.generateReference();
-      const campay = new CampayPayment({
-        description: `Grocery2Go Order #${newOrderId}`,
-        amount: CampayPayment.formatAmount(total),
-        currency: 'XAF',
-        externalReference: reference,
-        redirectUrl: `${window.location.origin}/success?order=${newOrderId}`
+      // Start Monetbil payment on backend
+      const startResp = await paymentsApi.startMonetbil({
+        orderId: newOrderId,
+        phone: formData.phone,
       });
 
-      await campay.initialize();
-
-      campay.onSuccess(() => {
-        clearCart();
-        show('Payment successful! Your order has been placed.', { type: 'success', title: 'Success' });
-        setIsProcessing(false);
-        onSuccess();
-      });
-
-      campay.onFail(() => {
-        show('Payment failed. Please try again.', { type: 'error', title: 'Payment Failed' });
-        setIsProcessing(false);
-      });
-
-      campay.onModalClose((data) => {
-        if ((data as any)?.status === 'closed') {
-          setIsProcessing(false);
-          show('Payment cancelled', { type: 'info' });
-        }
-      });
-
-      const payButton = document.getElementById('campay-pay-button');
-      if (payButton) {
-        payButton.click();
+      const paymentId: string | undefined = startResp.paymentId;
+      if (!paymentId) {
+        throw new Error('Failed to initialize Monetbil payment');
       }
+
+      // Poll payment status until completion
+      const pollIntervalMs = 3000;
+      const maxAttempts = 60; // ~3 minutes
+      let attempts = 0;
+
+      const poll = async (): Promise<void> => {
+        attempts += 1;
+        try {
+          const statusResp = await paymentsApi.checkMonetbil(newOrderId);
+          const payment = statusResp.payment;
+          if (payment?.status === 'success') {
+            clearCart();
+            show('Payment successful! Your order has been placed.', { type: 'success', title: 'Success' });
+            setIsProcessing(false);
+            onSuccess();
+            return;
+          }
+          if (payment?.status === 'failed' || payment?.status === 'cancelled' || payment?.status === 'refunded') {
+            show('Payment was not successful.', { type: 'error', title: 'Payment Failed' });
+            setIsProcessing(false);
+            return;
+          }
+
+          if (attempts < maxAttempts) {
+            setTimeout(poll, pollIntervalMs);
+          } else {
+            show('Payment pending. You can track your order status.', { type: 'info' });
+            setIsProcessing(false);
+          }
+        } catch (e) {
+          if (attempts < maxAttempts) {
+            setTimeout(poll, pollIntervalMs);
+          } else {
+            show('Unable to confirm payment at this time.', { type: 'warning' });
+            setIsProcessing(false);
+          }
+        }
+      };
+
+      // Start polling
+      setTimeout(poll, pollIntervalMs);
     } catch (error) {
       show('Failed to initialize payment. Please try again.', { type: 'error' });
       setIsProcessing(false);
@@ -485,14 +503,13 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                       <div className="space-y-3">
                         <Button
-                          id="campay-pay-button"
                           onClick={initializePayment}
                           loading={isProcessing}
                           className="w-full"
                           size="lg"
                         >
                           <CreditCard size={20} className="mr-2" />
-                          Pay {total.toFixed(0)} CFA with Mobile Money
+                          Pay {total.toFixed(0)} CFA with Monetbil
                         </Button>
                         <Button variant="outline" onClick={handlePreviousStep} className="w-full">
                           Back to Review

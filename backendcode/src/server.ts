@@ -10,6 +10,7 @@ import reviewRoutes from './routes/reviews';
 import restaurantRoutes from './routes/restaurants';
 import couponRoutes from './routes/coupons';
 import wishlistRoutes from './routes/wishlist';
+import paymentRoutes from './routes/payments';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 
@@ -45,6 +47,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });

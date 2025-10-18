@@ -11,8 +11,10 @@ const auth_1 = __importDefault(require("./routes/auth"));
 const products_1 = __importDefault(require("./routes/products"));
 const orders_1 = __importDefault(require("./routes/orders"));
 const reviews_1 = __importDefault(require("./routes/reviews"));
+const restaurants_1 = __importDefault(require("./routes/restaurants"));
 const coupons_1 = __importDefault(require("./routes/coupons"));
 const wishlist_1 = __importDefault(require("./routes/wishlist"));
+const payments_1 = __importDefault(require("./routes/payments"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
@@ -35,6 +37,7 @@ app.use((0, cors_1.default)({
     },
 }));
 app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 (0, database_1.connectDB)();
 app.use('/api/auth', auth_1.default);
 app.use('/api/products', products_1.default);
@@ -42,6 +45,8 @@ app.use('/api/orders', orders_1.default);
 app.use('/api/reviews', reviews_1.default);
 app.use('/api/coupons', coupons_1.default);
 app.use('/api/wishlist', wishlist_1.default);
+app.use('/api/restaurants', restaurants_1.default);
+app.use('/api/payments', payments_1.default);
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
 });

@@ -93,7 +93,7 @@ export const updateMenuItem = async (req: Request, res: Response) => {
     const { id, itemId } = req.params as { id: string; itemId: string };
     const restaurant = await Restaurant.findById(id);
     if (!restaurant) return res.status(404).json({ message: 'Restaurant not found' });
-    const item = restaurant.menu.id(itemId as any);
+    const item = (restaurant.menu as any).id(itemId as any);
     if (!item) return res.status(404).json({ message: 'Menu item not found' });
     Object.assign(item, req.body);
     await restaurant.save();
@@ -108,7 +108,7 @@ export const deleteMenuItem = async (req: Request, res: Response) => {
     const { id, itemId } = req.params as { id: string; itemId: string };
     const restaurant = await Restaurant.findById(id);
     if (!restaurant) return res.status(404).json({ message: 'Restaurant not found' });
-    const item = restaurant.menu.id(itemId as any);
+    const item = (restaurant.menu as any).id(itemId as any);
     if (!item) return res.status(404).json({ message: 'Menu item not found' });
     item.deleteOne();
     await restaurant.save();

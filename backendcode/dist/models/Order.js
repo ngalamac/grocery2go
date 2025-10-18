@@ -78,7 +78,27 @@ const OrderSchema = new mongoose_1.Schema({
             title: { type: String, required: true },
             description: { type: String }
         }
-    ]
+    ],
+    payment: {
+        provider: { type: String, enum: ['monetbil'], default: 'monetbil' },
+        paymentId: { type: String },
+        paymentRef: { type: String },
+        status: {
+            type: String,
+            enum: ['initiated', 'pending', 'success', 'failed', 'cancelled', 'refunded'],
+            default: 'initiated'
+        },
+        message: { type: String },
+        operator: { type: String },
+        channelName: { type: String },
+        channelUSSD: { type: String },
+        currency: { type: String },
+        amount: { type: Number },
+        fee: { type: Number },
+        revenue: { type: Number },
+        raw: { type: mongoose_1.Schema.Types.Mixed },
+        lastCheckedAt: { type: Date }
+    }
 }, {
     timestamps: true
 });
