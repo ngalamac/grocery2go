@@ -38,6 +38,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     }
 
     const totalAmount = estimatedTotal + totalFee;
+    const budgetValue = parseFloat(budget);
+    const orderBudget = Number.isFinite(budgetValue) && !isNaN(budgetValue) ? budgetValue : totalAmount;
 
     const orderData = {
       items: cart.map(item => ({
@@ -49,7 +51,11 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
       })),
       additionalItems,
       specialInstructions,
+      subtotal,
+      shoppingFee: serviceFee,
+      deliveryFee: DELIVERY_FEE,
       total: totalAmount,
+      budget: orderBudget,
       customerInfo: {
         name: user.name,
         email: user.email,
@@ -262,7 +268,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 type="submit"
                 className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
               >
-                Proceed to Payment Details
+                Click Proceed to Payment Details
               </button>
               <Button
                 id="monetbil-pay-button"
