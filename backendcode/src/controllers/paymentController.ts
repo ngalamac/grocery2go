@@ -4,7 +4,11 @@ import { checkPayment, placePayment } from '../services/monetbil';
 
 export const startMonetbilPayment = async (req: Request, res: Response) => {
   try {
-    const { orderId, phone, operator } = req.body;
+    const { orderId, phone, operator } = req.body as {
+      orderId: string;
+      phone: string;
+      operator?: 'CM_MTNMOBILEMONEY' | 'CM_ORANGEMONEY' | 'CM_EUMM';
+    };
 
     if (!orderId || !phone) {
       return res.status(400).json({ message: 'orderId and phone are required' });
