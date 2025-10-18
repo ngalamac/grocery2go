@@ -5,7 +5,8 @@ import { AdditionalItem } from '../types';
 import { Container } from './ui';
 import Button from './ui/Button';
 import { CreditCard } from 'lucide-react';
-import { monetbil } from "../services/api";
+import { ordersApi, paymentsApi } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 interface BookingPageProps {
   onBack: () => void;
@@ -18,6 +19,7 @@ interface BookingPageProps {
 
 const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment }) => {
   const { cart, getCartTotal } = useCart();
+  const { user } = useAuth();
   const [budget, setBudget] = useState<string>('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [additionalItems, setAdditionalItems] = useState<AdditionalItem[]>([]);
@@ -30,10 +32,36 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
       alert('Please enter your phone number to proceed with the payment.');
       return;
     }
+    if (!user) {
+      alert('You must be logged in to place an order.');
+      return;
+    }
+
     const totalAmount = estimatedTotal + totalFee;
+
+    const orderData = {
+      items: cart,
+      additionalItems,
+      specialInstructions,
+      total: totalAmount,
+      customerInfo: {
+        name: user.name,
+        email: user.email,
+        phone: phoneNumber,
+      },
+      payment: {
+        provider: 'monetbil',
+        status: 'pending',
+      },
+    };
+
     try {
-      const paymentUrl = await monetbil(totalAmount, phoneNumber);
-      window.location.href = paymentUrl;
+      const newOrder = await ordersApi.create(orderData);
+      const paymentResponse = await paymentsApi.startMonetbil({
+        orderId: newOrder._id,
+        phone: phoneNumber,
+      });
+      window.location.href = paymentResponse.payment_url;
     } catch (error) {
       console.error("Payment Initialization failed", error);
       alert("Failed to start payment. Please try again.");
