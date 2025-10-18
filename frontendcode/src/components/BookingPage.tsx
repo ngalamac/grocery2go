@@ -38,6 +38,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     }
 
     const totalAmount = estimatedTotal + totalFee;
+    const budgetValue = parseFloat(budget);
+    const orderBudget = Number.isFinite(budgetValue) && !isNaN(budgetValue) ? budgetValue : totalAmount;
 
     const orderData = {
       items: cart.map(item => ({
@@ -49,7 +51,11 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
       })),
       additionalItems,
       specialInstructions,
+      subtotal,
+      shoppingFee: serviceFee,
+      deliveryFee: DELIVERY_FEE,
       total: totalAmount,
+      budget: orderBudget,
       customerInfo: {
         name: user.name,
         email: user.email,
