@@ -120,7 +120,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, onCheckout }) => {
               }}
               className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
             >
-              Proceed to Booking
+              Proceed to Booking Page
             </button>
           </div>
         )}
