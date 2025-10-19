@@ -47,6 +47,7 @@ export interface IOrder extends Document {
     provider: 'monetbil';
     paymentId?: string;
     paymentRef?: string;
+    paymentUrl?: string;
     status?: 'initiated' | 'pending' | 'success' | 'failed' | 'cancelled' | 'refunded';
     message?: string;
     operator?: string;
@@ -113,6 +114,7 @@ const OrderSchema: Schema = new Schema(
       provider: { type: String, enum: ['monetbil'], default: 'monetbil' },
       paymentId: { type: String },
       paymentRef: { type: String },
+      paymentUrl: { type: String },
       status: {
         type: String,
         enum: ['initiated', 'pending', 'success', 'failed', 'cancelled', 'refunded'],
