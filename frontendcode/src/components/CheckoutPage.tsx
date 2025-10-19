@@ -217,6 +217,28 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
     }
   };
 
+  const cancelPendingPayment = async () => {
+    try {
+      setIsProcessing(true);
+      // We need the order id; since we set it only after creation, this button
+      // is most useful after an attempted start. If not known, user can go back and retry.
+      // Here, we optimistically call cancel using the last known order via URL param if present.
+      const params = new URLSearchParams(window.location.search);
+      const orderFromUrl = params.get('order') || '';
+      if (!orderFromUrl) {
+        show('No pending order found to cancel.', { type: 'info' });
+        setIsProcessing(false);
+        return;
+      }
+      await paymentsApi.cancelMonetbil(orderFromUrl);
+      show('Pending payment has been cancelled. You can try again.', { type: 'success' });
+    } catch (e) {
+      show('Unable to cancel payment. Please try again.', { type: 'error' });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -520,6 +542,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         >
                           <CreditCard size={20} className="mr-2" />
                           pay with momo
+                        </Button>
+                        <Button variant="outline" onClick={cancelPendingPayment} className="w-full">
+                          Cancel pending payment
                         </Button>
                         <Button variant="outline" onClick={handlePreviousStep} className="w-full">
                           Back to Review
