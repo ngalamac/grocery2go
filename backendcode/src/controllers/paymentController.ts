@@ -3,6 +3,7 @@ import Order from '../models/Order';
 import { MonetbilOperator, checkPayment, placePayment } from '../services/monetbil';
 
 export const startMonetbilPayment = async (req: Request, res: Response) => {
+  console.log('ENTERING startMonetbilPayment FUNCTION');
   try {
     const { orderId, phone, operator } = req.body as {
       orderId: string;
