@@ -156,7 +156,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
       });
       
       // If Monetbil provides a hosted payment URL, redirect the user to complete authorization
-      if (startResp?.payment_url) {
+      if (startResp?.payment_url && typeof startResp.payment_url === 'string' && startResp.payment_url.startsWith('http')) {
         window.location.href = startResp.payment_url as string;
         return; // stop local polling; hosted page will handle flow and callbacks
       }
@@ -175,7 +175,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
         attempts += 1;
         try {
           const statusResp = await paymentsApi.checkMonetbil(newOrderId);
-          if (statusResp?.payment_url) {
+          if (statusResp?.payment_url && typeof statusResp.payment_url === 'string' && statusResp.payment_url.startsWith('http')) {
             window.location.href = statusResp.payment_url as string;
             return;
           }

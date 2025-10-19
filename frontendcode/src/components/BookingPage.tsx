@@ -84,13 +84,18 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
         orderId: newOrder._id,
         phone: phoneNumber,
       });
-      if (paymentResponse && paymentResponse.status === 'REQUEST_ACCEPTED' && paymentResponse.payment_url) {
+      if (
+        paymentResponse &&
+        paymentResponse.status === 'REQUEST_ACCEPTED' &&
+        typeof paymentResponse.payment_url === 'string' &&
+        paymentResponse.payment_url.startsWith('http')
+      ) {
         window.location.href = paymentResponse.payment_url;
       } else {
         // Try to surface an existing payment URL by checking payment status
         try {
           const checkResp = await paymentsApi.checkMonetbil(newOrder._id);
-          if (checkResp?.payment_url) {
+          if (checkResp?.payment_url && typeof checkResp.payment_url === 'string' && checkResp.payment_url.startsWith('http')) {
             window.location.href = checkResp.payment_url as string;
             return;
           }
