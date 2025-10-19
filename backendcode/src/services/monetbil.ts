@@ -166,9 +166,16 @@ export async function placePayment(params: {
   };
 
   const url = `${BASE_URL}/placePayment`;
-  const { data } = await axios.post<PlacePaymentResponse>(url, payload, {
+  const formParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== undefined && value !== null) {
+      formParams.append(key, String(value));
+    }
+  }
+
+  const { data } = await axios.post<PlacePaymentResponse>(url, formParams.toString(), {
     timeout: 30_000,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
   return data;
 }
