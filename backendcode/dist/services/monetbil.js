@@ -8,6 +8,7 @@ exports.detectCameroonOperator = detectCameroonOperator;
 exports.placePayment = placePayment;
 exports.checkPayment = checkPayment;
 const axios_1 = __importDefault(require("axios"));
+const qs_1 = __importDefault(require("qs"));
 const BASE_URL = process.env.MONETBIL_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/payment/v1';
 const SERVICE_KEY = process.env.MONETBIL_SERVICE_KEY || '';
 const NOTIFY_URL = process.env.MONETBIL_NOTIFY_URL;
@@ -38,11 +39,11 @@ function detectCameroonOperator(msisdn) {
     const mtn3 = (Number(prefix3) >= 650 && Number(prefix3) <= 654) ||
         (Number(prefix3) >= 680 && Number(prefix3) <= 684);
     if (orange2 || orange3)
-        return 'CM_ORANGEMONEY';
+        return 'CM_ORANGE';
     if (mtn2 || mtn3)
-        return 'CM_MTNMOBILEMONEY';
+        return 'CM_MTN';
     // Default to MTN if uncertain; caller can override
-    return 'CM_MTNMOBILEMONEY';
+    return 'CM_MTN';
 }
 async function placePayment(params) {
     const msisdn = normalizeCameroonMsisdn(params.phonenumber);
@@ -53,8 +54,8 @@ async function placePayment(params) {
             status: 'REQUEST_ACCEPTED',
             message: 'Mocked payment initiated',
             channel: operator,
-            channel_name: operator === 'CM_MTNMOBILEMONEY' ? 'MTN Mobile Money' : operator === 'CM_ORANGEMONEY' ? 'Orange Money' : 'EU Mobile Money',
-            channel_ussd: operator === 'CM_MTNMOBILEMONEY' ? '*126*1#' : '*150#',
+            channel_name: operator === 'CM_MTN' ? 'MTN Mobile Money' : operator === 'CM_ORANGE' ? 'Orange Money' : 'EU Mobile Money',
+            channel_ussd: operator === 'CM_MTN' ? '*126*1#' : '*150#',
             paymentId,
             payment_url: `https://mock.monetbil.com/pay/${paymentId}`,
         };
@@ -66,22 +67,13 @@ async function placePayment(params) {
         operator,
         currency: params.currency || 'XAF',
         country: params.country || 'CM',
-        item_ref: params.item_ref,
         payment_ref: params.payment_ref,
-        user: params.user,
         first_name: params.first_name,
-        last_name: params.last_name,
         email: params.email,
         notify_url: NOTIFY_URL,
     };
     const url = `${BASE_URL}/placePayment`;
-    const formParams = new URLSearchParams();
-    for (const [key, value] of Object.entries(payload)) {
-        if (value !== undefined && value !== null) {
-            formParams.append(key, String(value));
-        }
-    }
-    const { data } = await axios_1.default.post(url, formParams.toString(), {
+    const { data } = await axios_1.default.post(url, qs_1.default.stringify(payload), {
         timeout: 30000,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
