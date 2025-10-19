@@ -18,13 +18,18 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
-    // Idempotency: if a payment is already initiated or pending, return it (including hosted payment_url if available)
-    if (order.payment?.provider === 'monetbil' && ['initiated', 'pending'].includes(order.payment.status || '')) {
+    // Idempotency: only short-circuit if we actually have a paymentId or URL to reuse
+    const existingUrl = (order.payment as any)?.paymentUrl || (order.payment as any)?.raw?.payment_url;
+    if (
+      order.payment?.provider === 'monetbil' &&
+      ['initiated', 'pending'].includes(order.payment.status || '') &&
+      (order.payment.paymentId || existingUrl)
+    ) {
       return res.json({
         status: 'REQUEST_ACCEPTED',
         message: order.payment.message || 'Payment already initiated',
         paymentId: order.payment.paymentId,
-        payment_url: (order.payment as any)?.paymentUrl || (order.payment as any)?.raw?.payment_url,
+        payment_url: existingUrl,
         channel: order.payment.operator,
         channel_name: order.payment.channelName,
         channel_ussd: order.payment.channelUSSD,
