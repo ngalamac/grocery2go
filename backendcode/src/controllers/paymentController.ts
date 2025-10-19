@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Order from '../models/Order';
-import { MonetbilOperator, checkPayment, placePayment } from '../services/monetbil';
+import { MonetbilOperator, checkPayment, placePayment, createWidgetPayment } from '../services/monetbil';
 
 export const startMonetbilPayment = async (req: Request, res: Response) => {
   console.log('ENTERING startMonetbilPayment FUNCTION');
@@ -76,37 +76,51 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
       });
     }
 
-    const resp = await placePayment({
+    // Prefer Widget API v2.1 to obtain a hosted payment URL
+    const widget = await createWidgetPayment({
       amount,
-      phonenumber: phone,
-      operator,
-      currency: 'XAF',
-      country: 'CM',
+      phone,
       payment_ref,
-      first_name: order.customerInfo.name,
-      email: order.customerInfo.email,
-      user: order.userId?.toString(),
+      return_url: `${process.env.PUBLIC_WEB_BASE_URL || 'https://grocery2go.shop'}/payment/success`,
+      cancel_url: `${process.env.PUBLIC_WEB_BASE_URL || 'https://grocery2go.shop'}/payment/cancel`,
+      notify_url: process.env.MONETBIL_NOTIFY_URL,
+      user: order.customerInfo.email,
     });
+
+    // Fallback to legacy API if widget did not return a URL
+    let resp: any = widget?.payment_url
+      ? { status: 'REQUEST_ACCEPTED', message: 'Widget URL created', payment_url: widget.payment_url }
+      : await placePayment({
+          amount,
+          phonenumber: phone,
+          operator,
+          currency: 'XAF',
+          country: 'CM',
+          payment_ref,
+          first_name: order.customerInfo.name,
+          email: order.customerInfo.email,
+          user: order.userId?.toString(),
+        });
 
     await Order.findByIdAndUpdate(order._id, {
       $set: {
         'payment.paymentId': resp.paymentId,
         'payment.status': 'pending',
-        'payment.message': resp.message,
+        'payment.message': resp.message || (widget?.payment_url ? 'Redirect to Monetbil' : undefined),
         'payment.operator': resp.channel,
         'payment.channelName': resp.channel_name,
         'payment.channelUSSD': resp.channel_ussd,
-        'payment.paymentUrl': (resp as any).payment_url,
-        'payment.raw': resp,
+        'payment.paymentUrl': (resp as any)?.payment_url || widget?.payment_url,
+        'payment.raw': resp?.payment_url ? { widget: true, ...resp } : resp,
         'payment.lastCheckedAt': new Date(),
       },
     });
 
     return res.json({
       status: resp.status,
-      message: resp.message,
+      message: resp.message || 'Redirect to Monetbil',
       paymentId: resp.paymentId,
-      payment_url: (resp as any).payment_url,
+      payment_url: (resp as any)?.payment_url || widget?.payment_url,
       channel: resp.channel,
       channel_name: resp.channel_name,
       channel_ussd: resp.channel_ussd,
