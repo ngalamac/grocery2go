@@ -79,8 +79,9 @@ export interface CheckPaymentResponse {
   };
 }
 
-const BASE_URL = process.env.MONETBIL_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/payment/v1';
-const WIDGET_BASE_URL = process.env.MONETBIL_WIDGET_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/widget/v2.1';
+const trimSlash = (s?: string) => (s ? s.replace(/\/$/, '') : s);
+const BASE_URL = trimSlash(process.env.MONETBIL_BASE_URL) || 'https://api.monetbil.com/payment/v1';
+const WIDGET_BASE_URL = trimSlash(process.env.MONETBIL_WIDGET_BASE_URL) || 'https://api.monetbil.com/widget/v2.1';
 const SERVICE_KEY = process.env.MONETBIL_KEY || process.env.MONETBIL_SERVICE_KEY || '';
 const NOTIFY_URL = process.env.MONETBIL_NOTIFY_URL;
 const DEFAULT_LOCALE = process.env.MONETBIL_LOCALE || 'fr';
@@ -196,13 +197,18 @@ export async function checkPayment(paymentId: string): Promise<CheckPaymentRespo
     };
   }
 
-  const url = `${BASE_URL}/checkPayment`;
-  const params = new URLSearchParams({ paymentId });
-  const { data } = await axios.post<CheckPaymentResponse>(url, params.toString(), {
-    timeout: 30_000,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  });
-  return data;
+  try {
+    const url = `${BASE_URL}/checkPayment`;
+    const params = new URLSearchParams({ paymentId });
+    const { data } = await axios.post<CheckPaymentResponse>(url, params.toString(), {
+      timeout: 30_000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+    return data;
+  } catch (error: any) {
+    const detail = error?.response?.data || error?.message;
+    throw new Error(`Monetbil checkPayment failed: ${JSON.stringify(detail)}`);
+  }
 }
 
 // Widget API v2.1
@@ -243,9 +249,14 @@ export async function createWidgetPayment(params: {
     item_ref: params.item_ref,
     user: params.user,
   };
-  const { data } = await axios.post(url, body, {
-    timeout: 30_000,
-    headers: { 'Content-Type': 'application/json' },
-  });
-  return data as { success: boolean; payment_url?: string };
+  try {
+    const { data } = await axios.post(url, body, {
+      timeout: 30_000,
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return data as { success: boolean; payment_url?: string };
+  } catch (error: any) {
+    const detail = error?.response?.data || error?.message;
+    throw new Error(`Monetbil widget create failed: ${JSON.stringify(detail)}`);
+  }
 }

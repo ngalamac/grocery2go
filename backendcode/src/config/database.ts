@@ -6,6 +6,9 @@ let memoryServer: any = null;
 export const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || '';
+    if (!mongoURI) {
+      throw new Error('MONGODB_URI is not set');
+    }
 
     if (mongoURI === 'memory') {
       const { MongoMemoryServer } = await import('mongodb-memory-server');
