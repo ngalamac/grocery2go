@@ -154,13 +154,19 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
         orderId: newOrderId,
         phone: formData.phone,
       });
+      
+      // If Monetbil provides a hosted payment URL, redirect the user to complete authorization
+      if (startResp?.payment_url) {
+        window.location.href = startResp.payment_url as string;
+        return; // stop local polling; hosted page will handle flow and callbacks
+      }
 
       const paymentId: string | undefined = startResp.paymentId;
       if (!paymentId) {
         throw new Error('Failed to initialize Monetbil payment');
       }
 
-      // Poll payment status until completion
+      // Otherwise, fall back to polling payment status until completion
       const pollIntervalMs = 3000;
       const maxAttempts = 60; // ~3 minutes
       let attempts = 0;
