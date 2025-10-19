@@ -156,7 +156,6 @@ export async function placePayment(params: {
     service: SERVICE_KEY,
     phonenumber: msisdn,
     amount: Math.round(params.amount),
-    operator,
     currency: params.currency || 'XAF',
     country: params.country || 'CM',
     payment_ref: params.payment_ref,
