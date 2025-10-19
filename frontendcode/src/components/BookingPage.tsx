@@ -81,10 +81,11 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
         orderId: newOrder._id,
         phone: phoneNumber,
       });
-      if (paymentResponse && paymentResponse.payment_url) {
+      if (paymentResponse && paymentResponse.status === 'REQUEST_ACCEPTED' && paymentResponse.payment_url) {
         window.location.href = paymentResponse.payment_url;
       } else {
-        alert("Failed to get payment URL. Please try again.");
+        const errorMessage = paymentResponse?.message || "Failed to get payment URL. Please try again.";
+        alert(`Payment failed: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Payment Initialization failed", error);
