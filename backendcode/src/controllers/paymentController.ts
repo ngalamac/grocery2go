@@ -243,3 +243,24 @@ export const monetbilNotify = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Failed to process notification', error });
   }
 };
+
+export const cancelMonetbilPayment = async (req: Request, res: Response) => {
+  try {
+    const { orderId } = req.body as { orderId: string };
+    if (!orderId) return res.status(400).json({ message: 'orderId is required' });
+
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+
+    if (order.payment?.status === 'success') {
+      return res.status(400).json({ message: 'Cannot cancel a successful payment' });
+    }
+
+    order.payment = undefined as any;
+    await order.save();
+
+    return res.json({ ok: true });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to cancel payment', error });
+  }
+};

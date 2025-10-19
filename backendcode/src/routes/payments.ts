@@ -1,5 +1,5 @@
 import express from 'express';
-import { startMonetbilPayment, checkMonetbilPayment, monetbilNotify } from '../controllers/paymentController';
+import { startMonetbilPayment, checkMonetbilPayment, monetbilNotify, cancelMonetbilPayment } from '../controllers/paymentController';
 
 const router = express.Router();
 
@@ -11,5 +11,8 @@ router.get('/monetbil/check', checkMonetbilPayment);
 
 // Notification webhook (Monetbil -> our server)
 router.post('/monetbil/notify', monetbilNotify);
+
+// Cancel/reset a pending Monetbil payment for an order
+router.post('/monetbil/cancel', cancelMonetbilPayment);
 
 export default router;
