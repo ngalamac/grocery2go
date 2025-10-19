@@ -80,8 +80,10 @@ export interface CheckPaymentResponse {
 }
 
 const BASE_URL = process.env.MONETBIL_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/payment/v1';
-const SERVICE_KEY = process.env.MONETBIL_SERVICE_KEY || '';
+const WIDGET_BASE_URL = process.env.MONETBIL_WIDGET_BASE_URL?.replace(/\/$/, '') || 'https://api.monetbil.com/widget/v2.1';
+const SERVICE_KEY = process.env.MONETBIL_KEY || process.env.MONETBIL_SERVICE_KEY || '';
 const NOTIFY_URL = process.env.MONETBIL_NOTIFY_URL;
+const DEFAULT_LOCALE = process.env.MONETBIL_LOCALE || 'fr';
 const MONETBIL_MOCK = process.env.MONETBIL_MOCK === 'true' || !SERVICE_KEY;
 
 export function normalizeCameroonMsisdn(input: string): string {
@@ -201,4 +203,49 @@ export async function checkPayment(paymentId: string): Promise<CheckPaymentRespo
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
   return data;
+}
+
+// Widget API v2.1
+export async function createWidgetPayment(params: {
+  amount: number;
+  phone: string;
+  payment_ref: string;
+  return_url: string;
+  cancel_url: string;
+  notify_url?: string;
+  item_ref?: string;
+  user?: string; // email or user id
+  country?: 'CM';
+  currency?: 'XAF';
+  locale?: string;
+}): Promise<{ success: boolean; payment_url?: string }> {
+  const msisdn = normalizeCameroonMsisdn(params.phone);
+  if (MONETBIL_MOCK) {
+    return {
+      success: true,
+      payment_url: `https://mock.monetbil.com/widget/pay/${Date.now()}`,
+    };
+  }
+  if (!SERVICE_KEY) {
+    throw new Error('Monetbil service key is not configured.');
+  }
+  const url = `${WIDGET_BASE_URL}/${SERVICE_KEY}`;
+  const body = {
+    amount: Math.round(params.amount),
+    phone: msisdn,
+    country: params.country || 'CM',
+    currency: params.currency || 'XAF',
+    locale: params.locale || DEFAULT_LOCALE,
+    payment_ref: params.payment_ref,
+    return_url: params.return_url,
+    cancel_url: params.cancel_url,
+    notify_url: params.notify_url || NOTIFY_URL,
+    item_ref: params.item_ref,
+    user: params.user,
+  };
+  const { data } = await axios.post(url, body, {
+    timeout: 30_000,
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data as { success: boolean; payment_url?: string };
 }
