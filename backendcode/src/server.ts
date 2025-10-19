@@ -24,17 +24,23 @@ const allowedOrigins = allowedOriginsEnv
   .map((o) => o.trim())
   .filter((o) => o.length > 0);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl) and health checks
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.length === 0) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error('Not allowed by CORS'));
-    },
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // In development, or for requests with no origin (e.g., mobile apps, curl), allow
+    if (!origin || (allowedOrigins.length > 0 && allowedOrigins.includes(origin))) {
+      callback(null, true);
+    } else if (allowedOrigins.length === 0 && process.env.NODE_ENV !== 'production') {
+      // Allow all origins in development if ALLOWED_ORIGINS is not set
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
