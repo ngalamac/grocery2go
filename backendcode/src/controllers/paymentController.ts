@@ -137,7 +137,19 @@ export const checkMonetbilPayment = async (req: Request, res: Response) => {
 
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (!order.payment?.paymentId) return res.status(400).json({ message: 'Payment not initialized' });
+    if (!order.payment?.paymentId) {
+      // For Widget API flows, we may have a hosted URL without a paymentId yet
+      const existingUrl = (order as any)?.payment?.paymentUrl || (order as any)?.payment?.raw?.payment_url;
+      if (existingUrl) {
+        return res.json({
+          orderId: order._id,
+          payment: order.payment,
+          orderStatus: order.status,
+          payment_url: existingUrl,
+        });
+      }
+      return res.status(400).json({ message: 'Payment not initialized' });
+    }
 
     const resp = await checkPayment(order.payment.paymentId);
 
