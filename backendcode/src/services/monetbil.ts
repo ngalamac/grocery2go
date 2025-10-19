@@ -132,14 +132,10 @@ export async function placePayment(params: {
   email?: string;
 }): Promise<PlacePaymentResponse> {
   console.log('ENTERING placePayment service');
-  if (!SERVICE_KEY) {
-    console.error('MONETBIL_SERVICE_KEY is not set.');
-    throw new Error('Monetbil service key is not configured.');
-  }
-  const msisdn = normalizeCameroonMsisdn(params.phonenumber);
-  const operator = params.operator || detectCameroonOperator(msisdn);
-
+  // In mock mode, short-circuit immediately (even if SERVICE_KEY is unset)
   if (MONETBIL_MOCK) {
+    const msisdn = normalizeCameroonMsisdn(params.phonenumber);
+    const operator = params.operator || detectCameroonOperator(msisdn);
     const paymentId = `mock_${Date.now()}`;
     return {
       status: 'REQUEST_ACCEPTED',
@@ -151,11 +147,18 @@ export async function placePayment(params: {
       payment_url: `https://mock.monetbil.com/pay/${paymentId}`,
     };
   }
+  if (!SERVICE_KEY) {
+    console.error('MONETBIL_SERVICE_KEY is not set.');
+    throw new Error('Monetbil service key is not configured.');
+  }
+  const msisdn = normalizeCameroonMsisdn(params.phonenumber);
+  const operator = params.operator || detectCameroonOperator(msisdn);
 
   const payload = {
     service: SERVICE_KEY,
     phonenumber: msisdn,
     amount: Math.round(params.amount),
+    // Note: operator intentionally omitted per Monetbil API guidance/compat
     currency: params.currency || 'XAF',
     country: params.country || 'CM',
     payment_ref: params.payment_ref,
