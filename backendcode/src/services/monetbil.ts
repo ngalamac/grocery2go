@@ -149,10 +149,10 @@ export async function placePayment(params: {
     };
   }
 
-  const payload: PlacePaymentRequest = {
+  const payload: { [key: string]: string | undefined } = {
     service: SERVICE_KEY,
     phonenumber: msisdn,
-    amount: Math.round(params.amount),
+    amount: String(Math.round(params.amount)),
     operator,
     currency: params.currency || 'XAF',
     country: params.country || 'CM',
@@ -166,16 +166,9 @@ export async function placePayment(params: {
   };
 
   const url = `${BASE_URL}/placePayment`;
-  const formParams = new URLSearchParams();
-  for (const [key, value] of Object.entries(payload)) {
-    if (value !== undefined && value !== null) {
-      formParams.append(key, String(value));
-    }
-  }
-
-  const { data } = await axios.post<PlacePaymentResponse>(url, formParams.toString(), {
+  const { data } = await axios.post<PlacePaymentResponse>(url, payload, {
     timeout: 30_000,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/json' },
   });
   return data;
 }
