@@ -64,7 +64,7 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
         status: 'REQUEST_ACCEPTED',
         message: fresh?.payment?.message || 'Payment already initiated',
         paymentId: fresh?.payment?.paymentId,
-        payment_url: (fresh as any)?.payment?.payment_url,
+        payment_url: (fresh as any)?.payment?.paymentUrl || (fresh as any)?.payment?.raw?.payment_url,
         channel: fresh?.payment?.operator,
         channel_name: fresh?.payment?.channelName,
         channel_ussd: fresh?.payment?.channelUSSD,
