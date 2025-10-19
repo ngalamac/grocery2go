@@ -18,6 +18,19 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
+    // Idempotency: if a payment is already initiated or pending, return it
+    if (order.payment?.provider === 'monetbil' && order.payment.paymentId && ['initiated', 'pending'].includes(order.payment.status || '')) {
+      return res.json({
+        status: 'REQUEST_ACCEPTED',
+        message: order.payment.message || 'Payment already initiated',
+        paymentId: order.payment.paymentId,
+        payment_url: (order.payment as any).payment_url,
+        channel: order.payment.operator,
+        channel_name: order.payment.channelName,
+        channel_ussd: order.payment.channelUSSD,
+      });
+    }
+
     const amount = Math.round(order.total);
     const payment_ref = `ORD-${order._id}`;
 

@@ -26,10 +26,12 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
   const [newItemName, setNewItemName] = useState('');
   const [newItemPrice, setNewItemPrice] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('Yaoundé');
 
   const handleMonetbilPayment = async () => {
+    if (isProcessingPayment) return;
     if (!phoneNumber) {
       alert('Please enter your phone number to proceed with the payment.');
       return;
@@ -76,6 +78,7 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     };
 
     try {
+      setIsProcessingPayment(true);
       const newOrder = await ordersApi.create(orderData);
       const paymentResponse = await paymentsApi.startMonetbil({
         orderId: newOrder._id,
@@ -90,6 +93,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
     } catch (error) {
       console.error("Payment Initialization failed", error);
       alert("Failed to start payment. Please try again.");
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
 
@@ -318,6 +323,8 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
                 className="w-full"
                 size="md"
                 onClick={handleMonetbilPayment}
+                loading={isProcessingPayment}
+                disabled={isProcessingPayment}
               >
                 <CreditCard size={18} className="mr-2" />
                 pay with Mobile Money
