@@ -175,6 +175,10 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({
         attempts += 1;
         try {
           const statusResp = await paymentsApi.checkMonetbil(newOrderId);
+          if (statusResp?.payment_url) {
+            window.location.href = statusResp.payment_url as string;
+            return;
+          }
           const payment = statusResp.payment;
           if (payment?.status === 'success') {
             clearCart();

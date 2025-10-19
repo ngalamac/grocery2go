@@ -87,7 +87,15 @@ const BookingPage: React.FC<BookingPageProps> = ({ onBack, onProceedToPayment })
       if (paymentResponse && paymentResponse.status === 'REQUEST_ACCEPTED' && paymentResponse.payment_url) {
         window.location.href = paymentResponse.payment_url;
       } else {
-        const errorMessage = paymentResponse?.message || "Failed to get payment URL. Please try again.";
+        // Try to surface an existing payment URL by checking payment status
+        try {
+          const checkResp = await paymentsApi.checkMonetbil(newOrder._id);
+          if (checkResp?.payment_url) {
+            window.location.href = checkResp.payment_url as string;
+            return;
+          }
+        } catch {}
+        const errorMessage = paymentResponse?.message || 'Failed to get payment URL. Please try again.';
         alert(`Payment failed: ${errorMessage}`);
       }
     } catch (error) {
