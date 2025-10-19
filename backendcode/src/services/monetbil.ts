@@ -131,6 +131,11 @@ export async function placePayment(params: {
   last_name?: string;
   email?: string;
 }): Promise<PlacePaymentResponse> {
+  console.log('ENTERING placePayment service');
+  if (!SERVICE_KEY) {
+    console.error('MONETBIL_SERVICE_KEY is not set.');
+    throw new Error('Monetbil service key is not configured.');
+  }
   const msisdn = normalizeCameroonMsisdn(params.phonenumber);
   const operator = params.operator || detectCameroonOperator(msisdn);
 
