@@ -24,8 +24,10 @@ const allowedOrigins = allowedOriginsEnv
   .map((o) => o.trim())
   .filter((o) => o.length > 0);
 
-const corsOptions = {
-  origin: (origin, callback) => {
+import { CorsOptions } from 'cors';
+
+const corsOptions: CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // In development, or for requests with no origin (e.g., mobile apps, curl), allow
     if (!origin || (allowedOrigins.length > 0 && allowedOrigins.includes(origin))) {
       callback(null, true);
