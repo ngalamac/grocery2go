@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import Order from '../models/Order';
-import { checkPayment, placePayment } from '../services/monetbil';
+import { MonetbilOperator, checkPayment, placePayment } from '../services/monetbil';
 
 export const startMonetbilPayment = async (req: Request, res: Response) => {
   try {
     const { orderId, phone, operator } = req.body as {
       orderId: string;
       phone: string;
-      operator?: 'CM_MTNMOBILEMONEY' | 'CM_ORANGEMONEY' | 'CM_EUMM';
+      operator?: MonetbilOperator;
     };
 
     if (!orderId || !phone) {
