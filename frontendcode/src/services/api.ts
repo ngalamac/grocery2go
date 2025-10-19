@@ -113,6 +113,12 @@ export const paymentsApi = {
 
   checkMonetbil: (orderId: string) =>
     apiRequest(`/payments/monetbil/check?orderId=${orderId}`),
+
+  cancelMonetbil: (orderId: string) =>
+    apiRequest('/payments/monetbil/cancel', {
+      method: 'POST',
+      body: JSON.stringify({ orderId }),
+    }),
 };
 
 export const reviewsApi = {

@@ -19,7 +19,7 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
     // Idempotency: if a payment is already initiated or pending, return it (including hosted payment_url if available)
-    if (order.payment?.provider === 'monetbil' && order.payment.paymentId && ['initiated', 'pending'].includes(order.payment.status || '')) {
+    if (order.payment?.provider === 'monetbil' && ['initiated', 'pending'].includes(order.payment.status || '')) {
       return res.json({
         status: 'REQUEST_ACCEPTED',
         message: order.payment.message || 'Payment already initiated',
@@ -172,6 +172,7 @@ export const checkMonetbilPayment = async (req: Request, res: Response) => {
       orderId: order._id,
       payment: order.payment,
       orderStatus: order.status,
+      payment_url: (order as any)?.payment?.paymentUrl || (order as any)?.payment?.raw?.payment_url,
     });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to check payment', error });
@@ -240,5 +241,26 @@ export const monetbilNotify = async (req: Request, res: Response) => {
     return res.json({ ok: true });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to process notification', error });
+  }
+};
+
+export const cancelMonetbilPayment = async (req: Request, res: Response) => {
+  try {
+    const { orderId } = req.body as { orderId: string };
+    if (!orderId) return res.status(400).json({ message: 'orderId is required' });
+
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+
+    if (order.payment?.status === 'success') {
+      return res.status(400).json({ message: 'Cannot cancel a successful payment' });
+    }
+
+    order.payment = undefined as any;
+    await order.save();
+
+    return res.json({ ok: true });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to cancel payment', error });
   }
 };
