@@ -34,6 +34,43 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
     const amount = Math.round(order.total);
     const payment_ref = `ORD-${order._id}`;
 
+    // Concurrency-safe: mark payment as initiated only if not already pending/initiated
+    const initiated = await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        $or: [
+          { 'payment.status': { $exists: false } },
+          { 'payment.status': { $nin: ['initiated', 'pending'] } },
+        ],
+      },
+      {
+        $set: {
+          'payment.provider': 'monetbil',
+          'payment.paymentRef': payment_ref,
+          'payment.status': 'initiated',
+          'payment.message': 'Starting Monetbil payment',
+          'payment.currency': 'XAF',
+          'payment.amount': amount,
+          'payment.lastCheckedAt': new Date(),
+        },
+      },
+      { new: true }
+    );
+
+    if (!initiated) {
+      // Another request started the payment concurrently; return existing state
+      const fresh = await Order.findById(order._id);
+      return res.json({
+        status: 'REQUEST_ACCEPTED',
+        message: fresh?.payment?.message || 'Payment already initiated',
+        paymentId: fresh?.payment?.paymentId,
+        payment_url: (fresh as any)?.payment?.payment_url,
+        channel: fresh?.payment?.operator,
+        channel_name: fresh?.payment?.channelName,
+        channel_ussd: fresh?.payment?.channelUSSD,
+      });
+    }
+
     const resp = await placePayment({
       amount,
       phonenumber: phone,
@@ -46,22 +83,18 @@ export const startMonetbilPayment = async (req: Request, res: Response) => {
       user: order.userId?.toString(),
     });
 
-    order.payment = {
-      ...(order.payment || { provider: 'monetbil' }),
-      provider: 'monetbil',
-      paymentRef: payment_ref,
-      paymentId: resp.paymentId,
-      status: 'pending',
-      message: resp.message,
-      operator: resp.channel,
-      channelName: resp.channel_name,
-      channelUSSD: resp.channel_ussd,
-      currency: 'XAF',
-      amount,
-      raw: resp,
-      lastCheckedAt: new Date(),
-    } as any;
-    await order.save();
+    await Order.findByIdAndUpdate(order._id, {
+      $set: {
+        'payment.paymentId': resp.paymentId,
+        'payment.status': 'pending',
+        'payment.message': resp.message,
+        'payment.operator': resp.channel,
+        'payment.channelName': resp.channel_name,
+        'payment.channelUSSD': resp.channel_ussd,
+        'payment.raw': resp,
+        'payment.lastCheckedAt': new Date(),
+      },
+    });
 
     return res.json({
       status: resp.status,
