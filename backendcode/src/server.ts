@@ -48,6 +48,14 @@ app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 
+// Basic startup validation for Monetbil env
+if (!process.env.MONETBIL_KEY && !process.env.MONETBIL_SERVICE_KEY) {
+  console.warn('[WARN] Monetbil key not set (MONETBIL_KEY). Widget payments may fail.');
+}
+if (!process.env.MONETBIL_NOTIFY_URL) {
+  console.warn('[WARN] MONETBIL_NOTIFY_URL not set; webhooks will not be received.');
+}
+
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
