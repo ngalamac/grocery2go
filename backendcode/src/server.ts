@@ -11,6 +11,7 @@ import restaurantRoutes from './routes/restaurants';
 import couponRoutes from './routes/coupons';
 import wishlistRoutes from './routes/wishlist';
 import paymentRoutes from './routes/payments';
+import settingsRoutes from './routes/settings';
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });

@@ -188,6 +188,15 @@ export const wishlistApi = {
     }),
 };
 
+export const settingsApi = {
+  getFees: () => apiRequest('/settings/fees'),
+  updateFees: (data: any) =>
+    apiRequest('/settings/fees', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+};
+
 export const restaurantsApi = {
   getAll: (params?: { city?: string; cuisine?: string; search?: string; isOpen?: boolean; isFeatured?: boolean }) => {
     const query = new URLSearchParams((params as any) || {}).toString();
