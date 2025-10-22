@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Clock, HeartHandshake, ShieldCheck, Truck, WandSparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, Headphones, ShieldCheck, Truck, Sparkles } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { useProducts } from '../context/ProductsContext';
 import BrandGallery from './BrandGallery';
 import { useNavigate } from 'react-router-dom';
-import { useQuickView } from '../context/QuickViewContext';
 import { Container } from './ui';
 import { useRestaurants } from '../context/RestaurantsContext';
 
@@ -13,26 +12,9 @@ interface HomePageProps { onShopClick: () => void }
 const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products, loading } = useProducts();
-  const { open } = useQuickView();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestseller'>('featured');
   const { restaurants, loading: loadingRestaurants } = useRestaurants();
 
-  const featuredProducts = (
-    products.filter(p => (p.rating ?? 0) >= 4.5).slice(0, 8).length > 0
-      ? products.filter(p => (p.rating ?? 0) >= 4.5).slice(0, 8)
-      : products.slice(0, 8)
-  );
-  const newProducts = products.slice(0, 8);
-  const bestsellerProducts = [...products]
-    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
-    .slice(0, 8);
-
-  const displayedProducts = {
-    featured: featuredProducts.length > 0 ? featuredProducts : products.slice(0, 8),
-    new: newProducts,
-    bestseller: bestsellerProducts.length > 0 ? bestsellerProducts : products.slice(8, 16)
-  }[activeTab];
 
   const heroSlides = [
     {
@@ -73,8 +55,8 @@ const HomePage: React.FC<HomePageProps> = ({ onShopClick }) => {
   const features = [
     { icon: <Truck className="text-primary-600" size={22} />, title: 'Free delivery', description: 'On all orders above 10,000 CFA' },
     { icon: <ShieldCheck className="text-primary-600" size={22} />, title: 'Secure payments', description: 'Pay safely with protection' },
-    { icon: <WandSparkles className="text-primary-600" size={22} />, title: 'Best quality', description: 'Curated fresh products' },
-    { icon: <HeartHandshake className="text-primary-600" size={22} />, title: 'Great support', description: '24/7 friendly service' },
+    { icon: <Sparkles className="text-primary-600" size={22} />, title: 'Best quality', description: 'Curated fresh products' },
+    { icon: <Headphones className="text-primary-600" size={22} />, title: 'Great support', description: '24/7 friendly service' },
   ];
 
   const nextSlide = () => setCurrentSlide(prev => (prev + 1) % heroSlides.length);
