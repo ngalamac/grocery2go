@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: grocery2go-frontend
+    env: static
+    buildCommand: cd frontendcode && npm ci && npm run build
+    staticPublishPath: frontendcode/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  - type: web
+    name: grocery2go-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./backendcode/Dockerfile
+    dockerContext: ./backendcode
+    healthCheckPath: /health
